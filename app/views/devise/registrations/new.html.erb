@@ -1,0 +1,48 @@
+<h2>Sign up</h2>
+
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+  <!-- Render any error messages for the resource (user) -->
+  <%= render "devise/shared/error_messages", resource: resource %>
+
+  <!-- Username field -->
+  <div class="field">
+    <%= f.label :username %><br />
+    <%= f.text_field :username, autofocus: true, autocomplete: "username" %>
+  </div>
+
+  <!-- Email field -->
+  <div class="field">
+    <%= f.label :email %><br />
+    <%= f.email_field :email, autocomplete: "email" %>
+  </div>
+
+  <!-- Phone number field -->
+  <div class="field">
+    <%= f.label :phone_number %><br />
+    <%= f.telephone_field :phone_number %>
+  </div>
+
+  <!-- Password field -->
+  <div class="field">
+    <%= f.label :password %>
+    <% if @minimum_password_length %>
+    <!-- Display minimum password length if set -->
+    <em>(<%= @minimum_password_length %> characters minimum)</em>
+    <% end %><br />
+    <%= f.password_field :password, autocomplete: "new-password" %>
+  </div>
+
+  <!-- Password confirmation field -->
+  <div class="field">
+    <%= f.label :password_confirmation %><br />
+    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+  </div>
+
+  <!-- Submit button -->
+  <div class="actions">
+    <%= f.submit "Sign up" %>
+  </div>
+<% end %>
+
+<!-- Render links for other Devise actions (like login, forgot password, etc.) -->
+<%= render "devise/shared/links" %>
