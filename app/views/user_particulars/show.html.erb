@@ -1,0 +1,43 @@
+<div class="container py-3">
+<h1 class="text-center rounded py-1">Your <strong style="color: #f1536a;">EnableID</strong></h1>
+
+<div class="card mx-auto border border-danger rounded" style="max-width: auto; border-width: 10px;">
+  <div class="card-body d-flex flex-column flex-md-row"> 
+    <div class="flex-shrink-0 mb-3 mb-md-0" style="width: 25%;">
+      <div class="border border-dark rounded w-100 h-100"></div> 
+    </div>
+
+    <div class="ms-md-3 flex-grow-1 row">
+      <div class="col-md-6 mb-3 mb-md-0">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item text-nowrap"><strong>Full Name:</strong> <%= @user_particular.full_name %></li>
+          <li class="list-group-item text-nowrap"><strong>Gender:</strong> <%= @user_particular.gender %></li>
+          <li class="list-group-item text-nowrap"><strong>Ethnicity:</strong> <%= @user_particular.ethnicity %></li>
+          <li class="list-group-item text-nowrap"><strong>Religion:</strong> <%= @user_particular.religion %></li>
+        </ul>
+      </div>
+      <div class="col-md-5 mb-3 mb-md-0">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item text-nowrap"><strong>Country of Origin:</strong> <%= @user_particular.country_of_origin %></li>
+          <li class="list-group-item text-nowrap"><strong>Date of Birth:</strong> <%= Date.parse(@user_particular.date_of_birth.to_s).strftime("%d-%m-%Y") %></li>
+          <li class="list-group-item text-nowrap"><strong>Date of Arrival:</strong> <%= Date.parse(@user_particular.date_of_arrival.to_s).strftime("%d-%m-%Y") %></li>
+          <li class="list-group-item text-nowrap"><strong>Phone Number:</strong> <%= @user_particular.phone_number %></li>
+        </ul>
+      </div>
+      <div class="col-md-1 text-md-center">
+        <div class="d-flex flex-column align-items-center">
+          <div class="bg-warning rounded-circle p-3 mb-4"><i class="fas fa-check text-white"></i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-footer text-muted d-flex justify-content-between">
+    <span>UnityPass - Pending Verification by NGO affiliates</span>
+  </div>
+</div>
+<div class="d-flex justify-content-center my-3" >
+    <%= link_to "Edit", edit_user_particular_path, class: "btn btn-danger"%> 
+</div>
+</div>
+
+<!--Fawziyah Here-->
