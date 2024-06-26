@@ -1,9 +1,16 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>To be confirmed</title>
+    <title>My Rails Application</title>
   </head>
   <body>
     <h1>Homepage here</h1>
+
+    <% if user_signed_in? %>
+      <p>Welcome, <%= current_user.email %>!</p>
+      <%= link_to 'Logout', destroy_user_session_path, method: :delete %>
+    <% else %>
+      <%= link_to 'Login', new_user_session_path %>
+    <% end %>
   </body>
 </html>

@@ -7,7 +7,7 @@
 require 'cucumber/rails'
 
 # By default, any exception happening in your Rails application will bubble up
-# to Cucumber so that your scenario will fail. This is different from how
+# to Cucumber so that your scenario will fail. This is a different from how
 # your application behaves in the production environment, where an error page will
 # be rendered instead.
 #
@@ -27,30 +27,24 @@ ActionController::Base.allow_rescue = false
 # For some databases (like MongoDB and CouchDB) you may need to use :truncation instead.
 begin
   DatabaseCleaner.strategy = :transaction
-  DatabaseCleaner.allow_remote_database_url = true
-
-  # Configure different strategies for different types of scenarios
-  Before('@javascript') do
-    DatabaseCleaner.strategy = :truncation
-  end
-
-  Before('not @javascript') do
-    DatabaseCleaner.strategy = :transaction
-  end
-
 rescue NameError
   raise "You need to add database_cleaner-active_record to your Gemfile (in the :test group) if you wish to use it."
 end
 
-# Ensures that the database is cleaned before each scenario is run.
-Before do
-  DatabaseCleaner.start
-end
-
-# Ensures that the database is cleaned after each scenario is run.
-After do
-  DatabaseCleaner.clean
-end
+# You may also want to configure DatabaseCleaner to use different strategies for certain features and scenarios.
+# See the DatabaseCleaner documentation for details. Example:
+#
+#   Before('@no-txn,@selenium,@culerity,@celerity,@javascript') do
+#     # { except: [:widgets] } may not do what you expect here
+#     # as Cucumber::Rails::Database.javascript_strategy overrides
+#     # this setting.
+#     DatabaseCleaner.strategy = :truncation
+#   end
+#
+#   Before('not @no-txn', 'not @selenium', 'not @culerity', 'not @celerity', 'not @javascript') do
+#     DatabaseCleaner.strategy = :transaction
+#   end
+#
 
 # Possible values are :truncation and :transaction
 # The :transaction strategy is faster, but might give you threading problems.

@@ -11,6 +11,23 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.1].define(version: 2024_06_25_150651) do
+  create_table "user_particulars", force: :cascade do |t|
+    t.string "full_name"
+    t.string "phone_number"
+    t.string "secondary_phone_number"
+    t.string "country_of_origin"
+    t.string "ethnicity"
+    t.string "religion"
+    t.string "gender"
+    t.date "date_of_birth"
+    t.date "date_of_arrival"
+    t.string "photo_url"
+    t.string "birth_certificate_url"
+    t.string "passport_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false

@@ -26,11 +26,17 @@ gem "stimulus-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 
+# Devise for authentication
 gem 'devise'
-gem 'cucumber-rails', require: false
-gem 'database_cleaner'
-gem 'factory_bot_rails'
 
+# Cucumber for BDD testing
+gem 'cucumber-rails', require: false
+
+# Database Cleaner to clean the database during tests
+gem 'database_cleaner-active_record'
+
+# Factory Bot for setting up Ruby objects as test data
+gem 'factory_bot_rails'
 
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"
@@ -53,6 +59,10 @@ gem "bootsnap", require: false
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ]
+
+  # For Cucumber and other test support
+  gem 'database_cleaner-active_record'
+  gem 'factory_bot_rails'
 end
 
 group :development do
@@ -70,4 +80,9 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+
+  # For Cucumber and other test support
+  gem 'cucumber-rails', require: false
+  gem 'database_cleaner-active_record'
+  gem 'factory_bot_rails'
 end
