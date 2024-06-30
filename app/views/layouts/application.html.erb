@@ -1,60 +1,61 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>UnityPass</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
-    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
-      crossorigin="anonymous"
-    />
-  </head>
-  <body class="d-flex flex-column min-vh-100" style="overflow-x:hidden;">
-    <div class="container-fluid bg-light p-0">
-      <div class="row flex-nowrap align-items-center justify-content-between p-2", style="background-color: #f1536a; color: white; margin-bottom:0;">
+<head>
+  <title>UnityPass</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+    crossorigin="anonymous"
+  />
+</head>
+<body class="d-flex flex-column min-vh-100" style="overflow-x:hidden;">
+  <div class="container-fluid bg-light p-0">
+    <% if user_signed_in? %>
+      <div class="row flex-nowrap align-items-center justify-content-between p-2" style="background-color: #f1536a; color: white; margin-bottom:0;">
         <div class="col-1"></div>
         <h4 class="text-center m-0 col-10 text-nowrap">Welcome, <%= current_user.email %>!</h4>
         <div class="col-1 d-flex justify-content-end align-items-center">
           <%= button_to "Sign out", destroy_user_session_path, method: 'delete', class: "text-nowrap btn btn-light" %>
         </div>
       </div>
-      <!--Display messages at the top of the page-->
-      <%- if flash[:notice]%>
-      <div class="alert alert-info text-center"><%=flash[:notice]%></div>
-      <%- elsif flash[:success]%>
-      <div class="alert alert-success text-center"><%=flash[:success]%></div>
-      <%- elsif flash[:error_message].present? %>
-        <div class="alert alert-danger">
-          <ul><%= flash[:error_message] %></ul>
-          <% if flash[:error].present? %>
-            <ul>
-              <% flash[:error].each do |error| %>
-                <li><%= error %></li>
-              <% end %>
-            </ul>
-          <% end %>
-        </div>
-      <% end %>
+    <% end %>
+    <!--Display messages at the top of the page-->
+    <% if flash[:notice] %>
+      <div class="alert alert-info text-center"><%= flash[:notice] %></div>
+    <% elsif flash[:success] %>
+      <div class="alert alert-success text-center"><%= flash[:success] %></div>
+    <% elsif flash[:error_message].present? %>
+      <div class="alert alert-danger">
+        <ul><%= flash[:error_message] %></ul>
+        <% if flash[:error].present? %>
+          <ul>
+            <% flash[:error].each do |error| %>
+              <li><%= error %></li>
+            <% end %>
+          </ul>
+        <% end %>
+      </div>
+    <% end %>
 
     <%= yield %>
-
+  </div>
+  <main class="flex-fill bg-light"></main>
+  <footer class="footer mt-auto bg-dark text-white-50 pt-2 pb-3" style="max-height:70px;">
+    <div class="container text-center">
+      <small>&copy; UnityPass Digital ID 2024</small>
+      <br>
+      <a href="#" class="text-white">Contact us</a> |
+      <a href="#" class="text-white">Share feedback</a> |
+      <a href="#" class="text-white">Read FAQs</a> |
+      <a href="#" class="text-white">Report vulnerability</a> |
+      <a href="#" class="text-white">Privacy statement</a> |
+      <a href="#" class="text-white">Terms of use</a> |
     </div>
-    <main class="flex-fill bg-light"></main>
-    <footer class="footer mt-auto bg-dark text-white-50 pt-2 pb-3", style="max-height:70px;">
-        <div class="container text-center">
-        <small>&copy; UnityPass Digital ID 2024</small>
-        <br>
-        <a href="#" class="text-white">Contact us</a> | 
-        <a href="#" class="text-white">Share feedback</a> | 
-        <a href="#" class="text-white">Read FAQs</a> | 
-        <a href="#" class="text-white">Report vulnerability</a> | 
-        <a href="#" class="text-white">Privacy statement</a> | 
-        <a href="#" class="text-white">Terms of use</a> | 
-        </div>
-    </footer>
-  </body>
+  </footer>
+</body>
 </html>
