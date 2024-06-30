@@ -1,19 +1,15 @@
 Rails.application.routes.draw do
-  get 'home/index'
+  root 'user_particulars#show' # set root path of web app as /user_particulars/show for now
 
-  devise_for :users
+  devise_for :users, controllers: {
+    registrations: 'users/registrations/registrations',
+    passwords: 'users/registrations/passwords'
+  }
 
-  # Routes for user particulars
-  resources :user_particulars, only: [:new, :create, :edit, :update, :show] do
-    member do
-      get 'confirm'
-    end
-  end
+  # Self-declared extra routes (must be before resources)
+  get 'user_particulars/confirm'
+  get 'user_particulars/home'
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
-  get "up" => "rails/health#show", as: :rails_health_check
-
-  # Defines the root path route ("/")
-  root "home#index"
+  # Resources: UserParticulars
+  resources :user_particulars
 end

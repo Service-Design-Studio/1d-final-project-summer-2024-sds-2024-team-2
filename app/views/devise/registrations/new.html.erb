@@ -1,29 +1,56 @@
-<h2>Sign up</h2>
-
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
-
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-10">
+      <h1 class="mb-4">Register for <strong style="color: #f1536a; font-size:3rem;">EnableID</strong></h1>
+      <div class="alert alert-warning">
+        <h5>Note:</h5>
+        <ul class="m-0">
+          <li>You can only register for an EnableID account once. All UnityPass account requests are final and cannot be cancelled or re-submitted.</li>
+        </ul>
+      </div>
+      <%= render "devise/shared/error_messages", resource: resource %>
+      <div class="row justify-content-center px-5">
+        <%= form_for(resource, as: resource_name, url: registration_path(resource_name), class: "card shadow-sm p-4 col-8") do |f| %>
+          <div class="form-group mb-3">
+            <%= f.label :username, class: "form-label" do %>
+              Username (Please ensure you can remember this)
+              <span class="text-danger">*</span>
+            <% end %>
+            <%= f.text_field :username, autofocus: true, class: "form-control", required: true %>
+          </div>
+          <div class="form-group mb-3">
+            <div class="form-group mb-3">
+              <%= f.label :password, class: "form-label" do %>
+                Password (Please ensure you can remember this)
+                <span class="text-danger">*</span>
+                <% if @minimum_password_length %>
+                  <em>(<%= @minimum_password_length %> characters minimum)</em>
+                <% end %><br />
+              <% end %>
+              <%= f.password_field :password, autocomplete: "new-password", class: "form-control", required: true %>
+            </div>
+          </div>
+          <div class="form-group mb-3">
+            <%= f.label :password_confirmation, class: "form-label" do %>
+              Password confirmation
+              <span class="text-danger">*</span>
+            <% end %>
+            <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-control", required: true %>
+          </div>
+          <div class="form-group mb-3">
+            <%= f.label :email, "Email (Compulsory)", class: "form-label" %>
+            <%= f.text_field :email, class: "form-control", required:true %>
+          </div>
+          <div class="form-group mb-3">
+            <%= f.label :phone_number, "Contact Number (Compulsory)", class: "form-label" %>
+            <%= f.text_field :phone_number, class: "form-control", required:true %>
+          </div>
+          <div class="d-flex justify-content-between">
+            <%= link_to "Cancel", root_path, class: "btn btn-secondary" %>
+            <%= f.submit "Register", class: "btn btn-danger" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
   </div>
-
-  <div class="field">
-    <%= f.label :password %>
-    <% if @minimum_password_length %>
-    <em>(<%= @minimum_password_length %> characters minimum)</em>
-    <% end %><br />
-    <%= f.password_field :password, autocomplete: "new-password" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
-
-  <div class="actions">
-    <%= f.submit "Sign up" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</div>
