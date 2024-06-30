@@ -12,4 +12,13 @@ class ApplicationController < ActionController::Base
     # Permit the additional account update parameters
     devise_parameter_sanitizer.permit(:account_update, keys: [:username, :phone_number])
   end
+
+  # Redirect to user particulars path after sign-in
+  def after_sign_in_path_for(resource)
+    if resource.user_particular.present?
+      user_particular_path(resource.user_particular)
+    else
+      new_user_particular_path # Redirect to the new user particular creation page
+    end
+  end
 end

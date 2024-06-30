@@ -1,69 +1,65 @@
 <div class="container py-3">
-<h5 class="text-center" style="color: black">Fill in your particulars</h2>
-<!-- user_particulars_confirm_path leads to the confirm function!-->
-<%= form_with model:@user_particular, url: user_particulars_confirm_path, method: :get, class: 'form' do |form| %>
-  <div class="form-group">
-  <%= form.label :full_name, "Full Name" %><span class="text-danger">*</span>
-  <%= form.text_field :full_name, class: "form-control", required: true %>
-  </div>
+  <h2 class="text-center" style="color: black">Fill in your particulars</h2>
+  <!-- user_particulars_confirm_path leads to the confirm function!-->
+  <%= form_with model: @user_particular, url: user_particulars_confirm_path, method: :get, class: 'form' do |form| %>
+    <div class="form-group">
+      <%= form.label :full_name, "Full Name" %><span class="text-danger">*</span>
+      <%= form.text_field :full_name, class: "form-control", required: true %>
+    </div>
 
-  <div class="form-group">
-    <%= form.label :phone_number, "Phone number" %><span class="text-danger">*</span>
-    <!--Yiqing your code goes here-->
-    <%= form.telephone_field :phone_number, class: "form-control", required: true, placeholder: "+60" %>
-  </div>
+    <div class="form-group">
+      <%= form.label :phone_number, "Phone number" %><span class="text-danger">*</span>
+      <%= form.telephone_field :phone_number, class: "form-control", required: true, placeholder: "+60" %>
+    </div>
 
-  <div class="form-group">
-    <%= form.label :secondary_phone_number, "Secondary phone number (optional)" %>
-    <%= form.telephone_field :secondary_phone_number, class: "form-control", placeholder: "+60" %>
-  </div>
+    <div class="form-group">
+      <%= form.label :secondary_phone_number, "Secondary phone number (optional)" %>
+      <%= form.telephone_field :secondary_phone_number, class: "form-control", placeholder: "+60" %>
+    </div>
 
-  <div class="form-group">
-    <%= form.label :country_of_origin, "Country of origin" %><span class="text-danger">*</span>
-    <%= form.select :country_of_origin, options_for_select(@countries, @user_particular["country_of_origin"]), {}, { class: "form-control", required: true } %>  </div>
-  <div class="form-group">
+    <div class="form-group">
+      <%= form.label :country_of_origin, "Country of origin" %><span class="text-danger">*</span>
+      <%= form.select :country_of_origin, options_for_select(@countries, @user_particular["country_of_origin"]), {}, { class: "form-control", required: true } %>
+    </div>
 
-<div class="form-group">
-  <%= form.label :ethnicity, "Ethnicity" %><span class="text-danger">*</span>
-  <%= form.select :ethnicity, options_for_select(@ethnicities, @user_particular["ethnicity"]), {}, { class: "form-control", required: true } %>
+    <div class="form-group">
+      <%= form.label :ethnicity, "Ethnicity" %><span class="text-danger">*</span>
+      <%= form.select :ethnicity, options_for_select(@ethnicities, @user_particular["ethnicity"]), {}, { class: "form-control", required: true } %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :religion, "Religion" %><span class="text-danger">*</span>
+      <%= form.select :religion, options_for_select(@religions, @user_particular["religion"]), {}, { class: "form-control", required: true } %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :gender, "Gender" %><span class="text-danger">*</span>
+      <%= form.select :gender, options_for_select(['Male', 'Female', 'Others'], @user_particular["gender"]), {}, { class: "form-control", required: true } %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :date_of_birth, "Date of birth" %><span class="text-danger">*</span>
+      <%= form.date_field :date_of_birth, class: "form-control", required: true %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :date_of_arrival_in_malaysia, "Date of arrival in Malaysia" %><span class="text-danger">*</span>
+      <%= form.date_field :date_of_arrival_in_malaysia, class: "form-control", required: true %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :photo_url, "Upload a copy of your passport size photo (optional)"%>
+      <%= form.file_field :photo_url, accept: 'image/jpeg,image/gif,image/png,application/pdf', class: "form-control-file"%>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :documents, "I have the following documents (optional)" %><br>
+      <%= form.check_box :birth_certificate_url, id: 'birth_certificate' %> <label for="birth_certificate">Birth certificate</label><br>
+      <%= form.check_box :passport_url, id: 'passport' %> <label for="passport">Passport</label><br>
+    </div>
+
+    <div class="text-center">
+      <%= form.submit "Submit", class: "btn btn-danger" %>
+    </div>
+  <% end %>
 </div>
-  </div>
-
-  <div class="form-group">
-    <%= form.label :religion, "Religion" %><span class="text-danger">*</span>
-    <%= form.select :religion, options_for_select(@religions, @user_particular["religion"]), {}, { class: "form-control", required: true } %>
-  </div>
-
-  <div class="form-group">
-    <%= form.label :gender, "Gender" %><span class="text-danger">*</span>
-    <%= form.select :gender, options_for_select(['Male', 'Female', 'Others'], @user_particular["gender"]), {}, { class: "form-control", required: true } %> 
-  </div>
-
-  <div class="form-group">
-    <%= form.label :date_of_birth, "Date of birth" %><span class="text-danger">*</span>
-    <%= form.date_field :date_of_birth, class: "form-control", required: true %>
-  </div>
- 
-  <div class="form-group">
-    <%= form.label :date_of_arrival, "Date of arrival in Malaysia" %><span class="text-danger">*</span>
-    <%= form.date_field :date_of_arrival, class: "form-control", required: true %>
-  </div>
- 
-  <div class="form-group">
-    <%= form.label :photo_url, "Upload a copy of your passport size photo (optional)"%>
-    <%= form.file_field :photo_url, accept: 'image/jpeg,image/gif,image/png,application/pdf', class: "form-control-file"%>
-  </div>
- 
-  <div class="form-group">
-    <%= form.label :documents, "I have the following documents (optional)" %><br>
-    <%= form.check_box :birth_certificate_url, id: 'birth_certificate' %> <label for="birth_certificate">Birth certificate</label><br>
-    <%= form.check_box :passport_url, id: 'passport' %> <label for="passport">Passport</label><br>
-  </div>
-
-  <div class="text-center">
-    <%= form.submit "Submit", class: "btn btn-danger" %>
-  </div>
-
-<% end %>
-</div>
-

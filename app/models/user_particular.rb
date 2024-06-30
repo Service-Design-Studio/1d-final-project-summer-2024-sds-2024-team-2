@@ -1,11 +1,20 @@
-class UserParticular < ActiveRecord::Base
+class UserParticular < ApplicationRecord
   belongs_to :user
 
+  validates :full_name, presence: true
+  validates :phone_number, presence: true
+  validates :country_of_origin, presence: true
+  validates :ethnicity, presence: true
+  validates :religion, presence: true
+  validates :gender, presence: true
+  validates :date_of_birth, presence: true
+  validates :date_of_arrival_in_malaysia, presence: true
+
   def self.create_user_particular(attributes)
-    UserParticular.create(attributes)
+    create(attributes)
   end
 
   def self.find_by_id(id)
-    UserParticular.find_by(id:)
+    find_by(id: id)
   end
 end

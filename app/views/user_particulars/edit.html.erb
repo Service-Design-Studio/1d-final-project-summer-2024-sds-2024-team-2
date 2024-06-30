@@ -1,0 +1,41 @@
+<%= form_with model: @user_particular, local: true do |f| %>
+  <div>
+    <%= f.label :full_name %>
+    <%= f.text_field :full_name %>
+  </div>
+  <div>
+    <%= f.label :phone_number %>
+    <%= f.text_field :phone_number %>
+  </div>
+  <div>
+    <%= f.label :secondary_phone_number %>
+    <%= f.text_field :secondary_phone_number %>
+  </div>
+  <div>
+    <%= f.label :country_of_origin %>
+    <%= f.text_field :country_of_origin %>
+  </div>
+  <div>
+    <%= f.label :ethnicity %>
+    <%= f.text_field :ethnicity %>
+  </div>
+  <div>
+    <%= f.label :religion %>
+    <%= f.text_field :religion %>
+  </div>
+  <div>
+    <%= f.label :gender %>
+    <%= f.text_field :gender %>
+  </div>
+  <div>
+    <%= f.label :date_of_birth %>
+    <%= f.date_field :date_of_birth %>
+  </div>
+  <div>
+    <%= f.label :date_of_arrival_in_malaysia %>
+    <%= f.date_field :date_of_arrival_in_malaysia %>
+  </div>
+  <div>
+    <%= f.submit "Update" %>
+  </div>
+<% end %>

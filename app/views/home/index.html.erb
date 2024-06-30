@@ -1,16 +1,29 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>My Rails Application</title>
-  </head>
-  <body>
-    <h1>Homepage here</h1>
+<head>
+  <title>My Rails Application</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+</head>
+<body>
+  <div class="container py-5">
+    <h1 class="text-center">Homepage here</h1>
 
     <% if user_signed_in? %>
-      <p>Welcome, <%= current_user.email %>!</p>
-      <%= link_to 'Logout', destroy_user_session_path, method: :delete %>
+      <div class="alert alert-success text-center" role="alert">
+        Welcome, <%= current_user.email %>!
+      </div>
+      <div class="text-center">
+        <%= link_to 'Logout', destroy_user_session_path, method: :delete, class: 'btn btn-danger' %>
+      </div>
     <% else %>
-      <%= link_to 'Login', new_user_session_path %>
+      <div class="text-center">
+        <%= link_to 'Login', new_user_session_path, class: 'btn btn-primary' %>
+      </div>
     <% end %>
-  </body>
+  </div>
+</body>
 </html>
