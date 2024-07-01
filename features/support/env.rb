@@ -52,3 +52,18 @@ end
 # The :transaction strategy is faster, but might give you threading problems.
 # See https://github.com/cucumber/cucumber-rails/blob/master/features/choose_javascript_database_strategy.feature
 Cucumber::Rails::Database.javascript_strategy = :truncation
+
+# Ensure the database is clean before each scenario
+Before do
+  DatabaseCleaner.start
+end
+
+After do |scenario|
+  DatabaseCleaner.clean
+end
+
+# Run pending migrations before each scenario
+Before do
+  ActiveRecord::Migrator.migrations_paths = [File.expand_path('../../db/migrate', __FILE__)]
+  ActiveRecord::Migration.maintain_test_schema!
+end
