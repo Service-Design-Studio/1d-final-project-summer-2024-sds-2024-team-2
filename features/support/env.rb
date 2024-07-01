@@ -74,3 +74,23 @@ Before do
     ActiveRecord::Migrator.migrate(File.join(Rails.root, 'db/migrate'))
   end
 end
+
+# Helper module to map page names to paths
+module NavigationHelpers
+  def path_to(page_name)
+    case page_name
+    when 'signup'
+      new_user_registration_path
+    when 'login'
+      new_user_session_path
+    when 'user registration'
+      user_registration_path
+    # Add more mappings as needed
+    else
+      raise "Can't find mapping from \"#{page_name}\" to a path.\n" +
+            "Now, go and add a mapping in #{__FILE__}"
+    end
+  end
+end
+
+World(NavigationHelpers)

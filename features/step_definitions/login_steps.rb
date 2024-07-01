@@ -1,35 +1,31 @@
-Given('I am on the login page') do
-  visit new_user_session_path
+Given(/^I am on the (.+) page$/) do |page_name|
+  visit path_to(page_name)
 end
 
-When('I fill in the username field with {string}') do |username|
-  fill_in 'Username', with: username
+When(/^I fill in the (.+) field with "(.*?)"$/) do |field, value|
+  fill_in field, with: value
 end
 
-When('I fill in the password field with {string}') do |password|
-  fill_in 'Password', with: password
+When(/^I press the (.+) button$/) do |button_name|
+  click_button button_name
 end
 
-When('I press the login button') do
-  click_button 'Log in'
-end
-
-Then('I will be logged in successfully') do
+Then(/^I will be logged in successfully$/) do
   expect(page).to have_content('Welcome')
 end
 
-Then('I will be redirected to the account dashboard page') do
-  expect(page).to have_current_path(user_dashboard_path)
+Then(/^I will be redirected to the (.+) page$/) do |page_name|
+  expect(page).to have_current_path(path_to(page_name))
 end
 
-Then('I will see a welcome message {string}') do |message|
+Then(/^I will see a welcome message "(.*?)"$/) do |message|
   expect(page).to have_content(message)
 end
 
-Then('I will see an error message {string}') do |message|
+Then(/^I will see an error message "(.*?)"$/) do |message|
   expect(page).to have_content(message)
 end
 
-Then('I will remain on the login page') do
-  expect(page).to have_current_path(new_user_session_path)
+Then(/^I will remain on the (.+) page$/) do |page_name|
+  expect(page).to have_current_path(path_to(page_name))
 end

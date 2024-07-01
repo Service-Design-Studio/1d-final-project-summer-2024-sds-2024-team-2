@@ -1,7 +1,7 @@
-Given("I am on the home page") do
-  visit root_path
+Given(/^I am on the (.+) page$/) do |page_name|
+  visit path_to(page_name)
 end
 
-Then("I should see {string}") do |text|
+Then(/^I should see "(.*?)"$/) do |text|
   expect(page).to have_content(text)
 end

@@ -1,29 +1,29 @@
-Given('I am on the signup page') do
-  visit new_user_registration_path
+Given(/^I am on the (.+) page$/) do |page_name|
+  visit path_to(page_name)
 end
 
-When('I fill in the following:') do |table|
+When(/^I fill in the following:$/) do |table|
   table.rows_hash.each do |field, value|
     fill_in field, with: value
   end
 end
 
-When('I press the register button') do
-  click_button 'Sign up'
+When(/^I press the (.+) button$/) do |button_name|
+  click_button button_name
 end
 
-Then('I will see a confirmation message {string}') do |message|
+Then(/^I will see a confirmation message "(.*?)"$/) do |message|
   expect(page).to have_content(message)
 end
 
-Then('I will be redirected to the login page') do
-  expect(page).to have_current_path(new_user_session_path)
+Then(/^I will be redirected to the (.+) page$/) do |page_name|
+  expect(page).to have_current_path(path_to(page_name))
 end
 
-Then('I will see an error message {string}') do |message|
+Then(/^I will see an error message "(.*?)"$/) do |message|
   expect(page).to have_content(message)
 end
 
-Then('I will remain on the signup page') do
-  expect(page).to have_current_path(user_registration_path)
+Then(/^I will remain on the (.+) page$/) do |page_name|
+  expect(page).to have_current_path(path_to(page_name))
 end

@@ -11,7 +11,7 @@ Feature: Account registration
       | Phone number    | 1234567890   |
       | Password        | password     |
       | Confirm Password| password     |
-    And I press the register button
+    And I press the "Sign up" button
     Then I will see a confirmation message "Registration Successful"
     And I will be redirected to the login page
 
@@ -22,7 +22,7 @@ Feature: Account registration
       | Phone number    | 1234567890   |
       | Password        | password     |
       | Confirm Password| password     |
-    And I press the register button
+    And I press the "Sign up" button
     Then I will see an error message "Username is required"
     And I will remain on the signup page
 
@@ -34,7 +34,7 @@ Feature: Account registration
       | Phone number    | 1234567890   |
       | Password        | password     |
       | Confirm Password| password     |
-    And I press the register button
+    And I press the "Sign up" button
     Then I will see an error message "Username already exists"
     And I will remain on the signup page
 
@@ -46,7 +46,7 @@ Feature: Account registration
       | Phone number    | 1234567890   |
       | Password        | password     |
       | Confirm Password| different    |
-    And I press the register button
+    And I press the "Sign up" button
     Then I will see an error message "Passwords do not match"
     And I will remain on the signup page
 
@@ -58,6 +58,6 @@ Feature: Account registration
       | Phone number    | 1234567890   |
       | Password        | password     |
       | Confirm Password| password     |
-    And I press the register button
+    And I press the "Sign up" button
     Then I will see an error message "Invalid email format"
     And I will remain on the signup page
