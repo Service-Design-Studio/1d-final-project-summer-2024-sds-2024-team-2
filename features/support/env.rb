@@ -66,4 +66,11 @@ end
 Before do
   ActiveRecord::Migrator.migrations_paths = [File.expand_path('../../db/migrate', __FILE__)]
   ActiveRecord::Migration.maintain_test_schema!
+
+  # Check for pending migrations
+  begin
+    ActiveRecord::Migration.check_pending!
+  rescue ActiveRecord::PendingMigrationError
+    ActiveRecord::Migrator.migrate(File.join(Rails.root, 'db/migrate'))
+  end
 end
