@@ -1,9 +1,5 @@
 # Step definitions for filling in user particulars form
 
-Given(/^I am on the (.+) page$/) do |page_name|
-  visit path_to(page_name)
-end
-
 Then(/^I should see the following fields:$/) do |table|
   table.rows.each do |row|
     field = row[0]
@@ -29,16 +25,12 @@ Given(/^I enter the following particulars:$/) do |table|
   end
 end
 
-And(/^I do not enter a (.+)$/) do |field|
+Given(/^I do not enter a "(.*?)"$/) do |field|
   fill_in field, with: ''
 end
 
-And(/^I do not select a (.+)$/) do |field|
+Given(/^I do not select a "(.*?)"$/) do |field|
   select '', from: field
-end
-
-When(/^I press "(.*?)"$/) do |button_name|
-  click_button button_name
 end
 
 Then(/^I will be prompted to fill in the "(.*?)" field$/) do |field|
@@ -55,10 +47,6 @@ end
 
 When(/^I select "(.*?)" from the "(.*?)" dropdown$/) do |value, field|
   select value, from: field
-end
-
-Then(/^I will be redirected to the "(.*?)" page$/) do |page_name|
-  expect(page).to have_current_path(path_to(page_name))
 end
 
 Then(/^I should see the filled-in details:$/) do |table|

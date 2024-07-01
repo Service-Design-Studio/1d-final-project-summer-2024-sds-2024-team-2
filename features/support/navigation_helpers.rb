@@ -22,7 +22,7 @@ module NavigationHelpers
     # Add additional mappings below as needed
     else
       raise "Can't find mapping from \"#{page_name}\" to a path.\n" +
-            "Now, go and add a mapping in #{__FILE__}"
+            "Please add a mapping in #{__FILE__}"
     end
   end
 end
