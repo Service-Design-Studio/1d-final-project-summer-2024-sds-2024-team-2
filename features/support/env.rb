@@ -53,15 +53,6 @@ end
 # See https://github.com/cucumber/cucumber-rails/blob/master/features/choose_javascript_database_strategy.feature
 Cucumber::Rails::Database.javascript_strategy = :truncation
 
-# Ensure the database is clean before each scenario
-Before do
-  DatabaseCleaner.start
-end
-
-After do |scenario|
-  DatabaseCleaner.clean
-end
-
 # Run pending migrations before each scenario
 Before do
   ActiveRecord::Migrator.migrations_paths = [File.expand_path('../../db/migrate', __FILE__)]
@@ -75,22 +66,11 @@ Before do
   end
 end
 
-# Helper module to map page names to paths
-module NavigationHelpers
-  def path_to(page_name)
-    case page_name
-    when 'signup'
-      new_user_registration_path
-    when 'login'
-      new_user_session_path
-    when 'user registration'
-      user_registration_path
-    # Add more mappings as needed
-    else
-      raise "Can't find mapping from \"#{page_name}\" to a path.\n" +
-            "Now, go and add a mapping in #{__FILE__}"
-    end
-  end
+# Ensure the database is clean before each scenario
+Before do
+  DatabaseCleaner.start
 end
 
-World(NavigationHelpers)
+After do |scenario|
+  DatabaseCleaner.clean
+end
