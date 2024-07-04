@@ -8,7 +8,6 @@ Rails.application.routes.draw do
 
   # Self-declared extra routes (must be before resources)
   get 'user_particulars/confirm'
-  get 'user_particulars/home'
 
   # Resources: UserParticulars
   resources :user_particulars

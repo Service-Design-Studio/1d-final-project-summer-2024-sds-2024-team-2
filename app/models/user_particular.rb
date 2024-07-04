@@ -17,4 +17,12 @@ class UserParticular < ApplicationRecord
   def self.find_by_id(id)
     find_by(id: id)
   end
+
+
+  def self.update_user_particular(id, attributes)
+    user_particular= UserParticular.find_by(id: id)
+    user_particular.update(attributes)
+    user_particular
+  end
+
 end

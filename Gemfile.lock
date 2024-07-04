@@ -77,6 +77,12 @@ GEM
       tzinfo (~> 2.0)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
+<<<<<<< HEAD
+=======
+    ast (2.4.2)
+    autoprefixer-rails (10.4.16.0)
+      execjs (~> 2)
+>>>>>>> development
     base64 (0.2.0)
     bcrypt (3.1.20)
     bigdecimal (3.1.8)
@@ -84,6 +90,7 @@ GEM
     bootsnap (1.18.3)
       msgpack (~> 1.2)
     builder (3.3.0)
+    byebug (11.1.3)
     capybara (3.40.0)
       addressable
       matrix
@@ -142,6 +149,10 @@ GEM
     diff-lcs (1.5.1)
     drb (2.2.1)
     erubi (1.13.0)
+<<<<<<< HEAD
+=======
+    execjs (2.9.1)
+>>>>>>> development
     factory_bot (6.4.6)
       activesupport (>= 5.0.0)
     factory_bot_rails (6.4.3)
@@ -164,6 +175,11 @@ GEM
     jbuilder (2.12.0)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
+<<<<<<< HEAD
+=======
+    json (2.7.2)
+    language_server-protocol (3.17.0.3)
+>>>>>>> development
     logger (1.6.0)
     loofah (2.22.0)
       crass (~> 1.0.2)
@@ -176,7 +192,7 @@ GEM
     marcel (1.0.4)
     matrix (0.4.2)
     mini_mime (1.1.5)
-    minitest (5.24.0)
+    minitest (5.24.1)
     msgpack (1.7.2)
     multi_test (1.1.0)
     mutex_m (0.2.0)
@@ -201,7 +217,11 @@ GEM
     puma (6.4.2)
       nio4r (~> 2.0)
     racc (1.8.0)
+<<<<<<< HEAD
     rack (3.1.4)
+=======
+    rack (3.1.6)
+>>>>>>> development
     rack-session (2.0.0)
       rack (>= 3.0.0)
     rack-test (2.1.0)
@@ -250,6 +270,17 @@ GEM
     rexml (3.3.1)
       strscan
     rubyzip (2.3.2)
+<<<<<<< HEAD
+=======
+    sassc (2.4.0)
+      ffi (~> 1.9)
+    sassc-rails (2.1.2)
+      railties (>= 4.0.0)
+      sassc (>= 2.0)
+      sprockets (> 3.0)
+      sprockets-rails
+      tilt
+>>>>>>> development
     selenium-webdriver (4.22.0)
       base64 (~> 0.2)
       logger (~> 1.4)
@@ -272,6 +303,10 @@ GEM
     sys-uname (1.3.0)
       ffi (~> 1.1)
     thor (1.3.1)
+<<<<<<< HEAD
+=======
+    tilt (2.4.0)
+>>>>>>> development
     timeout (0.4.1)
     turbo-rails (2.0.5)
       actionpack (>= 6.0.0)
@@ -303,12 +338,23 @@ PLATFORMS
 
 DEPENDENCIES
   bootsnap
+<<<<<<< HEAD
+=======
+  bootstrap (~> 5.0.2)
+  byebug
+>>>>>>> development
   capybara
   cucumber-rails
   database_cleaner-active_record
   debug
   devise
+<<<<<<< HEAD
   factory_bot_rails
+=======
+  erb_lint
+  factory_bot_rails
+  htmlbeautifier
+>>>>>>> development
   importmap-rails
   jbuilder
   puma (>= 5.0)

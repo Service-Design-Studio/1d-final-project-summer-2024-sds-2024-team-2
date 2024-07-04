@@ -1,41 +1,23 @@
 <div class="container py-3">
-<h1>Confirm Your Details</h1>
-
-<div class="card">
-  <div class="card-body">
-
-    <p class="card-text"><strong>Full Name:</strong> <%= @user_particular[:full_name] %></p>
-    <p class="card-text"><strong>Phone Number:</strong> <%= @user_particular[:phone_number] %></p>
-    <p class="card-text"><strong>Secondary Phone Number:</strong> <%= @user_particular[:secondary_phone_number] || "N/A" %></p>
-    <p class="card-text"><strong>Country of Origin:</strong> <%= @user_particular[:country_of_origin] %></p>
-    <p class="card-text"><strong>Ethnicity:</strong> <%= @user_particular[:ethnicity] %></p>
-    <p class="card-text"><strong>Religion:</strong> <%= @user_particular[:religion] %></p>
-    <p class="card-text"><strong>Gender:</strong> <%= @user_particular[:gender] %></p>
-    <p class="card-text"><strong>Date of Birth:</strong> <%= Date.parse(@user_particular[:date_of_birth].to_s).strftime("%d-%m-%Y") %></p>
-    <p class="card-text"><strong>Date of Arrival in Malaysia:</strong> <%= Date.parse(@user_particular[:date_of_arrival].to_s).strftime("%d-%m-%Y") %></p>
-
-  </div>
-</div>
-
-<%= form_with model: @user_particular, url: user_particulars_path, method: :post do |form| %>
-  <%= form.hidden_field :full_name, value: @user_particular.full_name %>
-  <%= form.hidden_field :phone_number, value: @user_particular.phone_number %>
-  <%= form.hidden_field :secondary_phone_number, value: @user_particular.secondary_phone_number %>
-  <%= form.hidden_field :country_of_origin, value: @user_particular.country_of_origin %>
-  <%= form.hidden_field :ethnicity, value: @user_particular.ethnicity %>
-  <%= form.hidden_field :religion, value: @user_particular.religion %>
-  <%= form.hidden_field :gender, value: @user_particular.gender %>
-  <%= form.hidden_field :date_of_birth, value: @user_particular.date_of_birth %>
-  <%= form.hidden_field :date_of_arrival, value: @user_particular.date_of_arrival %>
-  <%= form.hidden_field :photo_url, value: @user_particular.photo_url %>
-  <%= form.hidden_field :birth_certificate_url, value: @user_particular.birth_certificate_url %>
-  <%= form.hidden_field :passport_url, value: @user_particular.passport_url %>
-  <%= form.hidden_field :user_id, value: @user_particular.user_id %>
-
-  <div class="d-flex justify-content-center my-3">
-    <%= link_to "Back", new_user_particular_path, class: "btn btn-secondary mx-2" %> 
-    <%= form.submit "Confirm", class: "btn btn-danger mx-2" %>
-  </div>
-<% end %>
-
+  <h1>Confirm Your Details</h1>
+  <%= render 'digitalid' %>
+  <%= form_with model: @user_particular, url: user_particulars_path, method: :post do |form| %>
+    <%= form.hidden_field :full_name, value: @user_particular.full_name %>
+    <%= form.hidden_field :phone_number, value: @user_particular.phone_number %>
+    <%= form.hidden_field :secondary_phone_number, value: @user_particular.secondary_phone_number %>
+    <%= form.hidden_field :country_of_origin, value: @user_particular.country_of_origin %>
+    <%= form.hidden_field :ethnicity, value: @user_particular.ethnicity %>
+    <%= form.hidden_field :religion, value: @user_particular.religion %>
+    <%= form.hidden_field :gender, value: @user_particular.gender %>
+    <%= form.hidden_field :date_of_birth, value: @user_particular.date_of_birth %>
+    <%= form.hidden_field :date_of_arrival, value: @user_particular.date_of_arrival %>
+    <%= form.hidden_field :photo_url, value: @user_particular.photo_url %>
+    <%= form.hidden_field :birth_certificate_url, value: @user_particular.birth_certificate_url %>
+    <%= form.hidden_field :passport_url, value: @user_particular.passport_url %>
+    <%= form.hidden_field :user_id, value: @user_particular.user_id %>
+    <div class="d-flex justify-content-center my-3">
+      <%= link_to "Back", new_user_particular_path, class: "btn btn-secondary mx-2" %>
+      <%= form.submit "Confirm", class: "btn btn-danger mx-2" %>
+    </div>
+  <% end %>
 </div>

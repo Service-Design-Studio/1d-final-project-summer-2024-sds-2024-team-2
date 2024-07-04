@@ -1,7 +1,15 @@
 source "https://rubygems.org"
 
+<<<<<<< HEAD
 ruby "3.2.4"
 
+=======
+source 'https://rubygems.org'
+gem 'bootstrap', '~> 5.0.2'
+gem 'htmlbeautifier'
+gem 'sassc-rails', '>= 2.1.0'
+ruby '3.2.4'
+>>>>>>> development
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.1.3", ">= 7.1.3.4"
 
@@ -40,7 +48,7 @@ gem 'factory_bot_rails'
 
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"
-
+gem 'byebug'
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
 
@@ -78,8 +86,18 @@ end
 
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
+<<<<<<< HEAD
   gem "capybara"
   gem "selenium-webdriver"
+=======
+  gem 'capybara'
+  gem 'cucumber-rails', require: false
+  gem 'database_cleaner'
+  gem 'factory_bot_rails'
+  gem 'selenium-webdriver'
+  gem 'simplecov'
+end
+>>>>>>> development
 
   # For Cucumber and other test support
   gem 'cucumber-rails', require: false
