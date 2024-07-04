@@ -1,111 +1,150 @@
-<<<<<<< HEAD
-<%= form_with model: @user_particular, local: true do |f| %>
-  <div>
-    <%= f.label :full_name %>
-    <%= f.text_field :full_name %>
-  </div>
-  <div>
-    <%= f.label :phone_number %>
-    <%= f.text_field :phone_number %>
-  </div>
-  <div>
-    <%= f.label :secondary_phone_number %>
-    <%= f.text_field :secondary_phone_number %>
-  </div>
-  <div>
-    <%= f.label :country_of_origin %>
-    <%= f.text_field :country_of_origin %>
-  </div>
-  <div>
-    <%= f.label :ethnicity %>
-    <%= f.text_field :ethnicity %>
-  </div>
-  <div>
-    <%= f.label :religion %>
-    <%= f.text_field :religion %>
-  </div>
-  <div>
-    <%= f.label :gender %>
-    <%= f.text_field :gender %>
-  </div>
-  <div>
-    <%= f.label :date_of_birth %>
-    <%= f.date_field :date_of_birth %>
-  </div>
-  <div>
-    <%= f.label :date_of_arrival_in_malaysia %>
-    <%= f.date_field :date_of_arrival_in_malaysia %>
-  </div>
-  <div>
-    <%= f.submit "Update" %>
-  </div>
-<% end %>
-=======
 <div class="container py-3">
 <h5 class="text-center" style="color: black">Edit your particulars</h2>
 <!-- user_particulars_confirm_path leads to the confirm function!-->
 <%= form_with model: @user_particular do |form| %>
 <!-- added patch which updates existing records unlike get method in new.html -->
-<div class="form-group">
-<%= form.label :full_name, "Full Name" %><span class="text-danger">*</span>
-<%= form.text_field :full_name, class: "form-control", required: true %>
+<%= form.hidden_field :user_id, value: current_user.id %>
+    <div class="form-group">
+      <%= form.label :full_name, "Full Name" %><span class="text-danger">*</span>
+      <%= form.text_field :full_name, class: "form-control", required: true %>
+    </div>
+    <div class="form-group">
+      <%= form.label :abc, "Phone number" %><span class="text-danger">*</span>
+      <!--Yiqing your code goes here-->
+      <div class="row">
+        <div class="col" style="max-width: 125px; min-width: 125px;">
+          <%= form.select :abc, options_for_select(@country_code_options, @user_particular["country_of_origin"]), {}, { class: "form-control", required: true, id: "country_code_select" } %>
+        </div>
+        <div class="col">
+          <%= form.telephone_field :abc, class: "form-control", required: true, id: "phone_number_field", placeholder: "+60" %>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= form.label :phone_number, "Phone Number" %><span class="text-danger">*</span>
+      <%= form.hidden_field :phone_number, class: "form-control", id: "full_phone_number_field", readonly: true %>
+    </div>
+    <div class="form-group">
+      <%= form.label :secondary_phone_number, "Secondary phone number (optional)" %>
+      <div class="row">
+        <div class="col" style="max-width: 125px; min-width: 125px;">
+          <%= form.select :secondary_country_code, options_for_select(@country_code_options, @user_particular["country_of_origin"]), {}, { class: "form-control", required: true, id: "country_code_select_secondary" } %>
+        </div>
+        <div class="col">
+          <%= form.telephone_field :secondary_phone_number, class: "form-control", required: true, id: "phone_number_field_secondary", placeholder: "+60" %>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= form.label :country_of_origin, "Country of Origin" %><span class="text-danger">*</span>
+      <%= form.select :country_of_origin, options_for_select(@countries, @user_particular["country_of_origin"]), {}, { class: "form-control", required: true } %>
+    </div>
+    <div class="form-group">
+      <%= form.label :ethnicity, "Ethnicity" %><span class="text-danger">*</span>
+      <%= form.select :ethnicity, options_for_select(@ethnicities, @user_particular["ethnicity"]), {}, { class: "form-control", required: true } %>
+    </div>
+    <div class="form-group">
+      <%= form.label :religion, "Religion" %><span class="text-danger">*</span>
+      <%= form.select :religion, options_for_select(@religions, @user_particular["religion"]), {}, { class: "form-control", required: true } %>
+    </div>
+    <div class="form-group">
+      <%= form.label :gender, "Gender" %><span class="text-danger">*</span>
+      <%= form.select :gender, options_for_select(['Male', 'Female', 'Others'], @user_particular["gender"]), {}, { class: "form-control", required: true } %>
+    </div>
+    <div class="form-group">
+      <%= form.label :date_of_birth, "Date of Birth" %><span class="text-danger">*</span>
+      <%= form.date_field :date_of_birth, class: "form-control", required: true %>
+    </div>
+    <div class="form-group">
+      <%= form.label :date_of_arrival, "Date of Arrival in Malaysia" %><span class="text-danger">*</span>
+      <%= form.date_field :date_of_arrival, class: "form-control", required: true %>
+    </div>
+    <div class="form-group">
+      <%= form.label :photo_url, "Upload a copy of your passport size photo (optional)"%>
+      <%= form.file_field :photo_url, accept: 'image/jpeg,image/gif,image/png,application/pdf', class: "form-control-file"%>
+    </div>
+    <div class="form-group">
+      <%= form.label :documents, "I have the following documents (optional)" %><br>
+      <%= form.check_box :birth_certificate_url, id: 'birth_certificate' %> <label for="birth_certificate">Birth certificate</label><br>
+      <%= form.check_box :passport_url, id: 'passport' %> <label for="passport">Passport</label><br>
+    </div>
+    <div class="text-center">
+      <%= form.submit "Submit", class: "btn btn-danger" %>
+    </div>
+  <% end %>
 </div>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var countryCodeSelect = document.getElementById("country_code_select");
+    var phoneNumberField = document.getElementById("phone_number_field");
+    var fullPhoneNumberField = document.getElementById("full_phone_number_field");
 
-<div class="form-group">
-    <%= form.label :phone_number, "Phone number" %><span class="text-danger">*</span>
-    <%= form.telephone_field :phone_number, class: "form-control", required: true, placeholder: "+60" %>
-</div>
+    function updateFullPhoneNumber() {
+      var countryCode = countryCodeSelect.value;
+      var phoneNumber = phoneNumberField.value;
+      fullPhoneNumberField.value = (countryCode + '-' + phoneNumber).slice(1);
+    }
+    // Update the full phone number field on page load
+    updateFullPhoneNumber();
 
-<div class="form-group">
-    <%= form.label :secondary_phone_number, "Secondary phone number (optional)" %>
-    <%= form.telephone_field :secondary_phone_number, class: "form-control", placeholder: "+60" %>
-</div>
+    // Add event listeners to update the full phone number field when values change
+    countryCodeSelect.addEventListener("change", updateFullPhoneNumber);
+    phoneNumberField.addEventListener("input", updateFullPhoneNumber);
+  });
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var countryCodeSelects = [
+      {select: document.getElementById("country_code_select"), phoneField: document.getElementById("phone_number_field")},
+      {select: document.getElementById("country_code_select_secondary"), phoneField: document.getElementById("phone_number_field_secondary")}
+    ];
 
-<div class="form-group">
-    <%= form.label :country_of_origin, "Country of origin" %><span class="text-danger">*</span>
-    <%= form.select :country_of_origin, options_for_select(@countries, @user_particular.country_of_origin), {}, { class: "form-control", required: true } %>
-</div>
+    function updateSelectedOption(selectElement, phoneField) {
+      var selectedOptionIndex = selectElement.selectedIndex;
+      var selectedOption = selectElement.options[selectedOptionIndex];
+      var selectedValue = selectedOption.value;
 
-<div class="form-group">
-    <%= form.label :ethnicity, "Ethnicity" %><span class="text-danger">*</span>
-    <%= form.select :ethnicity, options_for_select(@ethnicities, @user_particular.ethnicity), {}, { class: "form-control", required: true } %>
-</div>
+      // Store the full text in a data attribute
+      if (!selectedOption.getAttribute("data-full-text")) {
+        selectedOption.setAttribute("data-full-text", selectedOption.text);
+      }
 
-<div class="form-group">
-    <%= form.label :religion, "Religion" %><span class="text-danger">*</span>
-    <%= form.select :religion, options_for_select(@religions, @user_particular.religion), {}, { class: "form-control", required: true } %>
-</div>
+      // Set the text of the selected option to the country code only
+      selectedOption.text = selectedValue;
 
-<div class="form-group">
-    <%= form.label :gender, "Gender" %><span class="text-danger">*</span>
-    <%= form.select :gender, options_for_select(['Male', 'Female', 'Others'], @user_particular.gender), {}, { class: "form-control", required: true } %> 
-</div>
+      // Update the phone field placeholder
+      phoneField.placeholder = selectedValue;
+    }
 
-<div class="form-group">
-    <%= form.label :date_of_birth, "Date of birth" %><span class="text-danger">*</span>
-    <%= form.date_field :date_of_birth, class: "form-control", required: true %>
-</div>
+    function addEventListeners(selectElement, phoneField) {
+      selectElement.addEventListener("change", function() {
+        updateSelectedOption(selectElement, phoneField);
+      });
 
-<div class="form-group">
-    <%= form.label :date_of_arrival, "Date of arrival in Malaysia" %><span class="text-danger">*</span>
-    <%= form.date_field :date_of_arrival, class: "form-control", required: true %>
-</div>
+      // Restore full text on dropdown open
+      selectElement.addEventListener("focus", function() {
+        for (var i = 0; i < selectElement.options.length; i++) {
+          var option = selectElement.options[i];
+          var fullText = option.getAttribute("data-full-text");
+          if (fullText) {
+            option.text = fullText;
+          }
+        }
+      });
 
-<div class="form-group">
-    <%= form.label :photo_url, "Upload a copy of your passport size photo (optional)"%>
-    <%= form.file_field :photo_url, accept: 'image/jpeg,image/gif,image/png,application/pdf', class: "form-control-file"%>
-</div>
+      // Maintain country code after selection
+      selectElement.addEventListener("blur", function() {
+        updateSelectedOption(selectElement, phoneField);
+      });
 
-<div class="form-group">
-    <%= form.label :documents, "I have the following documents (optional)" %><br>
-    <%= form.check_box :birth_certificate_url, id: 'birth_certificate' %> <label for="birth_certificate">Birth certificate</label><br>
-    <%= form.check_box :passport_url, id: 'passport' %> <label for="passport">Passport</label><br>
-</div>
+      // Trigger the change event on page load to set the initial display value
+      selectElement.dispatchEvent(new Event('change'));
+    }
 
-<div class="text-center">
-    <%= form.submit "Update", class: "btn btn-danger" %>
-</div>
-
-<% end %>
-</div>
->>>>>>> development
+    countryCodeSelects.forEach(function(element) {
+      if (element.select && element.phoneField) {
+        addEventListeners(element.select, element.phoneField);
+      }
+    });
+  });
+</script>

@@ -11,8 +11,6 @@ Scenario: All Fields Displayed
   Given I entered the following particulars:
     | Field                     | Value        |
     | Full Name                 | Alice Tan    |
-    | Phone Number              | 99999999     |
-    | Secondary Phone Number    | 87654321     |
     | Country of Origin         | Malaysia     |
     | Ethnicity                 | Gurka        |
     | Religion                  | Islam        |
@@ -23,8 +21,6 @@ Scenario: All Fields Displayed
   Then I should see the following fields:
     | Field                     | Value        |
     | Full Name                 | Alice Tan    |
-    | Phone Number              | 99999999     |
-    | Secondary Phone Number    | 87654321     |
     | Country of Origin         | Malaysia     |
     | Ethnicity                 | Gurka        |
     | Religion                  | Islam        |

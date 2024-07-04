@@ -28,7 +28,7 @@ def path_to(page_name)
     # Replace 'show_path' with the actual path helper for your show page
     root_path
   when 'fill in particulars'
-    new_user_session_path
+    new_user_particular_path
   else
     raise "Undefined page: #{page_name}"
   end
