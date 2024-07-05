@@ -10,11 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_30_154115) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_04_150907) do
+  create_table "ngo_users", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "user_particulars", force: :cascade do |t|
-    t.integer "user_id", null: false
     t.string "full_name"
+    t.string "phone_number_country_code"
     t.string "phone_number"
+    t.string "secondary_phone_number_country_code"
     t.string "secondary_phone_number"
     t.string "country_of_origin"
     t.string "ethnicity"
@@ -27,7 +34,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_30_154115) do
     t.string "passport_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.date "date_of_arrival_in_malaysia"
+    t.integer "user_id", null: false
+    t.string "full_phone_number"
     t.index ["user_id"], name: "index_user_particulars_on_user_id"
   end
 

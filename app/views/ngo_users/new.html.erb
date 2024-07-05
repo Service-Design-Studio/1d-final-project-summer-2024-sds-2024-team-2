@@ -1,0 +1,15 @@
+<div class="container mt-5">
+  <div class="row">
+    <% # Define your URLs here with actual IDs for each NgoUser %>
+    <% ngo_user_ids = [1, 2, 3, 4] %> <!-- Replace these with actual IDs -->
+    <% ngo_user_ids.each do |id| %>
+      <div class="col-sm-3">
+        <div class="card">
+          <div class="card-body">
+            <%= link_to 'Click Me', ngo_user_path(id), class: 'btn btn-primary' %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

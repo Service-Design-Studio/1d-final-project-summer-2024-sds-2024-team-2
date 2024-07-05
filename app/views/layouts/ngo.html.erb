@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>EnableID</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <link
+        rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+        crossorigin="anonymous"
+    />
+  </head> 
+  <body class="d-flex flex-column min-vh-100" style="overflow-x:hidden;">
+    <h4 class="text-center py-2" style="background-color: #f1536a; color: white; margin-bottom:0;">NGOs</h4>
+
+
+      <%= yield %>
+
+    <footer class="footer mt-auto bg-dark text-white-50 pt-2 pb-3", style="max-height:70px;">
+        <div class="container text-center">
+        <small>&copy; UnityPass Digital ID 2024</small>
+        <br>
+        <a href="#" class="text-white">Contact us</a> | 
+        <a href="#" class="text-white">Share feedback</a> | 
+        <a href="#" class="text-white">Read FAQs</a> | 
+        <a href="#" class="text-white">Report vulnerability</a> | 
+        <a href="#" class="text-white">Privacy statement</a> | 
+        <a href="#" class="text-white">Terms of use</a> | 
+        </div>
+    </footer>
+  </body>
+</html>

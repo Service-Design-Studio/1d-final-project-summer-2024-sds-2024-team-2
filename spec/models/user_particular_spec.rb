@@ -30,7 +30,9 @@ RSpec.describe UserParticular, type: :model do
     it 'creates a new user particular' do
       attributes = {
         full_name: 'Ashin Jinarakkhita',
+        phone_number_country_code: '+60',
         phone_number: '03-21008141',
+        secondary_phone_number_country_code: '+60',
         secondary_phone_number: '03-21348711',
         country_of_origin: 'Myanmar',
         ethnicity: 'Chinese',
@@ -51,8 +53,10 @@ RSpec.describe UserParticular, type: :model do
   describe '.find_by_id' do
     it 'returns the user particular with the specified ID' do
       attributes = { 
-        full_name: 'Rohingya Aung', 
+        full_name: 'Rohingya Aung',
+        phone_number_country_code: '+60', 
         phone_number: '111-222-3333',
+        secondary_phone_number_country_code: '+60',
         secondary_phone_number: '555-555-5555',
         country_of_origin: 'Myanmar',
         ethnicity: 'Rohingya',

@@ -3,8 +3,11 @@
   <%= render 'digitalid' %>
   <%= form_with model: @user_particular, url: user_particulars_path, method: :post do |form| %>
     <%= form.hidden_field :full_name, value: @user_particular.full_name %>
+    <%= form.hidden_field :phone_number_country_code, value: @user_particular.phone_number_country_code %>
     <%= form.hidden_field :phone_number, value: @user_particular.phone_number %>
+    <%= form.hidden_field :secondary_phone_number_country_code, value: @user_particular.secondary_phone_number_country_code %>
     <%= form.hidden_field :secondary_phone_number, value: @user_particular.secondary_phone_number %>
+    <%= form.hidden_field :full_phone_number, value: @user_particular.full_phone_number %>
     <%= form.hidden_field :country_of_origin, value: @user_particular.country_of_origin %>
     <%= form.hidden_field :ethnicity, value: @user_particular.ethnicity %>
     <%= form.hidden_field :religion, value: @user_particular.religion %>

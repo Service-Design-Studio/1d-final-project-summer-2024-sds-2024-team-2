@@ -9,8 +9,10 @@ user1 = User.create!(
 )
 
 user1.create_user_particular!(
-  full_name: 'Rohingya Aung', 
+  full_name: 'Rohingya Aung',
+  phone_number_country_code: '+60',
   phone_number: '111-222-3333',
+  secondary_phone_number_country_code: '+60',
   secondary_phone_number: '555-555-5555',
   country_of_origin: 'Myanmar',
   ethnicity: 'Rohingya',
@@ -31,19 +33,20 @@ user2 = User.create!(
   phone_number: '90000002'
 )
 
-#User particular: no secondary phone number
+# User particular: no secondary phone number
 user2.create_user_particular!(
-  full_name: 'Fatima Ali', 
-    phone_number: '444-555-6666',
-    country_of_origin: 'Iraq',
-    ethnicity: 'Kurdish',
-    religion: 'Muslim',
-    gender: 'Female',
-    date_of_birth: Date.new(1985, 12, 18),
-    date_of_arrival: Date.new(2010, 5, 20),
-    photo_url: 'https://example.com/fatima_ali_photo.jpg',
-    birth_certificate_url: 'https://example.com/fatima_ali_birth_certificate.jpg',
-    passport_url: 'https://example.com/fatima_ali_passport.jpg'
+  full_name: 'Fatima Ali',
+  phone_number_country_code: '+60',
+  phone_number: '444-555-6666',
+  country_of_origin: 'Iraq',
+  ethnicity: 'Kurdish',
+  religion: 'Muslim',
+  gender: 'Female',
+  date_of_birth: Date.new(1985, 12, 18),
+  date_of_arrival: Date.new(2010, 5, 20),
+  photo_url: 'https://example.com/fatima_ali_photo.jpg',
+  birth_certificate_url: 'https://example.com/fatima_ali_birth_certificate.jpg',
+  passport_url: 'https://example.com/fatima_ali_passport.jpg'
 )
 
 user3 = User.create!(
@@ -54,10 +57,12 @@ user3 = User.create!(
   phone_number: '90000003'
 )
 
-#User particular: no birth_certificate_url and passport_url
+# User particular: no birth_certificate_url and passport_url
 user3.create_user_particular!(
-  full_name: 'Ahmed Khalid', 
+  full_name: 'Ahmed Khalid',
+  phone_number_country_code: '+60',
   phone_number: '777-888-9999',
+  secondary_phone_number_country_code: '+60',
   secondary_phone_number: '555-555-5555',
   country_of_origin: 'Syria',
   ethnicity: 'Arab',
@@ -65,7 +70,7 @@ user3.create_user_particular!(
   gender: 'Male',
   date_of_birth: Date.new(1992, 7, 3),
   date_of_arrival: Date.new(2015, 2, 10),
-  photo_url: 'https://example.com/ahmed_khalid_photo.jpg',
+  photo_url: 'https://example.com/ahmed_khalid_photo.jpg'
 )
 
 user4 = User.create!(
@@ -77,8 +82,10 @@ user4 = User.create!(
 )
 
 user4.create_user_particular!(
-  full_name: 'Phyu Phyu Win', 
+  full_name: 'Phyu Phyu Win',
+  phone_number_country_code: '+60',
   phone_number: '123-456-7890',
+  secondary_phone_number_country_code: '+60',
   secondary_phone_number: '555-123-4567',
   country_of_origin: 'Myanmar',
   ethnicity: 'Burmese',
@@ -100,8 +107,10 @@ user5 = User.create!(
 )
 
 user5.create_user_particular!(
-  full_name: 'Hussein Abbas', 
+  full_name: 'Hussein Abbas',
+  phone_number_country_code: '+60',
   phone_number: '555-666-7777',
+  secondary_phone_number_country_code: '+60',
   secondary_phone_number: '010-814-4567',
   country_of_origin: 'Iraq',
   ethnicity: 'Arab',
@@ -114,3 +123,8 @@ user5.create_user_particular!(
   passport_url: 'https://example.com/hussein_abbas_passport.jpg'
 )
 
+ngolist = ['UNHCR', 'UNICEF', 'World Vision', 'Save the Children', 'Red Cross', 'Doctors Without Borders', 'Gebirah']
+
+ngolist.each do |i|
+  NgoUser.create!(name: i)
+end

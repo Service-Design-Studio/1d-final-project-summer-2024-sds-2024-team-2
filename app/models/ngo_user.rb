@@ -1,0 +1,2 @@
+class NgoUser < ApplicationRecord
+end

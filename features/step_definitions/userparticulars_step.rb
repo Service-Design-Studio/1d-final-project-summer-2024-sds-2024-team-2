@@ -105,3 +105,5 @@ Given('I am a logged-in user') do
   # Optionally, you can add an assertion here to ensure the login was successful
   expect(page).to have_content('Signed in successfully.')
 end
+
+# From here onwards User Story 2
