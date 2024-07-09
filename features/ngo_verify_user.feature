@@ -1,5 +1,5 @@
 Feature: Verify user particulars and account
-  As a non-governmental organization (NGO) personnel approached to help provide verification for an undocumented user's EnableID account on the 4th July 2024,
+  As a non-governmental organization(NGO) personnel approached to help provide verification for an undocumented user's EnableID account on the 4th July 2024,
   I want to view information from his/her EnableID account to help determine the authenticity of his/her identity
   So that I can mark the personal particulars of his/her EnableID account as verified.
 
@@ -10,6 +10,7 @@ Scenario: Going to my own "NGO" page
   When I press the "NGO Gebirah" button
   Then I should be redirected to the "NGO: Gebirah" page
   And I should see "Welcome Gebirah!"
+
 
 Scenario: Retrieving undocumented user's EnableID personal particulars
   Given I am already on my "NGO: Gebirah" page
@@ -22,10 +23,11 @@ Scenario: Retrieving undocumented user's EnableID personal particulars
   And a "Verify" button below
 
 Scenario: Mark undocumented user's EnableID status as verified
-  Given I am on the "User Verification" page
+  Given I am on the "home" page
+  And I navigate to the "User Verification" page
   When I press the "Verify" button
   Then I should see "Successfully verified EnableID: 1004209!"
-  And I should be redirected to the "NGO: Gebirah" page
+  Then I should be redirected to the "NGO: Gebirah" page
 
 Scenario: Undocumented user's 1004209 EnableID verified checkmark
   Given that I am logged into user 1004209 EnableID account
