@@ -1,5 +1,5 @@
 Feature: Verify user particulars and account
-  As a non-governmental organization(NGO) personnel approached to help provide verification for an undocumented user's EnableID account on the 4th July 2024,
+  As a non-governmental organization (NGO) personnel approached to help provide verification for an undocumented user's EnableID account on the 4th July 2024,
   I want to view information from his/her EnableID account to help determine the authenticity of his/her identity
   So that I can mark the personal particulars of his/her EnableID account as verified.
 
