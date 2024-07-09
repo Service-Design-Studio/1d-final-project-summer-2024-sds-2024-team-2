@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 # Helper Methods
+
+# Method to fill in form fields based on the provided table data
 def fill_in_form(table)
   table.hashes.each do |row|
     case row['Field'].downcase
@@ -14,6 +16,7 @@ def fill_in_form(table)
   end
 end
 
+# Method to verify form data against the provided table data
 def verify_form_data(table)
   table.hashes.each do |row|
     field = find_field(row['Field'])
@@ -21,6 +24,7 @@ def verify_form_data(table)
   end
 end
 
+# Method to map page names to their corresponding paths
 def path_to(page_name)
   case page_name.downcase
   when 'home'
