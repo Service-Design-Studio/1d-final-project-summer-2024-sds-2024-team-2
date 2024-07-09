@@ -11,14 +11,29 @@
         font-size: 0.9rem; /* Smaller text on smaller devices */
       }
     }
+
+    /* Positioning the Back button */
+    #back-button {
+      position: fixed;
+      top: 3px;
+      left: 10px;
+      z-index: 1000;
+      align-items: center; 
+      display: inline-flex;
+      cursor: pointer;
+      font-size: 16px;
+      text-decoration: none;
+      font-family: Arial, sans-serif;
+    }
   </style>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-  <div class="container" style="padding: 15px;">
+  <div class="container" style="padding: 15px; position: relative;">
+    <button id="back-button" class="btn btn-secondary"> <span class="arrow">&lt;</span> Back</button>
     <div class="row mb-4">
       <div class="col-12">
-        <form id="search-form" method="get" action="<%= new_ngo_user_path %>" style="display: flex; align-items: center; justify-content: space-between;">
+        <form id="search-form" method="get" action="<%= ngo_users_path %>" style="display: flex; align-items: center; justify-content: space-between;">
           <input type="text" id="search-input" name="search" class="form-control" placeholder="Search for NGOs..." value="<%= params[:search] %>" style="flex-grow: 1; margin-right: 10px;">
           <button type="submit" class="btn btn-primary" style="flex-shrink: 0;">Search</button>
         </form>
@@ -62,6 +77,11 @@
             $('#search-input').val(val);
           }
         });
+      });
+
+      $('#back-button').on('click', function() {
+        //window.history.back();
+        window.location.href = '<%= new_user_session_path %>'; // Use the Ruby route helper here
       });
     });
   </script>
