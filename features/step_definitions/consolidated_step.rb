@@ -9,7 +9,7 @@ module PathHelper
     when /ngo: gebirah/
       gebirah = NgoUser.find_by(name: 'Gebirah')
       raise "NGO user 'Gebirah' not found" unless gebirah
-      ngo_user_path(gebirah) # Path to the NGO Gebirah page with id
+      ngo_user_path(gebirah.id) # Path to the NGO Gebirah page with id
     when /user verification/ then user_verification_path
     when /fill in particulars/ then new_user_particular_path
     when /ngo search/ then ngo_users_path
