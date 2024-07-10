@@ -8,9 +8,10 @@ module PathHelper
     case page_name.downcase
     when 'home' then root_path
     when 'login' then new_user_session_path
-    when 'ngo: gebirah' then ngo_user_path(@gebirah.id) # Path to the NGO Gebirah page
+    when 'ngo: gebirah' then ngo_user_path(NgoUser.find_by(name: 'Gebirah')) # Path to the NGO Gebirah page
     when 'user verification' then root_path # Fallback to home and navigate manually
     when 'fill in particulars' then new_user_particular_path
+    when 'ngo search' then ngo_users_path
     else raise "Undefined page: #{page_name}"
     end
   end
@@ -47,16 +48,15 @@ end
 
 # Step Definitions
 
-Given(/^I am on the "(.*?)" page$/) do |page|
+Given(/^I am on the "(.+)" page$/) do |page|
   visit path_to(page)
 end
 
-Given(/^I navigate to the "User Verification" page$/) do
-  visit root_path
-  # Add steps here to navigate to the user verification page if necessary
+Given(/^I navigate to the "(.+)" page$/) do |page|
+  visit path_to(page)
 end
 
-When(/^I press (?:the )?"(.*?)" (?:button|link)$/) do |button|
+When(/^I press (?:the )?"(.+)" (?:button|link)$/) do |button|
   click_button_or_link(button)
 end
 
@@ -69,22 +69,20 @@ Then(/^I should see a set of different NGO buttons$/) do
   end
 end
 
-When(/^I press the NGO "(.*?)" button$/) do |ngo_name|
-  ngo_name = ngo_name.split('NGO ').last.strip # Capture the word after 'NGO'
-  using_wait_time 20 do
-    click_button_or_link(ngo_name)
+Then(/^I should be redirected to the "(.+)" page$/) do |page|
+  expected_path = path_to(page)
+  actual_path = current_path
+  unless actual_path == expected_path
+    puts "Expected Path: #{expected_path}, Actual Path: #{actual_path}" # Debugging statement
   end
+  expect(actual_path).to eq(expected_path)
 end
 
-Then(/^I should be redirected to the "(.*?)" page$/) do |page|
-  expect(current_path).to eq path_to(page)
-end
-
-Then(/^I should see "(.*?)"$/) do |text|
+Then(/^I should see "(.+)"$/) do |text|
   expect(page).to have_content(/#{Regexp.escape(text)}/)
 end
 
-Then(/^I will see an error message "(.*?)"$/) do |message|
+Then(/^I will see an error message "(.+)"$/) do |message|
   expect(page).to have_content(/#{Regexp.escape(message)}/)
 end
 
@@ -92,15 +90,15 @@ Then(/^I should see the following fields in the Digital ID:$/) do |table|
   verify_form_data(table)
 end
 
-When(/^I fill in the "(.*?)" field with "(.*?)"$/) do |field, value|
+When(/^I fill in the "(.+)" field with "(.+)"$/) do |field, value|
   fill_in field, with: value
 end
 
-When(/^I leave the "(.*?)" field empty$/) do |field|
+When(/^I leave the "(.+)" field empty$/) do |field|
   fill_in field, with: ''
 end
 
-Then(/^I will see a welcome message "(.*?)"$/) do |message|
+Then(/^I will see a welcome message "(.+)"$/) do |message|
   expect(page).to have_content(/#{Regexp.escape(message)}/)
 end
 
@@ -122,7 +120,7 @@ Then(/^I should see the following fields:$/) do |table|
   end
 end
 
-Given(/^I am already on my "(.*?)" page$/) do |page|
+Given(/^I am already on my "(.+)" page$/) do |page|
   visit path_to(page)
 end
 
@@ -139,7 +137,7 @@ When(/^I press "Submit"$/) do
   click_button_or_link('Submit')
 end
 
-Then(/^I should see "(.*?)" with a textbox$/) do |text|
+Then(/^I should see "(.+)" with a textbox$/) do |text|
   expect(page).to have_content(/#{Regexp.escape(text)}/)
   expect(page).to have_selector('input[type="text"]')
 end
@@ -152,11 +150,9 @@ Then(/^I should see his\/her EnableID card$/) do
   expect(page).to have_selector('.enableid-card')
 end
 
-Then(/^a "(.*?)" button below$/) do |button_text|
+Then(/^a "(.+)" button below$/) do |button_text|
   expect(page).to have_button(button_text)
 end
-
-# Step Definitions for the new scenario
 
 Given(/^that I am logged into user (\d+) EnableID account$/) do |user_id|
   visit new_user_session_path
@@ -207,18 +203,47 @@ def click_button_or_link(button)
       click_button(button)
     elsif page.has_link?(button)
       click_link(button)
-    elsif page.has_css?('.card-title', text: button)
-      find('.card-title', text: button).click
+    elsif page.has_css?('.card-title', text: /#{Regexp.escape(button)}/)
+      find('.card-title', text: /#{Regexp.escape(button)}/).click
+    elsif page.has_css?('.card-link', text: /#{Regexp.escape(button)}/)
+      find('.card-link', text: /#{Regexp.escape(button)}/).click
     else
-      puts "HTML Content of the page: \n#{page.html}" # Debugging statement
-      raise "Button or link '#{button}' not found"
+      within('#ngo-results') do
+        if page.has_css?('.card-title', text: /#{Regexp.escape(button)}/)
+          find('.card-title', text: /#{Regexp.escape(button)}/).click
+        elsif page.has_css?('.card-link', text: /#{Regexp.escape(button)}/)
+          find('.card-link', text: /#{Regexp.escape(button)}/).click
+        else
+          puts "Available card titles: #{page.all('.card-title').map(&:text).join(', ')}" # Debugging statement
+        end
+      end
     end
+  end
+rescue Capybara::ElementNotFound => e
+  puts "HTML Content of the page: \n#{page.html}" # Debugging statement
+  raise e
+end
+
+# Helper method to fill in a form with table data
+def fill_in_form(table)
+  table.hashes.each do |row|
+    field = row['Field']
+    value = row['Value']
+    select_or_fill_in(field, value)
   end
 end
 
-# Helper method to fill in a form with multiple fields
-def fill_in_form(table)
+# Helper method to verify form data
+def verify_form_data(table)
   table.hashes.each do |row|
-    select_or_fill_in(row['Field'], row['Value'])
+    field = row['Field']
+    value = row['Value']
+    if page.has_field?(field)
+      expect(find_field(field).value).to eq(value)
+    elsif page.has_select?(field)
+      expect(find(:select, field).value).to eq(value)
+    else
+      raise "Field #{field} not found"
+    end
   end
 end
