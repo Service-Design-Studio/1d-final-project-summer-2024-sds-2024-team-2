@@ -4,15 +4,15 @@ module PathHelper
   # Method to get the path for different pages
   def path_to(page_name)
     case page_name.downcase
-    when 'home' then root_path
-    when 'login' then new_user_session_path
-    when 'ngo: gebirah'
+    when /home/ then root_path
+    when /login/ then new_user_session_path
+    when /ngo: gebirah/
       gebirah = NgoUser.find_by(name: 'Gebirah')
       raise "NGO user 'Gebirah' not found" unless gebirah
       ngo_user_path(gebirah) # Path to the NGO Gebirah page with id
-    when 'user verification' then user_verification_path
-    when 'fill in particulars' then new_user_particular_path
-    when 'ngo search' then ngo_users_path
+    when /user verification/ then user_verification_path
+    when /fill in particulars/ then new_user_particular_path
+    when /ngo search/ then ngo_users_path
     else raise "Undefined page: #{page_name}"
     end
   end
@@ -75,12 +75,13 @@ Then(/^I should see a set of different NGO buttons$/) do
   end
 end
 
-Then(/^I should be redirected to the "(.*)" page$/) do |expected_path|
+Then(/^I should be redirected to the "(.*)" page$/) do |expected_page|
   actual_path = current_path
-  unless actual_path == path_to(expected_path)
-    puts "Expected Path: #{path_to(expected_path)}, Actual Path: #{actual_path}" # Debugging statement
+  expected_path = path_to(expected_page)
+  unless actual_path == expected_path
+    puts "Expected Path: #{expected_path}, Actual Path: #{actual_path}" # Debugging statement
   end
-  expect(actual_path).to eq(path_to(expected_path))
+  expect(actual_path).to eq(expected_path)
 end
 
 Then(/^I should see "(.*)"$/) do |text|
@@ -93,10 +94,10 @@ end
 
 When(/^I key in the undocumented user's unique EnableID number: (\d+)$/) do |enable_id_number|
   using_wait_time 20 do
-    unless page.has_field?('unique_id', disabled: false) # Correct field name is 'unique_id'
+    unless page.has_field?('unique_id', disabled: false) # Ensure the correct field name is used
       puts "HTML Content of the page: \n#{page.html}" # Debugging statement
     end
-    fill_in 'unique_id', with: enable_id_number # Use correct field name
+    fill_in 'unique_id', with: enable_id_number # Use the correct field name
     puts "Debugging: Entered EnableID number: #{enable_id_number}" # Debugging line
   end
 end
