@@ -1,5 +1,3 @@
-# features/step_definitions/consolidated_step.rb
-
 module PathHelper
   include Rails.application.routes.url_helpers
 
@@ -8,8 +6,11 @@ module PathHelper
     case page_name.downcase
     when 'home' then root_path
     when 'login' then new_user_session_path
-    when 'ngo: gebirah' then ngo_user_path(NgoUser.find_by(name: 'Gebirah')) # Path to the NGO Gebirah page
-    when 'user verification' then root_path # Fallback to home and navigate manually
+    when 'ngo: gebirah'
+      gebirah = NgoUser.find_by(name: 'Gebirah')
+      raise "NGO user 'Gebirah' not found" unless gebirah
+      ngo_user_path(gebirah.id) # Path to the NGO Gebirah page with id
+    when 'user verification' then user_verification_path
     when 'fill in particulars' then new_user_particular_path
     when 'ngo search' then ngo_users_path
     else raise "Undefined page: #{page_name}"
@@ -35,29 +36,42 @@ Before do
     ngo_user.save! # Ensure the record is saved with updated attributes
   end
 
-  # Create or find a UserParticular with the unique_id '1004209' and associate with the user
-  @user_particular = UserParticular.find_or_create_by(unique_id: '1004209') do |user_particular|
-    user_particular.user = @user
-    user_particular.two_fa_passcode = '958523'
-    user_particular.save! # Ensure the record is saved with updated attributes
-  end
+  # Ensure the user particular with the correct unique_id is created
+  UserParticular.where(unique_id: '1071783').destroy_all # Clear any existing records to avoid duplicates
+  @user_particular = UserParticular.create!(
+    user: @user,
+    unique_id: '1071783',
+    two_fa_passcode: '958523'
+  )
 
   # Debugging output to confirm the setup
-  puts "UserParticular created with unique_id: #{@user_particular.unique_id}, user_id: #{@user_particular.user_id}, two_fa_passcode: #{@user_particular.two_fa_passcode}"
+  puts "Debugging: UserParticular created with unique_id: #{@user_particular.unique_id}, user_id: #{@user_particular.user_id}, two_fa_passcode: #{@user_particular.two_fa_passcode}"
+
+  # Confirm that the record exists in the database
+  user_particular_record = UserParticular.find_by(unique_id: '1071783')
+  if user_particular_record
+    puts "Debugging: UserParticular with unique_id '1071783' found in database."
+  else
+    puts "Debugging: UserParticular with unique_id '1071783' NOT found in database."
+  end
 end
 
 # Step Definitions
 
-Given(/^I am on the "(.+)" page$/) do |page|
+Given(/^I am on the "(.*)" page$/) do |page|
   visit path_to(page)
 end
 
-Given(/^I navigate to the "(.+)" page$/) do |page|
+Given(/^I am already on my "(.*)" page$/) do |page|
   visit path_to(page)
 end
 
-When(/^I press (?:the )?"(.+)" (?:button|link)$/) do |button|
+When(/^I (?:press|click) (?:the )?"(.*)" (?:button|link)$/) do |button|
   click_button_or_link(button)
+end
+
+When(/^I navigate to the "(.*)" page$/) do |page|
+  visit path_to(page)
 end
 
 Then(/^I should see a set of different NGO buttons$/) do
@@ -69,7 +83,7 @@ Then(/^I should see a set of different NGO buttons$/) do
   end
 end
 
-Then(/^I should be redirected to the "(.+)" page$/) do |page|
+Then(/^I should be redirected to the "(.*)" page$/) do |page|
   expected_path = path_to(page)
   actual_path = current_path
   unless actual_path == expected_path
@@ -78,50 +92,28 @@ Then(/^I should be redirected to the "(.+)" page$/) do |page|
   expect(actual_path).to eq(expected_path)
 end
 
-Then(/^I should see "(.+)"$/) do |text|
+Then(/^I should see "(.*)"$/) do |text|
   expect(page).to have_content(/#{Regexp.escape(text)}/)
 end
 
-Then(/^I will see an error message "(.+)"$/) do |message|
+Then(/^I will see (?:an error message|a welcome message) "(.*)"$/) do |message|
   expect(page).to have_content(/#{Regexp.escape(message)}/)
 end
 
-Then(/^I should see the following fields in the Digital ID:$/) do |table|
-  verify_form_data(table)
-end
-
-When(/^I fill in the "(.+)" field with "(.+)"$/) do |field, value|
-  fill_in field, with: value
-end
-
-When(/^I leave the "(.+)" field empty$/) do |field|
-  fill_in field, with: ''
-end
-
-Then(/^I will see a welcome message "(.+)"$/) do |message|
-  expect(page).to have_content(/#{Regexp.escape(message)}/)
+When(/^I (?:fill in|leave) the "(.*)" field (?:with "(.*)"|empty)$/) do |field, value|
+  fill_in field, with: (value || '')
 end
 
 Given(/^I entered the following particulars:$/) do |table|
   fill_in_form(table)
 end
 
-When(/^I do not enter a date of birth$/) do
-  fill_in 'Date of Birth', with: ''
-end
-
-When(/^I do not select a country of origin$/) do
-  select '', from: 'Country of Origin'
-end
-
-Then(/^I should see the following fields:$/) do |table|
-  table.hashes.each do |row|
-    expect(page).to have_content(row['Value'])
+When(/^I do not (?:enter a date of birth|select a country of origin)$/) do |step|
+  if step.include?("date of birth")
+    fill_in 'Date of Birth', with: ''
+  else
+    select '', from: 'Country of Origin'
   end
-end
-
-Given(/^I am already on my "(.+)" page$/) do |page|
-  visit path_to(page)
 end
 
 When(/^I key in the undocumented user's unique EnableID number: (\d+)$/) do |enable_id_number|
@@ -130,6 +122,7 @@ When(/^I key in the undocumented user's unique EnableID number: (\d+)$/) do |ena
       puts "HTML Content of the page: \n#{page.html}" # Debugging statement
     end
     fill_in 'unique_id', with: enable_id_number # Use correct field name
+    puts "Debugging: Entered EnableID number: #{enable_id_number}" # Debugging line
   end
 end
 
@@ -137,7 +130,8 @@ When(/^I press "Submit"$/) do
   click_button_or_link('Submit')
 end
 
-Then(/^I should see "(.+)" with a textbox$/) do |text|
+Then(/^I should see "(.*)" with a textbox$/) do |text|
+  puts "Debugging: Current page content: #{page.html}"  # Debugging line
   expect(page).to have_content(/#{Regexp.escape(text)}/)
   expect(page).to have_selector('input[type="text"]')
 end
@@ -150,7 +144,7 @@ Then(/^I should see his\/her EnableID card$/) do
   expect(page).to have_selector('.enableid-card')
 end
 
-Then(/^a "(.+)" button below$/) do |button_text|
+Then(/^a "(.*)" button below$/) do |button_text|
   expect(page).to have_button(button_text)
 end
 
