@@ -20,7 +20,12 @@
           <%= button_to "Back", @back_path, class: "btn btn-light text-nowrap", method: :get %>
         </div>
         <div class="col d-flex justify-content-center">
-          <h4 class="m-0 text-nowrap" style="background-color: #f1536a; color: white; margin-bottom:0;"><%= @ngo_user&.name || "NGO" %></h4>
+          <!--<h4 class="m-0 text-nowrap" style="background-color: #f1536a; color: white; margin-bottom:0;"><%= @ngo_user&.name || "NGO" %></h4>-->
+          <% if controller_name == 'ngo_users' && action_name == 'verify' %>
+              <h4 class="m-0 text-nowrap" style="background-color: #f1536a; color: white; margin-bottom:0;"><%= @ngo_user&.name %> - EnableID Verification</h4>
+          <% else %>
+              <h4 class="m-0 text-nowrap" style="background-color: #f1536a; color: white; margin-bottom:0;"><%= @ngo_user&.name || "NGO" %></h4>
+          <% end %>
         </div>
         <div class="col-auto"></div> <!-- Empty column to balance the layout -->
       </div>

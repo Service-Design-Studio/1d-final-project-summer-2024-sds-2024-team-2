@@ -1,40 +1,218 @@
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-<style>
-  .file-upload-wrapper {
-      position: relative;
-      width: 100%;
-      height: 200px;
-      border: 4px dashed #d6d6d6;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #d6d6d6;
-      cursor: pointer;
-  }
-  .file-upload-wrapper:hover {
-      background-color: #f5f5f5;
-  }
-  .file-upload-wrapper input[type="file"] {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-      cursor: pointer;
-  }
-</style>
-<div class="container mt-5">
-  <h1 class="text-center">Basic Example</h1>
-  <p class="text-center">For each input with a <code>data-mdb-file-upload-init</code> attribute you have to add a wrapper with the class <code>file-upload-wrapper</code>.</p>
-  <form action="/your_upload_path" method="post" enctype="multipart/form-data">
-    <div class="file-upload-wrapper" data-mdb-file-upload-init>
-      <input type="file" name="file" class="form-control-file">
-      <span>Drag and drop a file here or click</span>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Upload</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Style for the file upload wrapper */
+        .file-upload-wrapper {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            border: 4px dashed #d6d6d6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #d6d6d6;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        /* Hover effect for the file upload wrapper */
+        .file-upload-wrapper:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* Hide the file input field */
+        .file-upload-wrapper input[type="file"] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <!-- Title and instruction -->
+        <h1 class="text-center">Basic Example</h1>
+        <p class="text-center">For each input with a <code>data-mdb-file-upload-init</code> attribute you have to add a wrapper with the class <code>file-upload-wrapper</code>.</p>
+        
+        <!-- Form for file upload -->
+        <form id="uploadForm">
+            <!-- File upload wrapper -->
+            <div class="file-upload-wrapper" data-mdb-file-upload-init id="dropArea">
+                <span>Drag and drop a file here</span>
+            </div>
+            <!-- Button to trigger file selection modal -->
+            <div class="text-center mt-3">
+                <button type="button" id="triggerFileModal" class="btn btn-secondary" data-toggle="modal" data-target="#fileModal">Select File</button>
+            </div>
+        </form>
+        <!-- Status message -->
+        <div id="statusMessage" class="text-center mt-3"></div>
+        <!-- List of selected files -->
+        <div id="fileList" class="text-center mt-3"></div>
     </div>
-    <div class="text-center mt-3">
-      <button type="submit" class="btn btn-primary">Upload</button>
+
+    <!-- Modal for file selection -->
+    <div class="modal fade" id="fileModal" tabindex="-1" role="dialog" aria-labelledby="fileModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="fileModalLabel">Select Files to Upload</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="file" id="modalFileInput" name="modalFile" class="form-control-file" multiple />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirmFiles">Confirm</button>
+                </div>
+            </div>
+        </div>
     </div>
-  </form>
-</div>
+
+    <!-- jQuery, Popper.js, and Bootstrap JS for Bootstrap functionality -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <!-- JavaScript to handle file upload -->
+    <script>
+        // Variable to temporarily store selected files in the modal
+        let tempFiles = [];
+
+        // Variable to store selected files
+        let selectedFiles = [];
+
+        // Event listener for the modal file input change to store selected files
+        document.getElementById('modalFileInput').addEventListener('change', function() {
+            // Store selected files temporarily
+            tempFiles = Array.from(this.files);
+        });
+
+        // Event listener for the confirm button in the modal
+        document.getElementById('confirmFiles').addEventListener('click', function() {
+            if (tempFiles.length === 0) {
+                // No files selected, display message and close modal
+                document.getElementById('statusMessage').innerText = 'No files selected.';
+                $('#fileModal').modal('hide');
+                return;
+            }
+
+            // Add tempFiles to selectedFiles
+            selectedFiles = selectedFiles.concat(tempFiles);
+            tempFiles = []; // Clear tempFiles
+            updateFileList(); // Update the file list display
+            $('#fileModal').modal('hide'); // Close the modal after confirming files
+            document.getElementById('statusMessage').innerText = 'Files selected successfully!';
+        });
+
+        // Function to update the file list display
+        function updateFileList() {
+            var fileListContainer = document.getElementById('fileList');
+            fileListContainer.innerHTML = ''; // Clear previous file list
+            selectedFiles.forEach(file => {
+                var fileItem = document.createElement('div');
+                // Display file name and formatted size
+                fileItem.innerText = file.name + ' (' + formatFileSize(file.size) + ')';
+                fileListContainer.appendChild(fileItem);
+            });
+        }
+
+        // Function to format file size
+        function formatFileSize(bytes) {
+            const units = ['bytes', 'KB', 'MB', 'GB', 'TB'];
+            let unitIndex = 0;
+            let size = bytes;
+
+            // Convert bytes to the largest unit possible
+            while (size >= 1024 && unitIndex < units.length - 1) {
+                size /= 1024;
+                unitIndex++;
+            }
+
+            // Return size with two decimal places and unit
+            return size.toFixed(2) + ' ' + units[unitIndex];
+        }
+
+        // Event listeners for drag and drop functionality
+        const dropArea = document.getElementById('dropArea');
+
+        dropArea.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            dropArea.classList.add('hover'); // Add hover effect on dragover
+        });
+
+        dropArea.addEventListener('dragleave', () => {
+            dropArea.classList.remove('hover'); // Remove hover effect on dragleave
+        });
+
+        dropArea.addEventListener('drop', (event) => {
+            event.preventDefault();
+            dropArea.classList.remove('hover'); // Remove hover effect on drop
+            const files = Array.from(event.dataTransfer.files); // Get files from drop event
+            selectedFiles = selectedFiles.concat(files); // Add files to selectedFiles
+            updateFileList(); // Update the file list display
+            document.getElementById('statusMessage').innerText = 'Files selected successfully!';
+        });
+
+        // Event listener for form submission to handle the file upload process
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+            if (selectedFiles.length === 0) {
+                document.getElementById('statusMessage').innerText = 'Please select files to upload.';
+                return;
+            }
+
+            var formData = new FormData();
+            selectedFiles.forEach(file => {
+                formData.append('files[]', file);
+            });
+
+            // Create and send an AJAX request to upload the files
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/your_existing_upload_route', true); // Replace with your actual upload route
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    document.getElementById('statusMessage').innerText = 'Files uploaded successfully!';
+                } else {
+                    document.getElementById('statusMessage').innerText = 'File upload failed! Status: ' + xhr.status + ' Response: ' + xhr.responseText;
+                }
+            };
+            xhr.onerror = function () {
+                document.getElementById('statusMessage').innerText = 'File upload failed due to a network error.';
+            };
+            xhr.send(formData);
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

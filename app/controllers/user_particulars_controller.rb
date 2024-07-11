@@ -59,11 +59,12 @@ class UserParticularsController < ApplicationController
 
   def update
     @user_particular = UserParticular.update_user_particular(params[:id], user_particular_params)
-    @user_particular[:status] = 'pending' # Set status to pending after editing
+
     # Check if edit was successful
     if @user_particular.persisted?
       flash[:success] = 'Digital ID was successfully edited!'
-      @user_particular[:status] = 'pending' # Set status to pending after editing
+      UserParticular.reset_verification(params[:id]) # Set status to pending and reset verifier_ngo
+      @user_particular = UserParticular.find_by_id(params[:id]) # Retrieve user particular
       redirect_to @user_particular # redirects to /user_particulars/:id
     else
       flash[:error_message] = 'Edit failed. Please try again.'

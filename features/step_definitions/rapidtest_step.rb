@@ -14,6 +14,7 @@ end
 
 # Step to click a specific button
 And(/^I press the "([^"]*)" button$/) do |button|
+  puts "Current URL: #{current_url}, Current Path: #{current_path}, #{button}"
   if has_link?(button)
     click_link button
   elsif has_button?(button)
@@ -86,16 +87,32 @@ Given(/^I have a user (\d+) verified by NGO: (.+), and logs in$/) do |user_id, n
   @ngo_user = NgoUser.find_by(name: ngo_name)
   @user_particular = UserParticular.find_by(unique_id: user_id)
   @user = User.find_by(id: @user_particular.user_id)
-  step 'I am on the "Login" page'
+  step 'I am on the "Home" page'
   login_as(@user, scope: :user)
   expect(page).to have_content('Welcome,')
+end
+
+Given(/^I am a freshly logged in new user$/) do
+  step 'I am on the "Login" page'
+  @user = User.create(username: 'example1234', email: 'example123@example.com', password: 'password',
+                      password_confirmation: 'password', phone_number: '123456789')
+  # Debugging: Check if user was successfully created
+  raise "User creation failed: #{@user.errors.full_messages.join(', ')}" unless @user.persisted?
+
+  fill_in 'Log in EnableID', with: @user.username
+  fill_in 'Password', with: @user.password
+  step 'I press the "Log in" button'
+  expected_path = '/user_particular'
+  raise "Expected to be on #{expected_path}, but was on #{current_path}" unless current_path == expected_path
+
+  step 'I should see "Welcome, "'
 end
 
 # Maps page names to their corresponding paths
 def path_to(page_name)
   case page_name.downcase
   when 'home'
-    root_path
+    user_particular_path
   when 'login'
     new_user_session_path
   when 'ngogebirah'

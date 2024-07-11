@@ -6,8 +6,7 @@ users_data = [
   {
     username: 'user1',
     email: 'user1@mail.com',
-    password: 'adminpassword',
-    password_confirmation: 'adminpassword',
+    password: 'password1',
     phone_number: '90000001',
     particulars: {
       full_name: 'Rohingya Aung',
@@ -32,7 +31,6 @@ users_data = [
     username: 'user2',
     email: 'user2@mail.com',
     password: 'password2',
-    password_confirmation: 'password2',
     phone_number: '90000002',
     particulars: {
       full_name: 'Fatima Ali',
@@ -42,7 +40,7 @@ users_data = [
       secondary_phone_number: '111-222-333',
       full_phone_number: '60444-555-6666',
       country_of_origin: 'Iraq',
-      ethnicity: 'Kurdish',
+      ethnicity: 'Kurd',
       religion: 'Islam',
       gender: 'Female',
       status: 'pending',
@@ -57,7 +55,6 @@ users_data = [
     username: 'user3',
     email: 'user3@mail.com',
     password: 'password3',
-    password_confirmation: 'password3',
     phone_number: '90000003',
     particulars: {
       full_name: 'Ahmed Khalid',
@@ -66,7 +63,7 @@ users_data = [
       secondary_phone_number_country_code: '+60',
       secondary_phone_number: '555-555-5555',
       full_phone_number: '60777-888-9999',
-      country_of_origin: 'Syria',
+      country_of_origin: 'Syrian Arab Republic',
       ethnicity: 'Arab',
       religion: 'Islam',
       gender: 'Male',
@@ -80,7 +77,6 @@ users_data = [
     username: 'user4',
     email: 'user4@mail.com',
     password: 'password4',
-    password_confirmation: 'password4',
     phone_number: '90000004',
     particulars: {
       full_name: 'Phyu Phyu Win',
@@ -90,7 +86,7 @@ users_data = [
       secondary_phone_number: '555-123-4567',
       full_phone_number: '60123-456-7890',
       country_of_origin: 'Myanmar',
-      ethnicity: 'Burmese',
+      ethnicity: 'Rohingya',
       religion: 'Buddhism',
       gender: 'Female',
       status: 'pending',
@@ -105,7 +101,6 @@ users_data = [
     username: 'user5',
     email: 'user5@mail.com',
     password: 'password5',
-    password_confirmation: 'password5',
     phone_number: '90000005',
     particulars: {
       full_name: 'Hussein Abbas',
@@ -147,19 +142,22 @@ ngo_users_data = [
 # Create or update users and their particulars
 users_data.each do |user_data|
   user = User.find_or_initialize_by(username: user_data[:username])
-  user.assign_attributes(
-    email: user_data[:email],
-    password: user_data[:password],
-    password_confirmation: user_data[:password_confirmation],
-    phone_number: user_data[:phone_number]
-  )
-  user.save!
 
+  # Only create user data
+  if user.new_record?
+    user.email = user_data[:email]
+    user.password = user_data[:password] #TODO: Has error when updating password during deployment
+    user.phone_number = user_data[:phone_number]
+    user.save!
+  end
+
+  # Create/modify user data
   particulars_data = user_data[:particulars]
   user_particular = user.user_particular || user.build_user_particular
   user_particular.assign_attributes(particulars_data)
   user_particular.save!
 end
+
 
 # Create or update NgoUsers
 ngo_users_data.each do |ngo_data|
