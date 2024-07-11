@@ -2,8 +2,13 @@
 require 'spec_helper'
 require 'simplecov'
 
+# declare files that will not be checked by simplecov
 SimpleCov.start 'rails' do
   add_filter '/spec/'
+  add_filter 'app/channels'
+  add_filter 'app/controllers/users'
+  add_filter 'app/jobs'
+  add_filter 'app/mailers'
 end
 
 ENV['RAILS_ENV'] ||= 'test'
