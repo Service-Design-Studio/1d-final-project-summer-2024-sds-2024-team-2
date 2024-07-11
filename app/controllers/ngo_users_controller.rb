@@ -4,7 +4,7 @@ class NgoUsersController < ApplicationController
 
   def show
     @back_path = ngo_users_path
-    @ngo_user = NgoUser.find(params[:id])
+    @ngo_user = NgoUser.find_by_id(params[:id])
     nil unless params[:unique_id].present?
   end
 
@@ -20,7 +20,7 @@ class NgoUsersController < ApplicationController
 
   def check_user
     @back_path = ngo_users_path
-    @ngo_user = NgoUser.find(params[:id])
+    @ngo_user = NgoUser.find_by_id(params[:id])
     @user_particular = UserParticular.find_by(unique_id: params[:unique_id], two_fa_passcode: params[:two_fa_passcode])
     if @user_particular
       redirect_to verify_ngo_user_path(@ngo_user, unique_id: @user_particular.unique_id)
@@ -32,7 +32,7 @@ class NgoUsersController < ApplicationController
 
   def verify
     @back_path = ngo_user_path
-    @ngo_user = NgoUser.find(params[:id])
+    @ngo_user = NgoUser.find_by_id(params[:id])
     logger.debug "params[:unique_id]: #{params[:unique_id]}"
     @user_particular = UserParticular.find_by(unique_id: params[:unique_id])
     logger.debug "User Particular: #{@user_particular}"
@@ -44,7 +44,7 @@ class NgoUsersController < ApplicationController
 
   def confirm_verify
     @back_path = ngo_user_path
-    @ngo_user = NgoUser.find(params[:id])
+    @ngo_user = NgoUser.find_by_id(params[:id])
     @user_particular = UserParticular.find_by(unique_id: params[:unique_id])
     #@user_particular = UserParticular.includes(:verified_by_ngo_user).find_by(id: params[:id])
     # Add any verification logic here
