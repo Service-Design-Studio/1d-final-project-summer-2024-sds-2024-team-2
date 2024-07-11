@@ -23,6 +23,7 @@ RSpec.describe UserParticular, type: :model do
     if @seeded
       ActiveRecord::Base.connection.execute('DELETE FROM user_particulars')
       ActiveRecord::Base.connection.execute('DELETE FROM users')
+      ActiveRecord::Base.connection.execute('DELETE FROM ngo_users')
     end
   end
 
