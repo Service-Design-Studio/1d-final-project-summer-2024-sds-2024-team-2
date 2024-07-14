@@ -12,6 +12,27 @@
         integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
         crossorigin="anonymous"
     />
+    <style>
+      html {
+        display: flex;
+        flex-direction: column; 
+        overflow-x: hidden; /* Keep your existing styles but remove background and opacity */
+      }
+      html::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;  
+        background: url('<%= asset_path('fingerprint.svg') %>') no-repeat center center;
+        background-size: cover;
+        opacity: 0.1; /* Set the opacity for the background image */
+        z-index: -1; /* Ensure the background is behind the content */
+        background-attachment: fixed; /* This will make the background image stay fixed during scrolling */
+      }
+      /* Add any other custom styles here */
+    </style>
 </head> 
 <body class="d-flex flex-column min-vh-100" style="overflow-x: hidden;"> 
     <div class="container-fluid" style="background-color: #f1536a; color: white;">
