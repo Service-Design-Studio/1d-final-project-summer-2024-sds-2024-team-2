@@ -18,7 +18,7 @@ Before('@requires_login') do
   login_as($user, scope: :user)
 end
 
-# # Step to click a specific button
+# Step to click a specific button
 # And(/^I press the "([^"]*)" button$/) do |button|
 #   puts "Current URL: #{current_url}"
 #   byebug
@@ -34,9 +34,19 @@ end
 #   byebug
 # end
 
+When('I press the "I am a NGO" button') do
+  login_as($user, scope: :user)
+  click_link 'I am a NGO'
+end
+
+When('I press the "Verify" button') do
+  login_as($user, scope: :user)
+  click_button 'Verify'
+end
+
 When('I press the "Fill in your particulars to get your Digital ID!" button') do
   login_as($user, scope: :user)
-  find("#fill-in-particulars-btn").click
+  find('#fill-in-particulars-btn').click
 end
 
 # Step to navigate to a specific page
@@ -87,11 +97,11 @@ end
 When(/^I key in the Unique ID: '([^"]*)" and 6 digit code 2FA: "([^"]*)", then I press the check button$/) do |unique_id, two_fa_code|
   fill_in 'unique_id', with: unique_id # Replace 'unique_id_field' with the actual field identifier
   fill_in 'two_fa_passcode', with: two_fa_code # Replace 'two_fa_code_field' with the actual field identifier
-  find('#check-btn').click
+  click_button 'Check'
 end
 
 Then('I should see his\/her EnableID card') do
-  expect(page).to have_selector('#digitalcard')
+  step 'I should see "EnableID Digital Card"'
 end
 
 Then(/^I should see "([^"]*)" button$/) do |button_text|
@@ -113,6 +123,7 @@ Given(/^I have created an account and have just logged in$/) do
                       password_confirmation: 'password', phone_number: '123456789')
   # Debugging: Check if user was successfully created
   raise "User creation failed: #{$user.errors.full_messages.join(', ')}" unless $user.persisted?
+
   login_as($user, scope: :user)
   fill_in 'Log in EnableID', with: $user.username
   fill_in 'Password', with: $user.password
