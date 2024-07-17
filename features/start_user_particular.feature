@@ -3,10 +3,8 @@ Feature: Start process of filling user particular form
     I want to reach the “Enter Particulars” page
     So that I can enter my particulars and start the registration process
 
-Background: 
-    Given I am a freshly logged in new user
-
+@requires_login_new
 Scenario: Button to redirect to "Fill Particulars” page
-    Given I am on the "Home" page 
+    Given I am now on the user particulars home page
     When I press the "Fill in your particulars to get your Digital ID!" button
     Then I should see "Fill in your particulars"

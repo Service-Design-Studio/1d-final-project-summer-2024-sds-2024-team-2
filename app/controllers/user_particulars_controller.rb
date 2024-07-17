@@ -147,4 +147,13 @@ class UserParticularsController < ApplicationController
 
     error_messages_arr
   end
+
+  private
+
+  def skip_authentication?
+    # You can set an environment variable in your test setup
+    # and check it here to decide whether to skip authentication.
+    # Make sure this is only used in a test or development environment.
+    Rails.env.test? && ENV['SKIP_AUTHENTICATE_USER'].present?
+  end
 end
