@@ -34,20 +34,16 @@ class NgoUsersController < ApplicationController
     @back_path = ngo_user_path
     @ngo_user = NgoUser.find_by_id(params[:id])
     logger.debug "params[:unique_id]: #{params[:unique_id]}"
-    @user_particular = UserParticular.find_by(unique_id: params[:unique_id])
+    @user_particular = UserParticular.find_by_unique_id(params[:unique_id])
     logger.debug "User Particular: #{@user_particular}"
-    # Any additional logic you want to include before rendering the verify view
-    # render 'verify' is implicit
-    # flash[:notice] = "Verification successful."
     # redirect_to ngo_user_path(@ngo_user, id: params[:id], commit:'Verify')
   end
 
   def confirm_verify
     @back_path = ngo_user_path
     @ngo_user = NgoUser.find_by_id(params[:id])
-    @user_particular = UserParticular.find_by(unique_id: params[:unique_id])
+    @user_particular = UserParticular.find_by_unique_id(params[:unique_id])
     # @user_particular = UserParticular.includes(:verified_by_ngo_user).find_by(id: params[:id])
-    # Add any verification logic here
     # redirect_to "http://localhost:3000/ngo_users/:id"
     # @user_particular.update(status: 'verified')
     logger.debug "User Particular: #{@ngo_user.name}"

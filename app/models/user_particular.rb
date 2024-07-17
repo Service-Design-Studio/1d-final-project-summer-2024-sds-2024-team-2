@@ -10,6 +10,10 @@ class UserParticular < ActiveRecord::Base
     UserParticular.find_by(id:)
   end
 
+  def self.find_by_unique_id(unique_id)
+    UserParticular.find_by(unique_id:)
+  end
+
   def self.update_user_particular(id, attributes)
     user_particular = UserParticular.find_by(id:)
     user_particular.update(attributes)
@@ -22,13 +26,12 @@ class UserParticular < ActiveRecord::Base
   end
 
   def assign_unique_id
-    self.unique_id = generate_unique_id
-  end
-
-  def generate_unique_id
     loop do
       unique_id = rand(1_000_000..9_999_999)
-      return unique_id unless UserParticular.exists?(unique_id:)
+      unless UserParticular.exists?(unique_id: unique_id)
+        self.unique_id = unique_id #Assign unique id to user particular
+        break
+      end
     end
   end
 

@@ -29,7 +29,7 @@ RSpec.describe UserParticular, type: :model do
 
   describe '.create' do
     it 'creates a new user particular' do
-      new_user = User.new(username: 'newuser', email: 'newuser@mail.com', password: 'password6',
+      new_user = User.new(username: 'newuser', email: 'newuser@mail.com', password: 'password',
                              phone_number: '91234567')
 
       new_user_particular = new_user.build_user_particular(
@@ -109,9 +109,55 @@ RSpec.describe UserParticular, type: :model do
       attributes.each do |key, value|
           expect(found_user_particular.send(key)).to eq(value)
       end
-      
-      #expect(found_user_particular.attributes.except('id', 'created_at', 'updated_at', 'date_of_birth', 'date_of_arrival').symbolize_keys).to eq(attributes)
     end  
+
+    it 'returns nil if no user particular with the specified ID is found' do
+      found_user_particular = UserParticular.find_by_id(999999) # Assuming there's no user particular with ID 999999
+      expect(found_user_particular).to be_nil
+    end
+  end
+
+  describe '.find_by_unique_id' do
+    it 'returns the user particular with the specified unique ID' do
+      attributes = {
+        full_name: 'John Tan',
+        phone_number_country_code: '+65',
+        phone_number: '91234567',
+        secondary_phone_number_country_code: '+60',
+        secondary_phone_number: '900001314',
+        full_phone_number: '6591234567',
+        country_of_origin: 'Myanmar',
+        ethnicity: 'Chinese',
+        religion: 'Buddhism',
+        gender: 'Male',
+        date_of_birth: Date.new(2001, 11, 1),
+        date_of_arrival: Date.new(2019, 10, 20),
+        photo_url: 'https://example.com/john_tan_photo.jpg',
+        birth_certificate_url: 'https://example.com/john_tan_birth_certificate.jpg',
+        passport_url: 'https://example.com/john_tan_passport.jpg'
+      }
+    
+      # Create a new user and user particular
+      new_user = User.new(username: 'newuser', email: 'newuser@mail.com', password: 'password',
+                          phone_number: '91234567')
+      
+      new_user_particular = new_user.build_user_particular(attributes)
+    
+      new_user.save!
+      new_user_particular.save!
+    
+      expect(new_user_particular).to be_valid  # Ensure the instance is valid
+    
+      unique_id = new_user_particular.unique_id
+      found_user_particular = UserParticular.find_by_unique_id(unique_id)
+    
+      expect(found_user_particular).not_to be_nil  # Ensure the user particular is found
+    
+      # Verify that the found user particular has the expected attributes
+      attributes.each do |key, value|
+        expect(found_user_particular.send(key)).to eq(value)
+      end
+    end
 
     it 'returns nil if no user particular with the specified ID is found' do
       found_user_particular = UserParticular.find_by_id(999999) # Assuming there's no user particular with ID 999999
@@ -121,7 +167,7 @@ RSpec.describe UserParticular, type: :model do
 
   describe '.reset_verification' do
   it 'sets status as pending and verifier ngo to nil' do
-    new_user = User.new(username: 'user6', email: 'user6@mail.com', password: 'password6',
+    new_user = User.new(username: 'user6', email: 'user6@mail.com', password: 'password',
                       phone_number: '90000006')
 
     new_user_particular = new_user.build_user_particular(
