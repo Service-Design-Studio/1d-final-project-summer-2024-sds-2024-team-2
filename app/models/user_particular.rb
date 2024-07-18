@@ -14,6 +14,10 @@ class UserParticular < ActiveRecord::Base
     UserParticular.find_by(unique_id:)
   end
 
+  def self.find_by_unique_id_and_two_fa_passcode(unique_id, two_fa_passcode)
+    UserParticular.find_by(unique_id: unique_id, two_fa_passcode: two_fa_passcode)
+  end
+
   def self.update_user_particular(id, attributes)
     user_particular = UserParticular.find_by(id:)
     user_particular.update(attributes)

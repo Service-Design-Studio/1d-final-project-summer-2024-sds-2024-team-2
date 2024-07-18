@@ -160,7 +160,57 @@ RSpec.describe UserParticular, type: :model do
     end
 
     it 'returns nil if no user particular with the specified ID is found' do
-      found_user_particular = UserParticular.find_by_id(999999) # Assuming there's no user particular with ID 999999
+      found_user_particular = UserParticular.find_by_unique_id(999999) # Assuming there's no user particular with ID 999999
+      expect(found_user_particular).to be_nil
+    end
+  end
+
+  describe '.find_by_unique_id_and_two_fa_passcode' do
+    it 'returns the user particular with the specified unique ID and two_fa_passcode' do
+      attributes = {
+        full_name: 'John Tan',
+        phone_number_country_code: '+65',
+        phone_number: '91234567',
+        secondary_phone_number_country_code: '+60',
+        secondary_phone_number: '900001314',
+        full_phone_number: '6591234567',
+        country_of_origin: 'Myanmar',
+        ethnicity: 'Chinese',
+        religion: 'Buddhism',
+        gender: 'Male',
+        date_of_birth: Date.new(2001, 11, 1),
+        date_of_arrival: Date.new(2019, 10, 20),
+        photo_url: 'https://example.com/john_tan_photo.jpg',
+        birth_certificate_url: 'https://example.com/john_tan_birth_certificate.jpg',
+        passport_url: 'https://example.com/john_tan_passport.jpg'
+      }
+    
+      # Create a new user and user particular
+      new_user = User.new(username: 'newuser', email: 'newuser@mail.com', password: 'password',
+                          phone_number: '91234567')
+      
+      new_user_particular = new_user.build_user_particular(attributes)
+    
+      new_user.save!
+      new_user_particular.save!
+    
+      expect(new_user_particular).to be_valid  # Ensure the instance is valid
+    
+      unique_id = new_user_particular.unique_id
+      two_fa_passcode = new_user_particular.two_fa_passcode
+      found_user_particular = UserParticular.find_by_unique_id_and_two_fa_passcode(unique_id, two_fa_passcode)
+    
+      expect(found_user_particular).not_to be_nil  # Ensure the user particular is found
+    
+      # Verify that the found user particular has the expected attributes
+      attributes.each do |key, value|
+        expect(found_user_particular.send(key)).to eq(value)
+      end
+    end
+
+    it 'returns nil if no user particular with the specified unique ID and two fa passcode is found' do
+      # Assuming there's no user particular with unique ID 999999 and two fa passcode 999999
+      found_user_particular = UserParticular.find_by_unique_id_and_two_fa_passcode(999999, 999999) 
       expect(found_user_particular).to be_nil
     end
   end
