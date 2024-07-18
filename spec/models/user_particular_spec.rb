@@ -1,6 +1,32 @@
 require 'rails_helper'
 
 RSpec.describe UserParticular, type: :model do
+  # Create new user and user particular for testing
+  before(:all) do
+    @user = User.create!(username: 'newuser', email: 'newuser@mail.com', password: 'password', phone_number: '91234567')
+    
+    @attributes = {
+      user_id: @user.id,
+      full_name: 'John Tan',
+      phone_number_country_code: '+65',
+      phone_number: '91234567',
+      secondary_phone_number_country_code: '+60',
+      secondary_phone_number: '900001314',
+      full_phone_number: '6591234567',
+      country_of_origin: 'Myanmar',
+      ethnicity: 'Chinese',
+      religion: 'Buddhism',
+      gender: 'Male',
+      date_of_birth: Date.new(2001, 11, 1),
+      date_of_arrival: Date.new(2019, 10, 20),
+      photo_url: 'https://example.com/john_tan_photo.jpg',
+      birth_certificate_url: 'https://example.com/john_tan_birth_certificate.jpg',
+      passport_url: 'https://example.com/john_tan_passport.jpg'
+    } 
+
+    @user_particular = UserParticular.create_user_particular(@attributes)
+  end
+
   # Rollback transaction after each test case
   around(:each) do |example|
     ActiveRecord::Base.transaction do
@@ -9,91 +35,53 @@ RSpec.describe UserParticular, type: :model do
     end
   end
 
+  # Rollback the seeding after all tests are done
+  after(:all) do
+    if @seeded
+      ActiveRecord::Base.connection.execute('DELETE FROM user_particulars')
+      ActiveRecord::Base.connection.execute('DELETE FROM users')
+    end
+  end
+
   describe '.create' do
     it 'creates a new user particular' do
-      new_user = User.new(username: 'newuser', email: 'newuser@mail.com', password: 'password',
-                             phone_number: '91234567')
-
-      new_user_particular = new_user.build_user_particular(
-        full_name: 'John Tan',
-        phone_number_country_code: '+65',
-        phone_number: '91234567',
-        secondary_phone_number_country_code: '+60',
-        secondary_phone_number: '900001314',
-        full_phone_number: '6591234567',
-        country_of_origin: 'Myanmar',
-        ethnicity: 'Chinese',
-        religion: 'Buddhism',
-        gender: 'Male',
-        date_of_birth: Date.new(2001, 11, 1),
-        date_of_arrival: Date.new(2019, 10, 20),
-        photo_url: 'https://example.com/john_tan_photo.jpg',
-        birth_certificate_url: 'https://example.com/john_tan_birth_certificate.jpg',
-        passport_url: 'https://example.com/john_tan_passport.jpg'
-      )
-
-      new_user.save!
-      new_user_particular.save!
-      
-      expect(new_user_particular).to be_valid  # Ensure the instance is valid
-     
-      expect(new_user_particular).not_to be_nil
-
+      # Create new user and corresponding user particular 
+      new_user = User.create!(username: 'jason101', email: 'jason101@mail.com', password: 'password',
+                             phone_number: '9004124')
+  
       attributes = {
-        full_name: 'John Tan',
+        user_id: new_user.id,
+        full_name: 'Jason Tan',
         phone_number_country_code: '+65',
-        phone_number: '91234567',
+        phone_number: '9004124',
         secondary_phone_number_country_code: '+60',
-        secondary_phone_number: '900001314',
-        full_phone_number: '6591234567',
-        country_of_origin: 'Myanmar',
+        secondary_phone_number: '9004124',
+        full_phone_number: '659004124',
+        country_of_origin: 'Indonesia',
         ethnicity: 'Chinese',
-        religion: 'Buddhism',
+        religion: 'Christianity',
         gender: 'Male',
         date_of_birth: Date.new(2001, 11, 1),
         date_of_arrival: Date.new(2019, 10, 20),
-        photo_url: 'https://example.com/john_tan_photo.jpg',
-        birth_certificate_url: 'https://example.com/john_tan_birth_certificate.jpg',
-        passport_url: 'https://example.com/john_tan_passport.jpg'
+        photo_url: 'https://example.com/jason_tan_photo.jpg',
+        birth_certificate_url: 'https://example.com/jason_tan_birth_certificate.jpg',
+        passport_url: 'https://example.com/jason_tan_passport.jpg'
       }
 
+      new_user_particular = UserParticular.create_user_particular(attributes)
+      
+      expect(new_user_particular).to be_valid  # Ensure the instance is valid
+      expect(new_user_particular).not_to be_nil
       expect(new_user_particular).to have_attributes(attributes)
     end
   end
 
   describe '.find_by_id' do
     it 'returns the user particular with the specified ID' do
-      attributes = {
-        full_name: 'John Tan',
-        phone_number_country_code: '+65',
-        phone_number: '91234567',
-        secondary_phone_number_country_code: '+60',
-        secondary_phone_number: '900001314',
-        full_phone_number: '6591234567',
-        country_of_origin: 'Myanmar',
-        ethnicity: 'Chinese',
-        religion: 'Buddhism',
-        gender: 'Male',
-        date_of_birth: Date.new(2001, 11, 1),
-        date_of_arrival: Date.new(2019, 10, 20),
-        photo_url: 'https://example.com/john_tan_photo.jpg',
-        birth_certificate_url: 'https://example.com/john_tan_birth_certificate.jpg',
-        passport_url: 'https://example.com/john_tan_passport.jpg'
-      }
-    
-      # Create a new user and user particular
-      new_user = User.new(username: 'newuser', email: 'newuser@mail.com', password: 'password',
-                          phone_number: '91234567')
-      
-      new_user_particular = new_user.build_user_particular(attributes)
-    
-      new_user.save!
-      new_user_particular.save!
-  
       # Test the find_by_id method
-      found_user_particular = UserParticular.find_by_id(new_user_particular.id)
+      found_user_particular = UserParticular.find_by_id(@user_particular.id)
       expect(found_user_particular).not_to be_nil
-      attributes.each do |key, value|
+      @attributes.each do |key, value|
           expect(found_user_particular.send(key)).to eq(value)
       end
     end  
@@ -106,42 +94,13 @@ RSpec.describe UserParticular, type: :model do
 
   describe '.find_by_unique_id' do
     it 'returns the user particular with the specified unique ID' do
-      attributes = {
-        full_name: 'John Tan',
-        phone_number_country_code: '+65',
-        phone_number: '91234567',
-        secondary_phone_number_country_code: '+60',
-        secondary_phone_number: '900001314',
-        full_phone_number: '6591234567',
-        country_of_origin: 'Myanmar',
-        ethnicity: 'Chinese',
-        religion: 'Buddhism',
-        gender: 'Male',
-        date_of_birth: Date.new(2001, 11, 1),
-        date_of_arrival: Date.new(2019, 10, 20),
-        photo_url: 'https://example.com/john_tan_photo.jpg',
-        birth_certificate_url: 'https://example.com/john_tan_birth_certificate.jpg',
-        passport_url: 'https://example.com/john_tan_passport.jpg'
-      }
-    
-      # Create a new user and user particular
-      new_user = User.new(username: 'newuser', email: 'newuser@mail.com', password: 'password',
-                          phone_number: '91234567')
-      
-      new_user_particular = new_user.build_user_particular(attributes)
-    
-      new_user.save!
-      new_user_particular.save!
-    
-      expect(new_user_particular).to be_valid  # Ensure the instance is valid
-    
-      unique_id = new_user_particular.unique_id
+      unique_id = @user_particular.unique_id
       found_user_particular = UserParticular.find_by_unique_id(unique_id)
     
       expect(found_user_particular).not_to be_nil  # Ensure the user particular is found
     
       # Verify that the found user particular has the expected attributes
-      attributes.each do |key, value|
+      @attributes.each do |key, value|
         expect(found_user_particular.send(key)).to eq(value)
       end
     end

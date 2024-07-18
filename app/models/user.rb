@@ -16,13 +16,4 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true
   validates :phone_number, format: { with: /\A[0-9]+\z/, message: :invalid }, presence: true, uniqueness: true
   validates :encrypted_password, presence: true
-
-  # Comment out to attempt fix for NoMethodError (super: no superclass method 'password' for #<User in deployment
-  # def password
-  #   Rails.env.development? || Rails.env.test? ? 'adminpassword' : super
-  # end
-
-  # def password_confirmation
-  #   Rails.env.development? || Rails.env.test? ? 'adminpassword' : super
-  # end
 end
