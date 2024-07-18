@@ -126,7 +126,7 @@ users_data = [
     email: 'newuser@mail.com',
     password: 'newuserpassword',
     phone_number: '60001119',
-    particulars: {}
+    particulars: nil
   }
 ]
 
@@ -157,12 +157,15 @@ users_data.each do |user_data|
     user.phone_number = user_data[:phone_number]
     user.save!
   end
-
-  # Create/modify user data
   particulars_data = user_data[:particulars]
-  user_particular = user.user_particular || user.build_user_particular
-  user_particular.assign_attributes(particulars_data)
-  user_particular.save!
+  if particulars_data.nil?
+    puts 'nil'
+  else
+    # Create/modify user data
+    user_particular = user.user_particular || user.build_user_particular
+    user_particular.assign_attributes(particulars_data)
+    user_particular.save!
+  end
 end
 
 # Create or update NgoUsers

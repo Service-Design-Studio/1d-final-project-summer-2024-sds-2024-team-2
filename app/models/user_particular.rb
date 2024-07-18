@@ -1,6 +1,5 @@
 class UserParticular < ActiveRecord::Base
   belongs_to :user
-  before_create :assign_unique_id, :generate_2fa_secret
 
   def self.create_user_particular(attributes)
     UserParticular.create(attributes)
@@ -37,6 +36,6 @@ class UserParticular < ActiveRecord::Base
   end
 
   def verified_by_ngo_user_name
-    self.verified_by_ngo_user&.name
+    verified_by_ngo_user&.name
   end
 end

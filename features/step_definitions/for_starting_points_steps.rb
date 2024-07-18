@@ -3,25 +3,15 @@ Given('a user particular exists with unique ID {string} and 2FA code {string}') 
   expect(user_particular).not_to be_nil
 end
 
-Before('@requires_login') do
-  # Set this before running your tests
-  ENV['SKIP_AUTHENTICATE_USER'] = 'true'
-  login_as($user, scope: :user)
-end
-
-When('I press the "I am a NGO" button') do
-  login_as($user, scope: :user)
-  click_link 'I am a NGO'
-end
-
-When('I press the "Verify" button') do
-  login_as($user, scope: :user)
-  click_button 'Verify'
-end
-
-When('I press the "Fill in your particulars to get your Digital ID!" button') do
-  login_as($user, scope: :user)
-  find('#fill-in-particulars-btn').click
+When(/^I press the "([^"]*)" button$/) do |btn_name|
+  byebug
+  if has_button?(btn_name)
+    click_button(btn_name)
+  elsif has_link?(btn_name)
+    click_link(btn_name)
+  else
+    raise "No button or link found with name '#{btn_name}'"
+  end
 end
 
 # Step to navigate to a specific page
@@ -86,31 +76,11 @@ Given(/^I have a user (\d+) verified by NGO: (.+), and logs in$/) do |user_id, n
   expect(page).to have_content('Welcome,')
 end
 
-Given(/^I have created an account and have just logged in$/) do
-  step 'I am on the "Login" page'
-  $user = User.create(username: 'example1234', email: 'example123@example.com', password: 'password',
-                      password_confirmation: 'password', phone_number: '123456789')
-  # Debugging: Check if user was successfully created
-  raise "User creation failed: #{$user.errors.full_messages.join(', ')}" unless $user.persisted?
-
-  login_as($user, scope: :user)
-  fill_in 'Log in EnableID', with: $user.username
-  fill_in 'Password', with: $user.password
-  step 'I press the "Log in" button'
-  login_as($user, scope: :user)
-  visit root_path
-  expected_path = '/'
-  raise "Expected to be on #{expected_path}, but was on #{current_path}" unless current_path == expected_path
-
-  step 'I should see "Welcome, "'
-  # Set this before running your tests
-end
-
 # Maps page names to their corresponding paths
 def path_to(page_name)
   case page_name.downcase
   when 'home'
-    user_particular_path($user.id)
+    root_path
   when 'login'
     new_user_session_path
   when 'ngogebirah'
