@@ -1,29 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe UserParticular, type: :model do
-  # Seed the database before running any tests,
-  # and roll back once all tests are finished
-  before(:all) do
-    ActiveRecord::Base.transaction do
-      Rails.application.load_seed
-      @seeded = true
-    end
-  end
-
   # Rollback transaction after each test case
   around(:each) do |example|
     ActiveRecord::Base.transaction do
       example.run
       raise ActiveRecord::Rollback
-    end
-  end
-
-  # Rollback the seeding after all tests are done
-  after(:all) do
-    if @seeded
-      ActiveRecord::Base.connection.execute('DELETE FROM user_particulars')
-      ActiveRecord::Base.connection.execute('DELETE FROM users')
-      ActiveRecord::Base.connection.execute('DELETE FROM ngo_users')
     end
   end
 
@@ -81,30 +63,35 @@ RSpec.describe UserParticular, type: :model do
 
   describe '.find_by_id' do
     it 'returns the user particular with the specified ID' do
-      attributes = { 
-        full_name: 'Rohingya Aung',
-        phone_number_country_code: '+60', 
-        phone_number: '111-222-3333',
+      attributes = {
+        full_name: 'John Tan',
+        phone_number_country_code: '+65',
+        phone_number: '91234567',
         secondary_phone_number_country_code: '+60',
-        secondary_phone_number: '555-555-5555',
-        full_phone_number: '60111-222-3333',
+        secondary_phone_number: '900001314',
+        full_phone_number: '6591234567',
         country_of_origin: 'Myanmar',
-        ethnicity: 'Rohingya',
-        religion: 'Islam',
+        ethnicity: 'Chinese',
+        religion: 'Buddhism',
         gender: 'Male',
-        date_of_birth: Date.new(1990, 3, 25),
-        date_of_arrival: Date.new(2017, 9, 10),
-        photo_url: 'https://example.com/rohingya_aung_photo.jpg',
-        birth_certificate_url: 'https://example.com/rohingya_aung_birth_certificate.jpg',
-        passport_url: 'https://example.com/rohingya_aung_passport.jpg'
+        date_of_birth: Date.new(2001, 11, 1),
+        date_of_arrival: Date.new(2019, 10, 20),
+        photo_url: 'https://example.com/john_tan_photo.jpg',
+        birth_certificate_url: 'https://example.com/john_tan_birth_certificate.jpg',
+        passport_url: 'https://example.com/john_tan_passport.jpg'
       }
-  
-      # Find the first user particular to ensure it exists
-      user_particular = UserParticular.first
-      expect(user_particular).not_to be_nil
+    
+      # Create a new user and user particular
+      new_user = User.new(username: 'newuser', email: 'newuser@mail.com', password: 'password',
+                          phone_number: '91234567')
+      
+      new_user_particular = new_user.build_user_particular(attributes)
+    
+      new_user.save!
+      new_user_particular.save!
   
       # Test the find_by_id method
-      found_user_particular = UserParticular.find_by_id(user_particular.id)
+      found_user_particular = UserParticular.find_by_id(new_user_particular.id)
       expect(found_user_particular).not_to be_nil
       attributes.each do |key, value|
           expect(found_user_particular.send(key)).to eq(value)

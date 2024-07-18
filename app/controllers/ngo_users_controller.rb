@@ -12,10 +12,11 @@ class NgoUsersController < ApplicationController
     @back_path = new_user_session_path
     # @ngo_users = NgoUser.all
     @ngo_users = if params[:search].present?
-                   NgoUser.where('name LIKE ?', "%#{params[:search]}%")
+                   NgoUser.search_by_name(params[:search])
                  else
-                   NgoUser.all
+                   NgoUser.all_ngo_users
                  end
+    Rails.logger.info(@ngo_users)
   end
 
   def check_user
