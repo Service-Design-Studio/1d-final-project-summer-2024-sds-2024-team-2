@@ -24,7 +24,10 @@ users_data = [
       status: 'pending',
       photo_url: 'https://example.com/rohingya_aung_photo.jpg',
       birth_certificate_url: 'https://example.com/rohingya_aung_birth_certificate.jpg',
-      passport_url: 'https://example.com/rohingya_aung_passport.jpg'
+      passport_url: 'https://example.com/rohingya_aung_passport.jpg',
+      verifier_ngo: 'Gebirah',
+      unique_id: '1055290',
+      two_fa_passcode: '606833'
     }
   },
   {

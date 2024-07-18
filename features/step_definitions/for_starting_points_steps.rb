@@ -4,7 +4,6 @@ Given('a user particular exists with unique ID {string} and 2FA code {string}') 
 end
 
 When(/^I press the "([^"]*)" button$/) do |btn_name|
-  byebug
   if has_button?(btn_name)
     click_button(btn_name)
   elsif has_link?(btn_name)
@@ -33,8 +32,8 @@ end
 
 Then(/^I should be redirected to the User Verification page under "([^"]*)"$/) do |ngo_name|
   @ngo_user = NgoUser.find_by(name: ngo_name)
-  @user_particular = UserParticular.find_by(unique_id: '3665753', two_fa_passcode: '310263')
-  puts verify_ngo_user_path(@ngo_user, unique_id: '3665753')
+  @user_particular = UserParticular.find_by(unique_id: '1055290', two_fa_passcode: '606833')
+  puts verify_ngo_user_path(@ngo_user, unique_id: '1055290')
   using_wait_time(10) do
     expect(current_path).to eq("/ngo_users/#{@ngo_user.id}/verify")
   end
@@ -74,6 +73,36 @@ Given(/^I have a user (\d+) verified by NGO: (.+), and logs in$/) do |user_id, n
   step 'I am on the "Home" page'
   login_as(@user, scope: :user)
   expect(page).to have_content('Welcome,')
+end
+
+When(/^I fill in the following fields$/) do |table|
+  fill_in_form(table)
+end
+
+# Helper Methods
+# Fills in a form based on the given table data
+def fill_in_form(table)
+  table.hashes.each do |row|
+    case row['Field'].downcase
+    when 'country of origin'
+      select row['Value'], from: row['Field']
+    when 'ethnicity', 'religion', 'gender'
+      # For dropdown fields
+      select row['Value'], from: "#{row['Field'].downcase}_select"
+    when 'date of birth', 'date of arrival in malaysia'
+      # For HTML5 date fields, ensure the date is in 'YYYY-MM-DD' format
+      fill_in row['Field'], with: row['Value'].to_date.strftime('%d-%m-%Y')
+      # For regular input fields
+    when 'phone number'
+      select('+65', from: 'country_code_select') # Selects the country code from the dropdown
+      fill_in 'phone_number_field', with: row['Value'] # Fills in the phone number field
+    when 'secondary phone number'
+      select('+65', from: 'country_code_select_secondary') # Selects the country code from the dropdown
+      fill_in 'phone_number_field_secondary', with: row['Value'] # Fills in the phone number field
+    else
+      fill_in row['Field'], with: row['Value']
+    end
+  end
 end
 
 # Maps page names to their corresponding paths

@@ -13,13 +13,13 @@ Given(/^I need to upload my documents to complete my digital identity$/) do
   @user.update(needs_document_upload: true)
 end
 
-Given(/^I am on the "(.*)" page$/) do |page|
-  visit path_to(page)
-end
+# Given(/^I am on the "(.*)" page$/) do |page|
+#   visit path_to(page)
+# end
 
-When(/^I press the "(.*)" button$/) do |button|
-  click_button(button)
-end
+# When(/^I press the "(.*)" button$/) do |button|
+#   click_button(button)
+# end
 
 Then(/^I should be directed to the "(.*)" page$/) do |page|
   expect(page).to have_current_path(path_to(page))
