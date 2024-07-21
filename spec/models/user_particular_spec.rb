@@ -148,7 +148,6 @@ RSpec.describe UserParticular, type: :model do
     found_user_particular = UserParticular.find_by_id(@user_particular.id)
     expect(found_user_particular.status).to eq('pending')
     expect(found_user_particular.verifier_ngo).to be_nil
+    end
   end
-end
-
 end
