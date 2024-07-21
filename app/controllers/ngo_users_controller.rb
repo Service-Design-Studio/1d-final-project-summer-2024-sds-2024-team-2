@@ -16,7 +16,6 @@ class NgoUsersController < ApplicationController
                  else
                    NgoUser.all_ngo_users
                  end
-    Rails.logger.info(@ngo_users)
   end
 
   def check_user
