@@ -19,10 +19,13 @@ class UserParticular < ActiveRecord::Base
   end
 
   def self.update_user_particular(id, attributes)
-    user_particular = UserParticular.find_by(id:)
+    user_particular = find_by(id: id)
+    return nil unless user_particular
+    
     user_particular.update(attributes)
     user_particular
   end
+  
 
   def self.reset_verification(id)
     user_particular = UserParticular.find_by(id:)
