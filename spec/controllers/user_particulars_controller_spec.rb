@@ -147,8 +147,6 @@ RSpec.describe UserParticularsController, type: :controller do
         end
     end
 
-
-    #TODO: Incomplete test
     describe 'PATCH #update' do
         context 'with valid params' do
             it 'updates the UserParticular' do
@@ -185,6 +183,33 @@ RSpec.describe UserParticularsController, type: :controller do
                 # Ensure the response redirects to the confirm page with the provided parameters
                 expect(response).to redirect_to(user_particulars_confirm_path(user_particular: @valid_attributes.merge(full_name: 'new name')))
                 expect(flash[:error_message]).to eq 'Edit failed. Please try again.'
+            end
+        end
+    end
+
+    describe 'POST #generate_2fa' do
+        context 'when 2FA passcode generation is successful' do
+            it 'generates and returns a 2FA passcode' do
+            @user_particular = UserParticular.create_user_particular(@valid_attributes)
+            post :generate_2fa, params: { id: @user_particular.id }, format: :json
+
+            @user_particular.reload
+            expect(response).to have_http_status(:ok)
+            expect(JSON.parse(response.body)['two_fa_passcode']).to eq(@user_particular.two_fa_passcode)
+            end
+        end
+
+        context 'when 2FA passcode generation fails' do
+            it 'returns an error message' do
+            @user_particular = UserParticular.create_user_particular(@valid_attributes)
+
+            # Force the save method called in generate_2fa to return false
+            allow_any_instance_of(UserParticular).to receive(:save).and_return(false)
+
+            post :generate_2fa, params: { id: @user_particular.id }, format: :json
+
+            expect(response).to have_http_status(:unprocessable_entity)
+            expect(JSON.parse(response.body)['error']).to eq('Failed to generate 2FA passcode')
             end
         end
     end
