@@ -216,4 +216,131 @@ RSpec.describe UserParticularsController, type: :controller do
             end
         end
     end
+
+    describe 'PATCH #validate_user_particulars' do
+    # Define a helper method for validation
+    def validate_user_particulars(attributes)
+      controller.send(:validate_user_particulars, attributes)
+    end
+
+    context 'with valid attributes' do
+      it 'returns no error messages' do
+        error_messages = validate_user_particulars(@valid_attributes)
+        expect(error_messages).to be_empty
+      end
+    end
+
+    context 'with invalid full name' do
+      it 'adds an error message for invalid full name' do
+        invalid_attributes = @valid_attributes.merge(full_name: 'John123!')
+        error_messages = validate_user_particulars(invalid_attributes)
+        expect(error_messages).to include('Full name can only contain valid letters and symbols.')
+      end
+    end
+
+    context 'with invalid phone numbers' do
+      it 'adds error messages for invalid phone numbers' do
+        invalid_attributes = @valid_attributes.merge(phone_number: '123-ABCD', secondary_phone_number: '123abc456')
+        error_messages = validate_user_particulars(invalid_attributes)
+        expect(error_messages).to include('Phone number can only contain numbers and hyphens.')
+        expect(error_messages).to include('Secondary phone number can only contain numbers and hyphens.')
+      end
+    end
+
+    context 'with invalid dropdown options' do
+      it 'adds error messages for invalid dropdown options' do
+        invalid_attributes = @valid_attributes.merge(country_of_origin: 'NotInDropdown', ethnicity: '', religion: '')
+        error_messages = validate_user_particulars(invalid_attributes)
+        expect(error_messages).to include('Select country of origin from the dropdown list.')
+        expect(error_messages).to include('Select ethnicity from the dropdown list.')
+        expect(error_messages).to include('Select religion from the dropdown list.')
+      end
+    end
+
+    context 'with future date of birth' do
+      it 'adds an error message for date of birth in the future' do
+        invalid_attributes = @valid_attributes.merge(date_of_birth: (Date.today + 1).to_s)
+        error_messages = validate_user_particulars(invalid_attributes)
+        expect(error_messages).to include('Date of birth cannot be in the future.')
+      end
+    end
+
+    context 'with future date of arrival' do
+      it 'adds an error message for date of arrival in the future' do
+        invalid_attributes = @valid_attributes.merge(date_of_arrival: (Date.today + 1).to_s)
+        error_messages = validate_user_particulars(invalid_attributes)
+        expect(error_messages).to include('Date of arrival cannot be in the future.')
+      end
+    end
+
+    context 'with date of arrival earlier than date of birth' do
+      it 'adds an error message for date of arrival earlier than date of birth' do
+        invalid_attributes = @valid_attributes.merge(date_of_arrival: '2000-01-01')
+        error_messages = validate_user_particulars(invalid_attributes)
+        expect(error_messages).to include('Date of arrival cannot be earlier than date of birth.')
+      end
+    end
+  end
+
+  describe '#validate_user_particulars' do
+    it 'returns an error if full_name contains numbers' do
+      user_particular = @valid_attributes.merge(full_name: 'John123')
+      errors = @controller.validate_user_particulars(user_particular)
+      expect(errors).to include('Full name can only contain valid letters and symbols.')
+    end
+
+    it 'returns an error if phone_number contains letters' do
+      user_particular = @valid_attributes.merge(phone_number: '123abc456')
+      errors = @controller.validate_user_particulars(user_particular)
+      expect(errors).to include('Phone number can only contain numbers and hyphens.')
+    end
+
+    it 'returns an error if secondary_phone_number contains letters' do
+      user_particular = @valid_attributes.merge(secondary_phone_number: '123abc456')
+      errors = @controller.validate_user_particulars(user_particular)
+      expect(errors).to include('Secondary phone number can only contain numbers and hyphens.')
+    end
+
+    it 'returns an error if country_of_origin is invalid' do
+      user_particular = @valid_attributes.merge(country_of_origin: 'InvalidCountry')
+      errors = @controller.validate_user_particulars(user_particular)
+      expect(errors).to include('Select country of origin from the dropdown list.')
+    end
+
+    it 'returns an error if ethnicity is missing' do
+      user_particular = @valid_attributes.merge(ethnicity: '')
+      errors = @controller.validate_user_particulars(user_particular)
+      expect(errors).to include('Select ethnicity from the dropdown list.')
+    end
+
+    it 'returns an error if religion is invalid' do
+      user_particular = @valid_attributes.merge(religion: 'InvalidReligion')
+      errors = @controller.validate_user_particulars(user_particular)
+      expect(errors).to include('Select religion from the dropdown list.')
+    end
+
+    it 'returns an error if date_of_birth is in the future' do
+      user_particular = @valid_attributes.merge(date_of_birth: (Date.today + 1).to_s)
+      errors = @controller.validate_user_particulars(user_particular)
+      expect(errors).to include('Date of birth cannot be in the future.')
+    end
+
+    it 'returns an error if date_of_arrival is in the future' do
+      user_particular = @valid_attributes.merge(date_of_arrival: (Date.today + 1).to_s)
+      errors = @controller.validate_user_particulars(user_particular)
+      expect(errors).to include('Date of arrival cannot be in the future.')
+    end
+
+    it 'returns an error if date_of_arrival is earlier than date_of_birth' do
+      user_particular = @valid_attributes.merge(date_of_birth: '2020-01-01', date_of_arrival: '2000-01-01')
+      errors = @controller.validate_user_particulars(user_particular)
+      expect(errors).to include('Date of arrival cannot be earlier than date of birth.')
+    end
+
+    it 'returns no errors if all attributes are valid' do
+      user_particular = @valid_attributes
+      errors = @controller.validate_user_particulars(user_particular)
+      expect(errors).to be_empty
+    end
+  end
 end
