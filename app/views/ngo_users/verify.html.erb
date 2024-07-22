@@ -9,7 +9,37 @@
       <%= render partial: "user_particulars/digitalid", locals: { user_particular: @user_particular } %>
       <%= form_with url: confirm_verify_ngo_user_path(@ngo_user), method: :post, local: true, id: "verify" do %>
         <input type="hidden" name="unique_id" value="<%= @user_particular.unique_id %>">
-        <%= submit_tag "Verify", class: "btn btn-success mt-3", id: "#ngo-verify-btn" %>
+
+        
+  
+        <h4>Please ensure that all these information is present before verifying:</h4>
+        <div class="inputGroup">
+          <input id="option1" name="option1" type="checkbox"/>
+          <label for="option1">Full name</label>
+        </div>
+        
+        <div class="inputGroup">
+          <input id="option2" name="option2" type="checkbox"/>
+          <label for="option2">Country of Origin</label>
+        </div>
+
+        <div class="inputGroup">
+          <input id="option3" name="option3" type="checkbox"/>
+          <label for="option3">Date of Birth</label>
+        </div>
+
+        <div class="inputGroup">
+          <input id="option4" name="option4" type="checkbox"/>
+          <label for="option4">Date of Arrival</label>
+        </div>
+
+        <div class="inputGroup">
+          <input id="option5" name="option5" type="checkbox"/>
+          <label for="option5">Phone Number</label>
+        </div>
+
+
+        <%= submit_tag "Verify", class: "btn btn-success mt-3", id: "verify-btn", disabled: true%>
       <% end %>
     </div>
   <% end %>
@@ -18,5 +48,36 @@
 <script type="text/javascript">
   document.addEventListener('DOMContentLoaded', function() {
     document.title = 'Gebirah - EnableID Verification';
+  });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const checkboxes = document.querySelectorAll('.inputGroup input[type="checkbox"]');
+    const verifyButton = document.getElementById('verify-btn');
+
+    function updateVerifyButtonState() {
+      // Debug: Log the current state of each checkbox
+      checkboxes.forEach((checkbox, index) => {
+        console.log(`Checkbox ${index}: ${checkbox.checked}`);
+      });
+
+      const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+      verifyButton.disabled = !allChecked;
+      console.log('Verify Button Disabled:', verifyButton.disabled); // Debugging line
+    }
+
+    checkboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', updateVerifyButtonState);
+    });
+
+    verifyButton.addEventListener('click', function(event) {
+      if (this.disabled) {
+        event.preventDefault();
+        alert('Please complete the checklist before verifying.');
+      }
+    });
+
+    updateVerifyButtonState(); // Initial check to ensure correct button state on page load
   });
 </script>
