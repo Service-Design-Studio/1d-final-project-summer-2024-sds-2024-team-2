@@ -39,8 +39,7 @@ class UserParticularsController < ApplicationController
   end
 
   def confirm
-    session[:user_particular_params] = user_particular_params # Use the session to store the model
-    @user_particular = UserParticular.new(session[:user_particular_params]) # The Model object to store the hidden keyed params
+    @user_particular = UserParticular.new(session[:user_particular_params]) # Get parameters from session
     error_messages_arr = validate_user_particulars(@user_particular)
     flash[:error] = error_messages_arr
 
