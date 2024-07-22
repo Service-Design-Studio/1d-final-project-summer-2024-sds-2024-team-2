@@ -65,10 +65,8 @@ RSpec.describe UserParticularsController, type: :controller do
 
     # Rollback the seeding after all tests are done
     after(:all) do
-        if @seeded
         ActiveRecord::Base.connection.execute('DELETE FROM user_particulars')
         ActiveRecord::Base.connection.execute('DELETE FROM users')
-        end
     end  
 
     describe 'GET #show' do
