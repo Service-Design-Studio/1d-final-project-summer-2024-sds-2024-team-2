@@ -51,38 +51,30 @@ RSpec.describe UserParticular, type: :model do
     end
   end
 
-  describe '.create' do
+  describe '.create_user_particular' do
     it 'creates a new user particular' do
-      # Create new user and corresponding user particular 
-      new_user = User.create!(username: 'jason101', email: 'jason101@mail.com', password: 'password',
-                             phone_number: '9004124')
+      new_user_particular = UserParticular.create_user_particular(@attributes)
   
-      attributes = {
-        user_id: new_user.id,
-        full_name: 'Jason Tan',
-        phone_number_country_code: '+65',
-        phone_number: '9004124',
-        secondary_phone_number_country_code: '+60',
-        secondary_phone_number: '9004124',
-        full_phone_number: '659004124',
-        country_of_origin: 'Indonesia',
-        ethnicity: 'Abgal',
-        religion: 'Christianity',
-        gender: 'Male',
-        date_of_birth: Date.new(2001, 11, 1),
-        date_of_arrival: Date.new(2019, 10, 20),
-        photo_url: 'https://example.com/jason_tan_photo.jpg',
-        birth_certificate_url: 'https://example.com/jason_tan_birth_certificate.jpg',
-        passport_url: 'https://example.com/jason_tan_passport.jpg'
-      }
-
-      new_user_particular = UserParticular.create_user_particular(attributes)
-      
-      expect(new_user_particular).to be_valid  # Ensure the instance is valid
+      expect(new_user_particular).to be_valid
       expect(new_user_particular).not_to be_nil
-      expect(new_user_particular).to have_attributes(attributes)
+      expect(new_user_particular).to have_attributes(@attributes)
+    end
+  
+    it 'fails to create a user particular without a user_id' do
+      attributes = @attributes.merge(user_id: nil)
+      new_user_particular = UserParticular.create_user_particular(attributes)
+  
+      expect(new_user_particular).not_to be_valid
+    end
+  
+    it 'fails to create a user particular with a non-existent user_id' do
+      attributes = @attributes.merge(user_id: 99999)  # Assuming 99999 is not a valid user ID
+      new_user_particular = UserParticular.create_user_particular(attributes)
+  
+      expect(new_user_particular).not_to be_valid
     end
   end
+  
 
   describe '.find_by_id' do
     it 'returns the user particular with the specified ID' do
