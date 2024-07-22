@@ -25,7 +25,7 @@ Given(/^I am now on the user particulars home page as a new user$/) do
 end
 
 # Yiqing: Starting point for NGO User Verification page
-Given('I am already on NGO "Gebirah" verify a user page') do
+Given(/^I am already on NGO "Gebirah" verify a user page$/) do
   step 'I am on the "Login" page'
   step 'I press the "I am a NGO" button'
   step 'I press the NGO "Gebirah" card'
