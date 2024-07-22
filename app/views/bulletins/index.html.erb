@@ -15,8 +15,8 @@
   </div>
   <div class="row overflow-auto" style='max-height: 65vh;' id="event-cards-container">
     <% @bulletins.each do |bulletin| %>
-      <div class="col-md-3 mb-4 event-card justify-content-center align-items-center" data-title="<%= bulletin.title.downcase %>" data-description="<%= bulletin.description.downcase %>" data-ngo-name="<%= bulletin.ngo_name.downcase %>">
-        <div class="card">
+      <div class="col-md-3 mb-4 event-container justify-content-center align-items-center" data-title="<%= bulletin.title.downcase %>" data-description="<%= bulletin.description.downcase %>" data-ngo-name="<%= bulletin.ngo_name.downcase %>">
+        <div class="card event-card">
           <% ngo_user = @ngo_users.find { |user| user.name == bulletin.ngo_name } %>
           <% if ngo_user&.image_url.present? %>
             <%= image_tag ngo_user.image_url, alt: "#{ngo_user.name} image", style: 'width: 220px; height: 220px; object-fit: contain;' %>
@@ -48,7 +48,7 @@
   $(document).ready(function() {
     $('#search-input').on('input', function() {
       var searchQuery = $(this).val().toLowerCase();
-      $('.event-card').each(function() {
+      $('.event-container').each(function() {
         var title = $(this).data('title');
         var description = $(this).data('description');
         var ngoName = $(this).data('ngo-name');
@@ -61,3 +61,8 @@
     });
   });
 </script>
+<style>
+  .event-card {
+  box-shadow: -1px 8px 8px 0 rgba(0, 0, 0, 0.2);
+  }
+</style>
