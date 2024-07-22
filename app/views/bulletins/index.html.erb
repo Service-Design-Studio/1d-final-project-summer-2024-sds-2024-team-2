@@ -1,0 +1,63 @@
+<div id="bulletin" class="container my-2 h-100 w-100 pt-5 px-5 pb-3" style='background-color: #fff1f1; border-radius: 30px;'>
+  <div class="row mb-4">
+    <div class="col d-flex justify-content-between align-items-center">
+      <div class="input-group bg-dark search-bar py-2 px-2" style='border-radius: 40px;'>
+        <span class="input-group-text bg-dark border-0 text-white">
+          <i class="fas fa-bars"></i>
+        </span>
+        <input type="search" class="form-control bg-dark text-white border-0" id="search-input" placeholder="Search Post" aria-label="Search" aria-describedby="search-addon"/>
+        <span class="input-group-text bg-dark border-0 text-white">
+          <i class="fas fa-search"></i>
+        </span>
+      </div>
+      <button class="btn btn-outline-secondary bg-dark rounded-pill ml-3" style='color:white;'>Saved Posts</button>
+    </div>
+  </div>
+  <div class="row overflow-auto" style='max-height: 65vh;' id="event-cards-container">
+    <% @bulletins.each do |bulletin| %>
+      <div class="col-md-3 mb-4 event-card justify-content-center align-items-center" data-title="<%= bulletin.title.downcase %>" data-description="<%= bulletin.description.downcase %>" data-ngo-name="<%= bulletin.ngo_name.downcase %>">
+        <div class="card">
+          <% ngo_user = @ngo_users.find { |user| user.name == bulletin.ngo_name } %>
+          <% if ngo_user&.image_url.present? %>
+            <%= image_tag ngo_user.image_url, alt: "#{ngo_user.name} image", style: 'width: 220px; height: 220px; object-fit: contain;' %>
+          <% else %>
+            <%= image_tag 'default.png', alt: "Event image", style: 'width: 220px; height: 220px; object-fit: contain;' %>
+          <% end %>
+          <div class="card-body p-2">
+            <ul class="list-unstyled">
+              <h6 class="card-title"><%= bulletin.title %></h6>
+              <li>Date: <%= bulletin.date.strftime("%d %B %Y") %></li>
+              <li>Location: <%= bulletin.location %></li>
+              <li>Information: <%= bulletin.description %></li>
+            </ul>
+            <div class="mt-3 d-flex justify-content-between align-items-center">
+              <small class="text-muted"><%= bulletin.ngo_name %></small>
+              <small class="text-muted"><%= time_ago_in_words(bulletin.created_at) %> ago</small>
+            </div>
+            <!--            <button class="btn btn-link" data-remote="true" rel="nofollow" data-method="patch" href="<%#=  %>">-->
+            <%#= bulletin.saved ? 'Unsave' : 'Save' %>
+            <!--            </button>-->
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('#search-input').on('input', function() {
+      var searchQuery = $(this).val().toLowerCase();
+      $('.event-card').each(function() {
+        var title = $(this).data('title');
+        var description = $(this).data('description');
+        var ngoName = $(this).data('ngo-name');
+        if (title.includes(searchQuery) || description.includes(searchQuery) || ngoName.includes(searchQuery)) {
+          $(this).show();
+        } else {
+          $(this).hide();
+        }
+      });
+    });
+  });
+</script>

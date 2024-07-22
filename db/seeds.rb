@@ -133,6 +133,109 @@ users_data = [
   }
 ]
 
+# Seed bulletin data
+bulletin_data = [
+  {
+    title: 'Bulletin 1',
+    date: DateTime.new(2024, 7, 1),
+    location: 'Singapore',
+    description: 'This is bulletin 1',
+    ngo_name: 'Gebirah',
+    saved: false,
+    created_at: DateTime.now,
+    updated_at: DateTime.now
+  },
+  {
+    title: 'Bulletin 2',
+    date: DateTime.new(2024, 7, 2),
+    location: 'Malaysia',
+    description: 'This is bulletin 2',
+    ngo_name: 'World Vision',
+    saved: false,
+    created_at: DateTime.now,
+    updated_at: DateTime.now
+  },
+  {
+    title: 'Bulletin 3',
+    date: DateTime.new(2024, 7, 3),
+    location: 'Thailand',
+    description: 'This is bulletin 3',
+    ngo_name: 'Oxfam',
+    saved: false,
+    created_at: DateTime.now,
+    updated_at: DateTime.now
+  },
+  {
+    title: 'Bulletin 4',
+    date: DateTime.new(2024, 6, 28),
+    location: 'Indonesia',
+    description: 'This is bulletin 4',
+    ngo_name: 'Gebirah',
+    saved: false,
+    created_at: DateTime.now - 3,
+    updated_at: DateTime.now - 3
+  },
+  {
+    title: 'Bulletin 5',
+    date: DateTime.new(2024, 6, 29),
+    location: 'Philippines',
+    description: 'This is bulletin 5',
+    ngo_name: 'Amnesty International',
+    saved: false,
+    created_at: DateTime.now - 2,
+    updated_at: DateTime.now - 2
+  },
+  {
+    title: 'Bulletin 6',
+    date: DateTime.new(2024, 6, 30),
+    location: 'Vietnam',
+    description: 'This is bulletin 6',
+    ngo_name: 'Human Rights Watch',
+    saved: false,
+    created_at: DateTime.now - 1,
+    updated_at: DateTime.now - 1
+  },
+  {
+    title: 'Bulletin 7',
+    date: DateTime.new(2024, 7, 4),
+    location: 'Cambodia',
+    description: 'This is bulletin 7',
+    ngo_name: 'World Relief',
+    saved: false,
+    created_at: DateTime.now,
+    updated_at: DateTime.now
+  },
+  {
+    title: 'Bulletin 8',
+    date: DateTime.new(2024, 7, 5),
+    location: 'Laos',
+    description: 'This is bulletin 8',
+    ngo_name: 'UNHCR',
+    saved: false,
+    created_at: DateTime.now,
+    updated_at: DateTime.now
+  },
+  {
+    title: 'Bulletin 9',
+    date: DateTime.new(2024, 7, 6),
+    location: 'Myanmar',
+    description: 'This is bulletin 9',
+    ngo_name: 'Save the Children',
+    saved: false,
+    created_at: DateTime.now,
+    updated_at: DateTime.now
+  },
+  {
+    title: 'Bulletin 10',
+    date: DateTime.new(2024, 7, 7),
+    location: 'Bangladesh',
+    description: 'This is bulletin 10',
+    ngo_name: 'CARE International',
+    saved: false,
+    created_at: DateTime.now,
+    updated_at: DateTime.now
+  }
+]
 # Seed NgoUser data
 ngo_users_data = [
   { name: 'CARE International', image_url: 'care.png' },
@@ -175,4 +278,10 @@ end
 ngo_users_data.each do |ngo_data|
   ngo_user = NgoUser.find_or_initialize_by(name: ngo_data[:name])
   ngo_user.update!(image_url: ngo_data[:image_url])
+end
+
+# Create or update Bulletins
+bulletin_data.each do |each_bulletin_data|
+  bulletin = Bulletin.find_or_initialize_by(title: each_bulletin_data[:title])
+  bulletin.update!(each_bulletin_data)
 end

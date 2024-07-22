@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  get 'bulletins/index'
+  get 'bulletins/update'
   root 'user_particulars#show' # set root path of web app as /user_particulars/show for now
 
   devise_for :users, controllers: {

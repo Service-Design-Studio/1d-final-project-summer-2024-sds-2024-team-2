@@ -10,7 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_10_122655) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_22_082849) do
+  create_table "bulletins", force: :cascade do |t|
+    t.string "title"
+    t.datetime "date"
+    t.string "location"
+    t.text "description"
+    t.string "ngo_name"
+    t.boolean "saved"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "ngo_users", force: :cascade do |t|
     t.string "name"
     t.string "image_url"
