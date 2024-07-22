@@ -20,7 +20,7 @@ RSpec.describe UserParticularsController, type: :controller do
         secondary_phone_number: '900001314',
         full_phone_number: '6591234567',
         country_of_origin: 'Myanmar',
-        ethnicity: 'Chinese',
+        ethnicity: 'Abgal',
         religion: 'Buddhism',
         gender: 'Male',
         date_of_birth: Date.new(2001, 11, 1),
@@ -95,11 +95,22 @@ RSpec.describe UserParticularsController, type: :controller do
         end
     end
 
+    describe 'GET #edit' do
+        it 'renders edit template' do
+            @user_particular = UserParticular.create_user_particular(@valid_attributes)
+            get :edit, params: { id: @user_particular.id }
+            expect(response).to render_template(:edit)
+        end
+    end
+
     #TODO: Incomplete test
     describe 'POST #create' do
-        xit 'renders new template' do
-            get :new
-            expect(response).to render_template(:new)
+        context 'with valid params' do
+            it 'creates a new UserParticular' do
+                post :create, params: { user_particular: @valid_attributes }
+                expect(response).to redirect_to(user_particular_path(UserParticular.last))
+                expect(flash[:success]). to eq 'Digital ID was successfully created!'
+            end
         end
     end
 
