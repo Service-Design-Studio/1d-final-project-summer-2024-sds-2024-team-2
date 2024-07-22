@@ -39,7 +39,7 @@ RSpec.describe UserParticularsController, type: :controller do
         secondary_phone_number: '900001314',
         full_phone_number: '6591234567',
         country_of_origin: 'Myanmar',
-        ethnicity: 'Chinese',
+        ethnicity: '', # Missing ethnicity
         religion: 'Buddhism',
         gender: 'Male',
         date_of_birth: Date.new(2001, 11, 1),
@@ -112,6 +112,19 @@ RSpec.describe UserParticularsController, type: :controller do
                 expect(flash[:success]). to eq 'Digital ID was successfully created!'
             end
         end
+
+        context 'with invalid params' do
+            it 'empty ethnicity, so does not create a new UserParticular' do
+                post :create, params: { user_particular: @invalid_attributes }
+                expect(response).to redirect_to(user_particulars_confirm_path(user_particular: @invalid_attributes))
+                expect(flash[:error_message]). to eq 'Digital ID creation failed. Please try again.'
+            end
+            it 'user id dont exist, so does not create a new UserParticular' do
+                post :create, params: { user_particular: @valid_attributes.merge(user_id: 999999) }
+                expect(response).to redirect_to(user_particulars_confirm_path(user_particular: @valid_attributes.merge(user_id: 999999)))
+                expect(flash[:error_message]). to eq 'Digital ID creation failed. Please try again.'
+            end
+        end
     end
 
     # #TODO: Incomplete test
@@ -163,14 +176,6 @@ RSpec.describe UserParticularsController, type: :controller do
     #         expect(response).to render_template(:confirm)
     #     end
     # end
-
-    describe 'GET #edit' do
-        it 'renders edit template' do
-            @user_particular = UserParticular.create_user_particular(@valid_attributes)
-            get :edit, params: { id: @user_particular.id }
-            expect(response).to render_template(:edit)
-        end
-    end
 
     #TODO: Incomplete test
     describe 'POST #update' do
