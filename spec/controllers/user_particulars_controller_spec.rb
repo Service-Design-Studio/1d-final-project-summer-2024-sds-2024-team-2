@@ -130,8 +130,7 @@ RSpec.describe UserParticularsController, type: :controller do
         context 'with valid params' do
             it 'renders the confirm template' do
                 # Set the session directly
-                session[:user_particular_params] = @valid_attributes
-                get :confirm
+                get :confirm, params: { user_particular: @valid_attributes}
                 expect(response).to render_template(:confirm)
             end
         end
@@ -139,8 +138,7 @@ RSpec.describe UserParticularsController, type: :controller do
         context 'with invalid params' do
             it 'redirects to the new template with error messages if validation fails' do
                 # Set the session directly
-                session[:user_particular_params] = @invalid_attributes
-                get :confirm
+                get :confirm, params: { user_particular: @invalid_attributes}
                 expect(response).to redirect_to(new_user_particular_path)
                 expect(flash[:error_message]).to eq('Please fix the error(s) below:')
             end

@@ -39,7 +39,8 @@ class UserParticularsController < ApplicationController
   end
 
   def confirm
-    @user_particular = UserParticular.new(session[:user_particular_params]) # Get parameters from session
+    session[:user_particular_params] = user_particular_params # Use the session to store the model
+    @user_particular = UserParticular.new(session[:user_particular_params]) # The Model object to store the hidden keyed params
     error_messages_arr = validate_user_particulars(@user_particular)
     flash[:error] = error_messages_arr
 
@@ -160,10 +161,10 @@ class UserParticularsController < ApplicationController
 
   private
 
-  def skip_authentication?
-    # You can set an environment variable in your test setup
-    # and check it here to decide whether to skip authentication.
-    # Make sure this is only used in a test or development environment.
-    Rails.env.test? && ENV['SKIP_AUTHENTICATE_USER'].present?
-  end
+  # def skip_authentication?
+  #   # You can set an environment variable in your test setup
+  #   # and check it here to decide whether to skip authentication.
+  #   # Make sure this is only used in a test or development environment.
+  #   Rails.env.test? && ENV['SKIP_AUTHENTICATE_USER'].present?
+  # end
 end
