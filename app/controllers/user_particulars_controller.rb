@@ -82,7 +82,7 @@ class UserParticularsController < ApplicationController
         redirect_to @user_particular # redirects to /user_particulars/:id
       else
         flash[:error_message] = 'Edit failed. Please fix the error(s) below:'
-        redirect_to edit_user_particular_path(@user_particular, user_particular: user_particular_params)
+        redirect_to edit_user_particular_path(params[:id], user_particular: user_particular_params)
       end
     else
       # Failed validation

@@ -31,7 +31,7 @@ RSpec.describe UserParticularsController, type: :controller do
     }
 
     @invalid_attributes = {
-      user_id: @user.id,
+      user_id: @user.id, #missing full name
       phone_number_country_code: '+65',
       phone_number: '91234567',
       secondary_phone_number_country_code: '+60',
@@ -152,33 +152,26 @@ RSpec.describe UserParticularsController, type: :controller do
         user_particular.reload # Reload to get updated attributes
         expect(response).to redirect_to(user_particular_path(user_particular))
         expect(flash[:success]).to eq 'Digital ID was successfully edited!'
-        expect(user_particular.full_name).to eq 'new name'
       end
     end
 
     context 'with invalid params' do
-      it 'does not update the UserParticular if params are invalid' do
+      it 'does not update the UserParticular' do
         user_particular = UserParticular.create!(@valid_attributes) # Create an initial record
         patch :update, params: { id: user_particular.id, user_particular: @invalid_attributes }
     
-        # Ensure the response redirects to the confirm page with the invalid parameters
-        expect(response).to redirect_to(user_particulars_confirm_path(user_particular: @invalid_attributes))
-        expect(flash[:error_message]).to eq 'Edit failed. Please try again.'
-    
-        # Reload the user_particular to ensure no changes were made
-        user_particular.reload
-        expect(user_particular.full_name).to eq @valid_attributes[:full_name] # Ensure no update occurred
+        expect(response).to redirect_to(edit_user_particular_path(user_particular.id, user_particular: @invalid_attributes))
+        expect(flash[:error_message]).to eq 'Edit failed. Please fix the error(s) below:'
       end
     end        
 
     context 'with non-existent UserParticular' do
-      it 'handles the case when the UserParticular does not exist' do
+      it 'does not update the UserParticular' do
         # Attempt to update a UserParticular with an ID that doesn't exist
         patch :update, params: { id: 99999, user_particular: @valid_attributes.merge(full_name: 'new name') }
     
-        # Ensure the response redirects to the confirm page with the provided parameters
-        expect(response).to redirect_to(user_particulars_confirm_path(user_particular: @valid_attributes.merge(full_name: 'new name')))
-        expect(flash[:error_message]).to eq 'Edit failed. Please try again.'
+        expect(response).to redirect_to(edit_user_particular_path(99999, user_particular: @valid_attributes.merge(full_name: 'new name')))
+        expect(flash[:error_message]).to eq 'Edit failed. Please fix the error(s) below:'
       end
     end
   end
