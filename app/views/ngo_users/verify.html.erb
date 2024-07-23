@@ -16,8 +16,8 @@
       <div class="col-md-8">
         <%= render partial: "user_particulars/digitalid", locals: { user_particular: @user_particular } %>
         <div id="app" v-scroll="onScroll">
-           <div class="card" v-for="(card, index) in styledCards" :style="card.style" :key="index">
-            <div class="card_content">
+           <div class="card_2" v-for="(card, index) in styledCards" :style="card.style" :key="index">
+            <div class="card_content_2">
               <h3>{{card.title}}</h3>
               <p>{{card.description}}</p>
             </div>
