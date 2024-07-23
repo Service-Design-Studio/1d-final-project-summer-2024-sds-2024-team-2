@@ -1,216 +1,216 @@
 require 'rails_helper'
 
 RSpec.describe UserParticularsController, type: :controller do
-    include Devise::Test::ControllerHelpers
+  include Devise::Test::ControllerHelpers
 
-    # Create new user and attributes for testing
-    before(:all) do
-        @user = User.find_or_create_by!(username: 'newuser') do |user|
-        user.email = 'newuser@mail.com'
-        user.password = 'password'
-        user.phone_number = '91234567'
-        end
-        
-        @valid_attributes = {
-        user_id: @user.id,
-        full_name: 'John Tan',
-        phone_number_country_code: '+65',
-        phone_number: '91234567',
-        secondary_phone_number_country_code: '+60',
-        secondary_phone_number: '900001314',
-        full_phone_number: '6591234567',
-        country_of_origin: 'Myanmar',
-        ethnicity: 'Abgal',
-        religion: 'Buddhism',
-        gender: 'Male',
-        date_of_birth: Date.new(2001, 11, 1),
-        date_of_arrival: Date.new(2019, 10, 20),
-        photo_url: 'https://example.com/john_tan_photo.jpg',
-        birth_certificate_url: 'https://example.com/john_tan_birth_certificate.jpg',
-        passport_url: 'https://example.com/john_tan_passport.jpg'
-        }
+  # Create new user and attributes for testing
+  before(:all) do
+    @user = User.find_or_create_by!(username: 'newuser') do |user|
+      user.email = 'newuser@mail.com'
+      user.password = 'password'
+      user.phone_number = '91234567'
+    end
+    
+    @valid_attributes = {
+      user_id: @user.id,
+      full_name: 'John Tan',
+      phone_number_country_code: '+65',
+      phone_number: '91234567',
+      secondary_phone_number_country_code: '+60',
+      secondary_phone_number: '900001314',
+      full_phone_number: '6591234567',
+      country_of_origin: 'Myanmar',
+      ethnicity: 'Abgal',
+      religion: 'Buddhism',
+      gender: 'Male',
+      date_of_birth: Date.new(2001, 11, 1),
+      date_of_arrival: Date.new(2019, 10, 20),
+      photo_url: 'https://example.com/john_tan_photo.jpg',
+      birth_certificate_url: 'https://example.com/john_tan_birth_certificate.jpg',
+      passport_url: 'https://example.com/john_tan_passport.jpg'
+    }
 
-        @invalid_attributes = {
-        user_id: @user.id,
-        full_name: 'John Tan',
-        phone_number_country_code: '+65',
-        phone_number: '91234567',
-        secondary_phone_number_country_code: '+60',
-        secondary_phone_number: '900001314',
-        full_phone_number: '6591234567',
-        country_of_origin: 'Myanmar',
-        ethnicity: '', # Missing ethnicity
-        religion: 'Buddhism',
-        gender: 'Male',
-        date_of_birth: Date.new(2001, 11, 1),
-        date_of_arrival: Date.new(2019, 10, 20),
-        photo_url: 'https://example.com/john_tan_photo.jpg',
-        birth_certificate_url: 'https://example.com/john_tan_birth_certificate.jpg',
-        passport_url: 'https://example.com/john_tan_passport.jpg'
-        }
+    @invalid_attributes = {
+      user_id: @user.id,
+      phone_number_country_code: '+65',
+      phone_number: '91234567',
+      secondary_phone_number_country_code: '+60',
+      secondary_phone_number: '900001314',
+      full_phone_number: '6591234567',
+      country_of_origin: 'Myanmar',
+      ethnicity: 'Abgal',
+      religion: 'Buddhism',
+      gender: 'Male',
+      date_of_birth: Date.new(2001, 11, 1),
+      date_of_arrival: Date.new(2019, 10, 20),
+      photo_url: 'https://example.com/john_tan_photo.jpg',
+      birth_certificate_url: 'https://example.com/john_tan_birth_certificate.jpg',
+      passport_url: 'https://example.com/john_tan_passport.jpg'
+    }
+  end
+
+  before do
+    # Sign in the user before each test
+    sign_in @user
+  end
+
+  # Rollback transaction after each test case
+  around(:each) do |example|
+      ActiveRecord::Base.transaction do
+      example.run
+      raise ActiveRecord::Rollback
+    end
+  end
+
+  # Rollback the seeding after all tests are done
+  after(:all) do
+    ActiveRecord::Base.connection.execute('DELETE FROM user_particulars')
+    ActiveRecord::Base.connection.execute('DELETE FROM users')
+  end  
+
+  describe 'GET #show' do
+    it 'renders show template' do
+      @user_particular = UserParticular.create_user_particular(@valid_attributes)
+      get :show, params: { id: @user_particular.id }
+      expect(response).to render_template(:show)
+    end
+  end
+
+  # Need to change name accordingly when controller action changes
+  describe 'GET #page2' do
+    it 'renders page2 template' do
+      @user_particular = UserParticular.create_user_particular(@valid_attributes)
+      get :page2, params: { id: @user_particular.id }
+      expect(response).to render_template(:page2)
+    end
+  end
+
+  describe 'GET #new' do
+    it 'renders new template' do
+      get :new
+      expect(response).to render_template(:new)
+    end
+  end
+
+  describe 'GET #edit' do
+    it 'renders edit template' do
+      @user_particular = UserParticular.create_user_particular(@valid_attributes)
+      get :edit, params: { id: @user_particular.id }
+      expect(response).to render_template(:edit)
+    end
+  end
+
+  describe 'POST #create' do
+    context 'with valid params' do
+      it 'creates a new UserParticular' do
+        post :create, params: { user_particular: @valid_attributes }
+        expect(response).to redirect_to(user_particular_path(UserParticular.last))
+        expect(flash[:success]). to eq 'Digital ID was successfully created!'
+      end
     end
 
-    before do
-        # Sign in the user before each test
-        sign_in @user
+    context 'with invalid params' do
+      it 'missing username, so does not create a new UserParticular' do
+          post :create, params: { user_particular: @invalid_attributes }
+          expect(response).to redirect_to(user_particulars_confirm_path(user_particular: @invalid_attributes))
+          expect(flash[:error_message]). to eq 'Digital ID creation failed. Please try again.'
+      end
+
+      it 'user id dont exist, so does not create a new UserParticular' do
+          post :create, params: { user_particular: @valid_attributes.merge(user_id: 999999) }
+          expect(response).to redirect_to(user_particulars_confirm_path(user_particular: @valid_attributes.merge(user_id: 999999)))
+          expect(flash[:error_message]). to eq 'Digital ID creation failed. Please try again.'
+      end
+    end
+  end
+
+  describe 'GET #confirm' do
+    context 'with valid params' do
+      it 'renders the confirm template' do
+        # Set the session directly
+        get :confirm, params: { user_particular: @valid_attributes}
+        expect(response).to render_template(:confirm)
+      end
     end
 
-    # Rollback transaction after each test case
-    around(:each) do |example|
-        ActiveRecord::Base.transaction do
-        example.run
-        raise ActiveRecord::Rollback
-        end
+    context 'with invalid params' do
+      it 'redirects to the new template with error messages if validation fails' do
+        # Set the session directly
+        get :confirm, params: { user_particular: @invalid_attributes}
+        expect(response).to redirect_to(new_user_particular_path)
+        expect(flash[:error_message]).to eq('Please fix the error(s) below:')
+      end
+    end
+  end
+
+  describe 'PATCH #update' do
+    context 'with valid params' do
+      it 'updates the UserParticular' do
+        user_particular = UserParticular.create!(@valid_attributes)
+        patch :update, params: { id: user_particular.id, user_particular: @valid_attributes.merge(full_name: 'new name') }
+
+        user_particular.reload # Reload to get updated attributes
+        expect(response).to redirect_to(user_particular_path(user_particular))
+        expect(flash[:success]).to eq 'Digital ID was successfully edited!'
+        expect(user_particular.full_name).to eq 'new name'
+      end
     end
 
-    # Rollback the seeding after all tests are done
-    after(:all) do
-        ActiveRecord::Base.connection.execute('DELETE FROM user_particulars')
-        ActiveRecord::Base.connection.execute('DELETE FROM users')
-    end  
+    context 'with invalid params' do
+      it 'does not update the UserParticular if params are invalid' do
+        user_particular = UserParticular.create!(@valid_attributes) # Create an initial record
+        patch :update, params: { id: user_particular.id, user_particular: @invalid_attributes }
+    
+        # Ensure the response redirects to the confirm page with the invalid parameters
+        expect(response).to redirect_to(user_particulars_confirm_path(user_particular: @invalid_attributes))
+        expect(flash[:error_message]).to eq 'Edit failed. Please try again.'
+    
+        # Reload the user_particular to ensure no changes were made
+        user_particular.reload
+        expect(user_particular.full_name).to eq @valid_attributes[:full_name] # Ensure no update occurred
+      end
+    end        
 
-    describe 'GET #show' do
-        it 'renders show template' do
-            @user_particular = UserParticular.create_user_particular(@valid_attributes)
-            get :show, params: { id: @user_particular.id }
-            expect(response).to render_template(:show)
-        end
+    context 'with non-existent UserParticular' do
+      it 'handles the case when the UserParticular does not exist' do
+        # Attempt to update a UserParticular with an ID that doesn't exist
+        patch :update, params: { id: 99999, user_particular: @valid_attributes.merge(full_name: 'new name') }
+    
+        # Ensure the response redirects to the confirm page with the provided parameters
+        expect(response).to redirect_to(user_particulars_confirm_path(user_particular: @valid_attributes.merge(full_name: 'new name')))
+        expect(flash[:error_message]).to eq 'Edit failed. Please try again.'
+      end
+    end
+  end
+
+  describe 'POST #generate_2fa' do
+    context 'when 2FA passcode generation is successful' do
+      it 'generates and returns a 2FA passcode' do
+        @user_particular = UserParticular.create_user_particular(@valid_attributes)
+        post :generate_2fa, params: { id: @user_particular.id }, format: :json
+
+        @user_particular.reload
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)['two_fa_passcode']).to eq(@user_particular.two_fa_passcode)
+      end
     end
 
-    # Need to change name accordingly when controller action changes
-    describe 'GET #page2' do
-        it 'renders page2 template' do
-            @user_particular = UserParticular.create_user_particular(@valid_attributes)
-            get :page2, params: { id: @user_particular.id }
-            expect(response).to render_template(:page2)
-        end
+    context 'when 2FA passcode generation fails' do
+      it 'returns an error message' do
+        @user_particular = UserParticular.create_user_particular(@valid_attributes)
+
+        # Force the save method called in generate_2fa to return false
+        allow_any_instance_of(UserParticular).to receive(:save).and_return(false)
+
+        post :generate_2fa, params: { id: @user_particular.id }, format: :json
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(JSON.parse(response.body)['error']).to eq('Failed to generate 2FA passcode')
+      end
     end
+  end
 
-    describe 'GET #new' do
-        it 'renders new template' do
-            get :new
-            expect(response).to render_template(:new)
-        end
-    end
-
-    describe 'GET #edit' do
-        it 'renders edit template' do
-            @user_particular = UserParticular.create_user_particular(@valid_attributes)
-            get :edit, params: { id: @user_particular.id }
-            expect(response).to render_template(:edit)
-        end
-    end
-
-    describe 'POST #create' do
-        context 'with valid params' do
-            it 'creates a new UserParticular' do
-                post :create, params: { user_particular: @valid_attributes }
-                expect(response).to redirect_to(user_particular_path(UserParticular.last))
-                expect(flash[:success]). to eq 'Digital ID was successfully created!'
-            end
-        end
-
-        context 'with invalid params' do
-            it 'empty ethnicity, so does not create a new UserParticular' do
-                post :create, params: { user_particular: @invalid_attributes }
-                expect(response).to redirect_to(user_particulars_confirm_path(user_particular: @invalid_attributes))
-                expect(flash[:error_message]). to eq 'Digital ID creation failed. Please try again.'
-            end
-            it 'user id dont exist, so does not create a new UserParticular' do
-                post :create, params: { user_particular: @valid_attributes.merge(user_id: 999999) }
-                expect(response).to redirect_to(user_particulars_confirm_path(user_particular: @valid_attributes.merge(user_id: 999999)))
-                expect(flash[:error_message]). to eq 'Digital ID creation failed. Please try again.'
-            end
-        end
-    end
-
-    describe 'GET #confirm' do
-        context 'with valid params' do
-            it 'renders the confirm template' do
-                # Set the session directly
-                get :confirm, params: { user_particular: @valid_attributes}
-                expect(response).to render_template(:confirm)
-            end
-        end
-
-        context 'with invalid params' do
-            it 'redirects to the new template with error messages if validation fails' do
-                # Set the session directly
-                get :confirm, params: { user_particular: @invalid_attributes}
-                expect(response).to redirect_to(new_user_particular_path)
-                expect(flash[:error_message]).to eq('Please fix the error(s) below:')
-            end
-        end
-    end
-
-    describe 'PATCH #update' do
-        context 'with valid params' do
-            it 'updates the UserParticular' do
-            user_particular = UserParticular.create!(@valid_attributes)
-            patch :update, params: { id: user_particular.id, user_particular: @valid_attributes.merge(full_name: 'new name') }
-
-            user_particular.reload # Reload to get updated attributes
-            expect(response).to redirect_to(user_particular_path(user_particular))
-            expect(flash[:success]).to eq 'Digital ID was successfully edited!'
-            expect(user_particular.full_name).to eq 'new name'
-            end
-        end
-
-        context 'with invalid params' do
-            it 'does not update the UserParticular if params are invalid' do
-              user_particular = UserParticular.create!(@valid_attributes) # Create an initial record
-              patch :update, params: { id: user_particular.id, user_particular: @invalid_attributes }
-          
-              # Ensure the response redirects to the confirm page with the invalid parameters
-              expect(response).to redirect_to(user_particulars_confirm_path(user_particular: @invalid_attributes))
-              expect(flash[:error_message]).to eq 'Edit failed. Please try again.'
-          
-              # Reload the user_particular to ensure no changes were made
-              user_particular.reload
-              expect(user_particular.full_name).to eq @valid_attributes[:full_name] # Ensure no update occurred
-            end
-          end        
-
-        context 'with non-existent UserParticular' do
-            it 'handles the case when the UserParticular does not exist' do
-                # Attempt to update a UserParticular with an ID that doesn't exist
-                patch :update, params: { id: 99999, user_particular: @valid_attributes.merge(full_name: 'new name') }
-            
-                # Ensure the response redirects to the confirm page with the provided parameters
-                expect(response).to redirect_to(user_particulars_confirm_path(user_particular: @valid_attributes.merge(full_name: 'new name')))
-                expect(flash[:error_message]).to eq 'Edit failed. Please try again.'
-            end
-        end
-    end
-
-    describe 'POST #generate_2fa' do
-        context 'when 2FA passcode generation is successful' do
-            it 'generates and returns a 2FA passcode' do
-            @user_particular = UserParticular.create_user_particular(@valid_attributes)
-            post :generate_2fa, params: { id: @user_particular.id }, format: :json
-
-            @user_particular.reload
-            expect(response).to have_http_status(:ok)
-            expect(JSON.parse(response.body)['two_fa_passcode']).to eq(@user_particular.two_fa_passcode)
-            end
-        end
-
-        context 'when 2FA passcode generation fails' do
-            it 'returns an error message' do
-            @user_particular = UserParticular.create_user_particular(@valid_attributes)
-
-            # Force the save method called in generate_2fa to return false
-            allow_any_instance_of(UserParticular).to receive(:save).and_return(false)
-
-            post :generate_2fa, params: { id: @user_particular.id }, format: :json
-
-            expect(response).to have_http_status(:unprocessable_entity)
-            expect(JSON.parse(response.body)['error']).to eq('Failed to generate 2FA passcode')
-            end
-        end
-    end
-
-    describe 'PATCH #validate_user_particulars' do
+  describe 'PATCH #validate_user_particulars' do
     # Define a helper method for validation
     def validate_user_particulars(attributes)
       controller.send(:validate_user_particulars, attributes)
