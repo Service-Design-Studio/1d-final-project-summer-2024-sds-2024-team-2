@@ -1,5 +1,5 @@
 require 'date'
-
+require 'faker'
 # Seed data for users and their particulars
 # Seeding is now idempotent
 users_data = [
@@ -252,6 +252,8 @@ ngo_users_data = [
   { name: 'World Relief', image_url: 'world relief.png' }
 ]
 
+
+
 # Create or update users and their particulars
 users_data.each do |user_data|
   user = User.find_or_initialize_by(username: user_data[:username])
@@ -284,4 +286,23 @@ end
 bulletin_data.each do |each_bulletin_data|
   bulletin = Bulletin.find_or_initialize_by(title: each_bulletin_data[:title])
   bulletin.update!(each_bulletin_data)
+end
+
+
+users_history = []
+15.times do
+  users_history << {
+    description: Faker::Lorem.words(number: rand(1..20)).join(' '),
+    date: DateTime.now - rand(1..30),
+    user_particular_id: User.first.id
+  }
+end
+puts users_history
+# Ensure there is at least one UserParticular record
+if User.first.nil?
+  puts 'No UserParticular records found. Please create one before proceeding.'
+else
+  users_history.each do |history_data|
+    UserHistory.create!(history_data)
+  end
 end
