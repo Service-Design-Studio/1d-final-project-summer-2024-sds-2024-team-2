@@ -1,0 +1,8 @@
+.pri-container {
+  background-color: #fff1f1 !important;
+  border-radius: 30px !important;
+}
+
+.add-small-shadow {
+  box-shadow: -1px 8px 8px 0 rgba(0, 0, 0, 0.2);
+}

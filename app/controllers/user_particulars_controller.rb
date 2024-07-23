@@ -74,6 +74,8 @@ class UserParticularsController < ApplicationController
     end
   end
 
+  def history; end
+
   # Retrieves user particular object linked to user object
   def set_user_particular
     @user_particular = current_user.user_particular
