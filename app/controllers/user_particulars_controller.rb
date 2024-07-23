@@ -57,8 +57,15 @@ class UserParticularsController < ApplicationController
 
   def edit
     set_dropdown_options
+  
+    if params[:user_particular]
+      @user_particular = UserParticular.new(user_particular_params)
+      @user_particular.id = params[:id]  # Required for error flow
+    else
+      @user_particular = UserParticular.find(params[:id])
+    end
   end
-
+  
   def update
     error_messages_arr = validate_user_particulars(UserParticular.new(user_particular_params))
     flash[:error] = error_messages_arr
@@ -74,13 +81,13 @@ class UserParticularsController < ApplicationController
         UserParticular.reset_verification(params[:id]) # Set status to pending and reset verifier_ngo
         redirect_to @user_particular # redirects to /user_particulars/:id
       else
-        flash[:error_message] = 'Edit failed. Please try again.'
-        redirect_to user_particulars_confirm_path(user_particular: user_particular_params)
+        flash[:error_message] = 'Edit failed. Please fix the error(s) below:'
+        redirect_to edit_user_particular_path(params[:id], user_particular: user_particular_params)
       end
     else
       # Failed validation
-      flash[:error_message] = 'Edit failed. Please try again.'
-      redirect_to user_particulars_confirm_path(user_particular: user_particular_params) # pass user_particular_params into params of confirm action
+      flash[:error_message] = 'Edit failed. Please fix the error(s) below:'
+      redirect_to edit_user_particular_path(params[:id], user_particular: user_particular_params)
     end
   end
 
@@ -150,6 +157,14 @@ class UserParticularsController < ApplicationController
     # Check if selected option is in dropdown options
     unless user_particular[:country_of_origin].in? country_options
       error_messages_arr << 'Select country of origin from the dropdown list.'
+    end
+
+    unless user_particular[:ethnicity].in? ethnicity_options
+      error_messages_arr << 'Select ethnicity from the dropdown list.'
+    end
+
+    unless user_particular[:religion].in? religion_options
+      error_messages_arr << 'Select religion from the dropdown list.'
     end
 
     if Date.parse(user_particular[:date_of_birth].to_s) > Date.today
