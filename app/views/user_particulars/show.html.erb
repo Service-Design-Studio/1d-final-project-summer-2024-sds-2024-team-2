@@ -78,7 +78,7 @@
         <% else %>
           <% if @user_particular.status == 'verified' %>
             <%= link_to edit_user_particular_path(@user_particular), class: 'customhome-button', style: 'text-decoration: none;' do %>
-              <i class="fas fa-user"></i> Edit your particulars!
+              <i class="fas fa-user"></i> Personal
             <% end %>
           <% else %>
             <%= link_to edit_user_particular_path(@user_particular), class: 'customhome-button', style: 'text-decoration: none;' do %>
@@ -105,7 +105,7 @@
       <div class="col-md-7">
       <div class="card">
         <div class="card-body" style="background-color: #fdc6cf; min-height: 800px; display: flex; justify-content: center; border-radius: 2%;">
-          <%= render 'bulletin' %>
+          <%# <%= render 'bulletin' %> 
         </div>
       </div>
     </div>
