@@ -65,6 +65,7 @@
     <div class="container mt-5">
         <!-- Title and instruction -->
         <h1 class="text-center">Select documents to upload</h1>
+        <p class="text-center">Drag and drop your documents below. Supported formats: PDF, DOCX, JPG. Max size: 5MB.</p>
         
         <!-- Form for file upload -->
         <form id="uploadForm">
@@ -75,7 +76,8 @@
             </div>
 
             <!-- Dropdown menu -->
-            <div class="dropdown-menu">
+            <div class="form-group">
+                <label for="documentTypeDropdown">Select Document Type</label>
                 <select class="form-control" id="documentTypeDropdown">
                     <option>Dropdown</option>
                     <option>Item 1</option>
@@ -114,8 +116,8 @@
             selectedFiles.forEach(file => {
                 var fileItem = document.createElement('div');
                 fileItem.classList.add('file-details');
-                // Display file name and formatted size
-                fileItem.innerText = file.name + ' (' + formatFileSize(file.size) + ')';
+                // Display file name, formatted size, and date of upload
+                fileItem.innerText = `${file.name} (${formatFileSize(file.size)}) - ${new Date().toLocaleDateString()}`;
                 fileListContainer.appendChild(fileItem);
             });
         }
@@ -153,9 +155,49 @@
             event.preventDefault();
             dropArea.classList.remove('hover'); // Remove hover effect on drop
             const files = Array.from(event.dataTransfer.files); // Get files from drop event
-            selectedFiles = selectedFiles.concat(files); // Add files to selectedFiles
+            files.forEach(file => {
+                if (!['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg'].includes(file.type)) {
+                    document.getElementById('statusMessage').innerText = 'Unsupported file type. Please upload a PDF, DOCX, or JPG file.';
+                    return;
+                }
+                if (file.size > 5242880) { // 5MB limit
+                    document.getElementById('statusMessage').innerText = 'File size exceeds the maximum limit of 5MB. Please upload a smaller file.';
+                    return;
+                }
+                selectedFiles.push(file);
+            });
             updateFileList(); // Update the file list display
             document.getElementById('statusMessage').innerText = 'Files attached successfully!';
+        });
+
+        fileInput.addEventListener('change', (event) => {
+            const files = Array.from(event.target.files); // Get files from file input
+            files.forEach(file => {
+                if (!['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg'].includes(file.type)) {
+                    document.getElementById('statusMessage').innerText = 'Unsupported file type. Please upload a PDF, DOCX, or JPG file.';
+                    return;
+                }
+                if (file.size > 5242880) { // 5MB limit
+                    document.getElementById('statusMessage').innerText = 'File size exceeds the maximum limit of 5MB. Please upload a smaller file.';
+                    return;
+                }
+                selectedFiles.push(file);
+            });
+            updateFileList(); // Update the file list display
+            document.getElementById('statusMessage').innerText = 'Files attached successfully!';
+        });
+
+        // Event listener for the preview button
+        document.querySelector('.preview-button').addEventListener('click', () => {
+            if (selectedFiles.length === 0) {
+                document.getElementById('statusMessage').innerText = 'No files to preview.';
+                return;
+            }
+
+            selectedFiles.forEach(file => {
+                const fileURL = URL.createObjectURL(file);
+                window.open(fileURL);
+            });
         });
 
         // Event listener for form submission to handle the file upload process
