@@ -294,7 +294,7 @@ users_history = []
   users_history << {
     description: Faker::Lorem.words(number: rand(1..20)).join(' '),
     date: DateTime.now - rand(1..30),
-    user_particular_id: User.first.id
+    user_id: User.first.id
   }
 end
 puts users_history

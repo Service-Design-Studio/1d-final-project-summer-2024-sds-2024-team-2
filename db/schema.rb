@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_22_082849) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_23_084924) do
   create_table "bulletins", force: :cascade do |t|
     t.string "title"
     t.datetime "date"
@@ -27,6 +27,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_22_082849) do
     t.string "image_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "user_histories", force: :cascade do |t|
+    t.text "description"
+    t.date "date"
+    t.integer "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_user_histories_on_user_id"
   end
 
   create_table "user_particulars", force: :cascade do |t|
@@ -53,7 +62,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_22_082849) do
     t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["unique_id"], name: "index_user_particulars_on_unique_id", unique: true
     t.index ["user_id"], name: "index_user_particulars_on_user_id"
   end
 
@@ -72,5 +80,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_22_082849) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  add_foreign_key "user_histories", "users"
   add_foreign_key "user_particulars", "users"
 end
