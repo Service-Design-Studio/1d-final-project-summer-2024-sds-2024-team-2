@@ -160,6 +160,14 @@ class UserParticularsController < ApplicationController
       error_messages_arr << 'Select country of origin from the dropdown list.'
     end
 
+    unless user_particular[:ethnicity].in? ethnicity_options
+      error_messages_arr << 'Select ethnicity from the dropdown list.'
+    end
+
+    unless user_particular[:religion].in? religion_options
+      error_messages_arr << 'Select religion from the dropdown list.'
+    end
+
     if Date.parse(user_particular[:date_of_birth].to_s) > Date.today
       error_messages_arr << 'Date of birth cannot be in the future.'
     end
