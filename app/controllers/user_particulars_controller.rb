@@ -57,14 +57,15 @@ class UserParticularsController < ApplicationController
 
   def edit
     set_dropdown_options
-
+  
     if params[:user_particular]
-      @user_particular = UserParticular.new(user_particular_params) # Populate form from params if params are passed
+      @user_particular = UserParticular.new(user_particular_params)
+      @user_particular.id = params[:id]  # Required for error flow
     else
-      @user_particular = UserParticular.find(params[:id]) # Populate form from database if no params are passed
+      @user_particular = UserParticular.find(params[:id])
     end
   end
-
+  
   def update
     error_messages_arr = validate_user_particulars(UserParticular.new(user_particular_params))
     flash[:error] = error_messages_arr
@@ -81,7 +82,7 @@ class UserParticularsController < ApplicationController
         redirect_to @user_particular # redirects to /user_particulars/:id
       else
         flash[:error_message] = 'Edit failed. Please fix the error(s) below:'
-        redirect_to edit_user_particular_path(params[:id], user_particular: user_particular_params)
+        redirect_to edit_user_particular_path(@user_particular, user_particular: user_particular_params)
       end
     else
       # Failed validation
