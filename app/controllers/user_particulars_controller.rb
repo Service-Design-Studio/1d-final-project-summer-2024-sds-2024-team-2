@@ -59,6 +59,7 @@ class UserParticularsController < ApplicationController
   end
 
   def update
+    logger.debug "OVER HERE! UPDATE! #{user_particular_params}"
     @user_particular = UserParticular.update_user_particular(params[:id], user_particular_params)
 
     # Check if edit was successful

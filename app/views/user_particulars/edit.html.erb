@@ -1,7 +1,7 @@
 <div class="container py-3">
   <h4 class="text-center" style="color: black">Edit your particulars</h4>
   <!-- user_particulars_confirm_path leads to the confirm function!-->
-  <%= form_with model:@user_particular, id: "form" do |form| %>
+  <%= form_with model:@user_particular, method: :put, id: "form" do |form| %>
     <%= form.hidden_field :user_id, value: current_user.id %>
     <div class="form-group">
       <%= form.label :full_name, "Full Name" %><span class="text-danger">*</span>
@@ -44,19 +44,25 @@
       <%= form.label :ethnicity, "Ethnicity" %><span class="text-danger">*</span>
       <%= form.select :ethnicity, options_for_select(@ethnicities, @user_particular["ethnicity"]), {}, { class: "form-control", required: true, id: "ethnicity_select" } %>
       <!-- Hidden Text Field for Ethnicity -->
-      <%= text_field_tag :ethnicity_other, nil, class: "form-control", style: "display:none;", placeholder: "Please specify", id: "ethnicity_other" %>
+      <div id="ethnicity_other_field" style="display: none;">
+        <input name="others[ethnicity]" type="text" class="form-control" placeholder="Specify other ethnicity">
+      </div>
     </div>
     <div class="form-group">
       <%= form.label :religion, "Religion" %><span class="text-danger">*</span>
       <%= form.select :religion, options_for_select(@religions, @user_particular["religion"]), {}, { class: "form-control", required: true, id: "religion_select" } %>
-      <!-- Hidden Text Field for Religion -->
-      <%= text_field_tag :religion_other, nil, class: "form-control", style: "display:none;", placeholder: "Please specify", id: "religion_other" %>
+      <!-- Hidden Religion Other Field -->
+      <div id="religion_other_field" style="display: none;">
+        <input name="others[religion]" type="text" class="form-control" placeholder="Specify other ethnicity">
+      </div>
     </div>
     <div class="form-group">
       <%= form.label :gender, "Gender" %><span class="text-danger">*</span>
       <%= form.select :gender, options_for_select(['Male', 'Female', 'Others'], @user_particular["gender"]), {}, { class: "form-control", required: true, id: "gender_select" } %>
       <!-- Hidden Text Field for Gender -->
-      <%= text_field_tag :gender_other, nil, class: "form-control", style: "display:none;", placeholder: "Please specify", id: "gender_other" %>
+      <div id="gender_other_field" style="display: none;">
+        <input name="others[gender]" type="text" class="form-control" placeholder="Specify other ethnicity">
+      </div>
     </div>
     <div class="form-group">
       <%= form.label :date_of_birth, "Date of Birth" %><span class="text-danger">*</span>
@@ -147,38 +153,22 @@
     // Initial update for both phone number fields
     updateAllFullPhoneNumbers();
 
-    function toggleOtherFieldAndUpdateModel(selectId, otherFieldId, modelAttributeName) {
-      const selectElement = document.getElementById(selectId);
-      const otherField = document.getElementById(otherFieldId);
-
-      // Function to update the Rails model attribute
-      function updateModel(value) {
-        // Assuming you have a hidden field for the model attribute to capture the "other" value
-        const modelAttributeField = document.querySelector(`[name='user_particular[${modelAttributeName}]']`);        console.log(modelAttributeField);
-        if (modelAttributeField) {
-          modelAttributeField.value = value;
-          console.log(`Updated ${modelAttributeName} to: ${value}`)
-        }
-      }
-
-      selectElement.addEventListener("change", () => {
-        if (selectElement.value === "Others") {
-          otherField.style.display = "block";
-          // Update the model when the other field is shown and its value changes
-          otherField.addEventListener("input", () => {
-            updateModel(otherField.value);
-          });
-        } else {
-          otherField.style.display = "none";
-          // Update the model with the selected value if it's not "Others"
-          updateModel(selectElement.value);
-        }
-      });
+    // Others options
+    // Function to toggle visibility of input fields
+    function toggleOtherField(selectElementId, otherFieldId) {
+    const selectElement = document.getElementById(selectElementId);
+    const otherField = document.getElementById(otherFieldId);
+    selectElement.addEventListener('change', function() {
+    if (this.value === 'Others') {
+    otherField.style.display = 'block';
+    } else {
+    otherField.style.display = 'none';
     }
-
-  // Initialize the function for each select field with the corresponding model attribute name
-  toggleOtherFieldAndUpdateModel("ethnicity_select", "ethnicity_other", "ethnicity");
-  toggleOtherFieldAndUpdateModel("religion_select", "religion_other", "religion");
-  toggleOtherFieldAndUpdateModel("gender_select", "gender_other", "gender");
+    });
+    }
+    // Initialize toggle for each dropdown
+    toggleOtherField('religion_select', 'religion_other_field');
+    toggleOtherField('ethnicity_select', 'ethnicity_other_field');
+    toggleOtherField('gender_select', 'gender_other_field');
   });
 </script>
