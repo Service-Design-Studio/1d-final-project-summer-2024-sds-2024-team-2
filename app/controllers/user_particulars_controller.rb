@@ -57,6 +57,12 @@ class UserParticularsController < ApplicationController
 
   def edit
     set_dropdown_options
+
+    if params[:user_particular]
+      @user_particular = UserParticular.new(user_particular_params) # Populate form from params if params are passed
+    else
+      @user_particular = UserParticular.find(params[:id]) # Populate form from database if no params are passed
+    end
   end
 
   def update
@@ -74,13 +80,13 @@ class UserParticularsController < ApplicationController
         UserParticular.reset_verification(params[:id]) # Set status to pending and reset verifier_ngo
         redirect_to @user_particular # redirects to /user_particulars/:id
       else
-        flash[:error_message] = 'Edit failed. Please try again.'
-        redirect_to user_particulars_confirm_path(user_particular: user_particular_params)
+        flash[:error_message] = 'Edit failed. Please fix the error(s) below:'
+        redirect_to edit_user_particular_path(params[:id], user_particular: user_particular_params)
       end
     else
       # Failed validation
-      flash[:error_message] = 'Edit failed. Please try again.'
-      redirect_to user_particulars_confirm_path(user_particular: user_particular_params) # pass user_particular_params into params of confirm action
+      flash[:error_message] = 'Edit failed. Please fix the error(s) below:'
+      redirect_to edit_user_particular_path(params[:id], user_particular: user_particular_params)
     end
   end
   
