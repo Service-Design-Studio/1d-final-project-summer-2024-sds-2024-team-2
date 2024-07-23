@@ -3,7 +3,9 @@
 class ApplicationController < ActionController::Base
   helper_method :current_user, :user_signed_in?
   layout :layout_by_resource
-  # render different base layout based on requesting controller
+
+  before_action :configure_permitted_parameters, if: :devise_controller?
+
   def layout_by_resource
     if controller_name == 'ngo_users'
       'ngo'
@@ -11,5 +13,11 @@ class ApplicationController < ActionController::Base
     else
       user_signed_in? ? 'application' : 'userlogin'
     end
+  end
+
+  protected
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_in, keys: [:login])
   end
 end

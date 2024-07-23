@@ -10,11 +10,12 @@ class UserParticularsController < ApplicationController
   # No need for content when using @user_particular from before_action
 
   def create
-    error_messages_arr = validate_user_particulars(UserParticular.new(user_particular_params))
+    error_messages_arr = validate_user_particulars(UserParticular.create_user_particular(user_particular_params))
     flash[:error] = error_messages_arr
 
     # Check if validation passes
     if error_messages_arr.empty?
+      logger.debug "OVER HERE! #{user_particular_params}"
       @user_particular = UserParticular.create_user_particular(user_particular_params)
       # Check if user particular creation was successful
       if @user_particular.persisted?
@@ -34,13 +35,13 @@ class UserParticularsController < ApplicationController
 
   def new
     # Fills up form with previously entered data
-    @user_particular = UserParticular.new(session.fetch(:user_particular_params, {}))
+    @user_particular = UserParticular.create_user_particular(session.fetch(:user_particular_params, {}))
     set_dropdown_options
   end
 
   def confirm
     session[:user_particular_params] = user_particular_params # Use the session to store the model
-    @user_particular = UserParticular.new(session[:user_particular_params]) # The Model object to store the hidden keyed params
+    @user_particular = UserParticular.create_user_particular(user_particular_params) # The Model object to store the hidden keyed params
     error_messages_arr = validate_user_particulars(@user_particular)
     flash[:error] = error_messages_arr
 
@@ -64,6 +65,7 @@ class UserParticularsController < ApplicationController
     
     # Check if validation passes
     if error_messages_arr.empty?
+      logger.debug "OVER HERE! UPDATE! #{user_particular_params}"
       @user_particular = UserParticular.update_user_particular(params[:id], user_particular_params)
   
       # Check if edit was successful
@@ -83,6 +85,10 @@ class UserParticularsController < ApplicationController
   end
   
 
+  def history
+    @user_history = UserHistory.find(params[:id])
+  end
+
   # Retrieves user particular object linked to user object
   def set_user_particular
     @user_particular = current_user.user_particular
@@ -91,8 +97,20 @@ class UserParticularsController < ApplicationController
   def user_particular_params
     params.require(:user_particular).permit(:full_name, :phone_number, :secondary_phone_number, :country_of_origin,
                                             :ethnicity, :religion, :gender, :date_of_birth, :date_of_arrival,
-                                            :photo_url, :birth_certificate_url, :passport_url, :user_id, :phone_number_country_code,
-                                            :secondary_phone_number_country_code, :full_phone_number, :full_secondary_phone_number)
+                                            :photo_url, :birth_certificate_url, :passport_url, :user_id,
+                                            :phone_number_country_code, :secondary_phone_number_country_code,
+                                            :full_phone_number, :full_secondary_phone_number).tap do |whitelisted|
+      # Check if ethnicity, religion, or gender is "Others" and replace with values from others hash if present
+      if whitelisted[:ethnicity] == 'Others' && params[:others].present?
+        whitelisted[:ethnicity] =
+          params[:others][:ethnicity]
+      end
+      if whitelisted[:religion] == 'Others' && params[:others].present?
+        whitelisted[:religion] =
+          params[:others][:religion]
+      end
+      whitelisted[:gender] = params[:others][:gender] if whitelisted[:gender] == 'Others' && params[:others].present?
+    end
   end
 
   def set_dropdown_options
@@ -135,14 +153,6 @@ class UserParticularsController < ApplicationController
       error_messages_arr << 'Select country of origin from the dropdown list.'
     end
 
-    unless user_particular[:ethnicity].in? ethnicity_options
-      error_messages_arr << 'Select ethnicity from the dropdown list.'
-    end
-
-    unless user_particular[:religion].in? religion_options
-      error_messages_arr << 'Select religion from the dropdown list.'
-    end
-
     if Date.parse(user_particular[:date_of_birth].to_s) > Date.today
       error_messages_arr << 'Date of birth cannot be in the future.'
     end
@@ -158,13 +168,4 @@ class UserParticularsController < ApplicationController
 
     error_messages_arr
   end
-
-  private
-
-  # def skip_authentication?
-  #   # You can set an environment variable in your test setup
-  #   # and check it here to decide whether to skip authentication.
-  #   # Make sure this is only used in a test or development environment.
-  #   Rails.env.test? && ENV['SKIP_AUTHENTICATE_USER'].present?
-  # end
 end

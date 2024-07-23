@@ -1,0 +1,23 @@
+<div id="user_history" class="add-small-shadow pri-container container mt-5 pt-5 px-5 pb-3" style='height: 75vh;'>
+  <div class='row'>
+    <h3>Activity History</h3>
+  </div>
+  <div class='row mt-4'>
+    <div class="col-8">
+      <h5 class='text-center'>Activity</h5>
+    </div>
+    <div class="col-4">
+      <h5 class='text-center'>Dates</h5>
+    </div>
+  </div>
+  <% @user_history.each do |history| %>
+    <div class="row">
+      <div class="col-8">
+        <span class='text-center'><%= history.description %></span>
+      </div>
+      <div class="col-4">
+        <span class='text-center'><%= history.date %></h5>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  get 'bulletins/index'
+  get 'bulletins/update'
   root 'user_particulars#show' # set root path of web app as /user_particulars/show for now
 
   devise_for :users, controllers: {
@@ -11,7 +13,7 @@ Rails.application.routes.draw do
   # Self-declared extra routes (must be before resources)
   get 'user_particulars/confirm'
   post 'user_particulars/:id/generate_2fa', to: 'user_particulars#generate_2fa', as: 'generate_2fa'
-
+  get 'user_particulars/history'
   # Resources: UserParticulars
   resources :user_particulars do
     member do
