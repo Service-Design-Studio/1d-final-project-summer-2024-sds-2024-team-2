@@ -182,4 +182,8 @@ class UserParticularsController < ApplicationController
 
     error_messages_arr
   end
+
+  def family
+    @user_particular = current_user.user_particular
+  end
 end
