@@ -85,7 +85,7 @@ class UserParticularsController < ApplicationController
   end
 
   def history
-    @user_history = UserHistory.where(user_id: params[:id])
+    @user_history = UserHistory.where(user_id: params[:id]).order(updated_at: :desc)
   end
 
   # Retrieves user particular object linked to user object
