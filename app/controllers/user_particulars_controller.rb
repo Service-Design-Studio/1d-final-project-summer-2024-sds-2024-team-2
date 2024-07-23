@@ -62,12 +62,12 @@ class UserParticularsController < ApplicationController
   def update
     error_messages_arr = validate_user_particulars(UserParticular.new(user_particular_params))
     flash[:error] = error_messages_arr
-    
+
     # Check if validation passes
     if error_messages_arr.empty?
       logger.debug "OVER HERE! UPDATE! #{user_particular_params}"
       @user_particular = UserParticular.update_user_particular(params[:id], user_particular_params)
-  
+
       # Check if edit was successful
       if @user_particular
         flash[:success] = 'Digital ID was successfully edited!'
@@ -83,10 +83,9 @@ class UserParticularsController < ApplicationController
       redirect_to user_particulars_confirm_path(user_particular: user_particular_params) # pass user_particular_params into params of confirm action
     end
   end
-  
 
   def history
-    @user_history = UserHistory.find(params[:id])
+    @user_history = UserHistory.where(user_id: params[:id])
   end
 
   # Retrieves user particular object linked to user object

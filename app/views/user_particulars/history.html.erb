@@ -1,23 +1,18 @@
-<div id="user_history" class="add-small-shadow pri-container container mt-5 pt-5 px-5 pb-3" style='height: 75vh;'>
+<div id="user_history" class="add-small-shadow pri-container container mt-5 pt-4 px-3 pb-3" style='height: 75vh;'>
   <div class='row'>
-    <h3>Activity History</h3>
+    <h3 class='ml-5'>Activity History</h3>
   </div>
-  <div class='row mt-4'>
-    <div class="col-8">
-      <h5 class='text-center'>Activity</h5>
-    </div>
-    <div class="col-4">
-      <h5 class='text-center'>Dates</h5>
-    </div>
+  <div style="max-height:65vh; overflow-y: auto; overflow-x: hidden;">
+    <% @user_history.each do |history| %>
+      <div class="flex d-flex py-2 px-2 my-1 mx-3 bg-light add-small-shadow align-items-center" style='border-radius: 16px;'>
+        <div class="d-flex justify-content-center align-items-center mr-3" style="background-color: #f1536a; width: 60px; height: 60px; border-radius: 50%;">
+          <i class="bi bi-person" style="color: white; font-size: 45px;"></i>
+        </div>
+        <div>
+          <h6><%= "Activity Title" %><span class="text-muted"><small><%= " • #{time_ago_in_words(history.updated_at)}" %> ago</small></span></h6>
+          <p><%= truncate(history.description, length: 100, omission: '...') %></p>
+        </div>
+      </div>
+    <% end %>
   </div>
-  <% @user_history.each do |history| %>
-    <div class="row">
-      <div class="col-8">
-        <span class='text-center'><%= history.description %></span>
-      </div>
-      <div class="col-4">
-        <span class='text-center'><%= history.date %></h5>
-      </div>
-    </div>
-  <% end %>
 </div>
