@@ -1,5 +1,38 @@
 <head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <%= stylesheet_link_tag '_digitalid', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <% if @user_particular.present? %>
+    <script>
+      $(document).ready(function() {
+        // When the modal is opened
+        $('#verificationWarningModal').on('shown.bs.modal', function () {
+        $('body').css('overflow', 'hidden'); // Prevent scrolling when modal is open
+        });
+        // When the modal is closed
+        $('#verificationWarningModal').on('hidden.bs.modal', function () {
+        $('body').css('overflow', 'hidden'); // Re-enable scrolling when modal is closed
+        });
+        $('#generate-2fa-btn').click(function(e) {
+          e.preventDefault();
+          console.log('HELLO');
+          $.ajax({
+            url: '<%= generate_2fa_path(@user_particular) %>',
+            type: 'POST',
+            dataType: 'json',
+            headers: {
+              'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(data) {
+              $('#two-fa-passcode').text(data.two_fa_passcode);
+            },
+            error: function(xhr, status, error) {
+              console.error('AJAX Error:', status, error);
+            }
+          });
+        });
+      });
+    </script>
+  <% end %>
 </head>
 <body>
   <div class="container-1">
@@ -12,54 +45,66 @@
           <%= image_tag 'default.png', alt: "Default image", class: 'img-fluid', style: 'border: 2px solid black;' %>
         </div>
         <div class="details-1">
-          <p><strong>Full Name:</strong><br>
-            <%= @user_particular&.full_name || "" %></p>
-          <p><strong>Unique Identifier:</strong><br>
- <%= @user_particular&.unique_id %></p>
-        </div>
-      </div>
-      <div class="collapse-1">
-        <div class="card-1-body-hide">
-          <div class="details-1">
-            <p><strong>Gender:</strong><br>
- <%= @user_particular&.gender || "" %></p>
-            <p><strong>Ethnicity:</strong><br>
- <%= @user_particular&.ethnicity || "" %></p>
-            <p><strong>Religion:</strong><br>
- <%= @user_particular&.religion || "" %></p>
-            <p><strong>Country of Origin:</strong><br>
- <%= @user_particular&.country_of_origin || "" %></p>
-            <p><strong>Date of Birth:</strong><br>
- <%= @user_particular&.date_of_birth ? @user_particular.date_of_birth.strftime("%d-%m-%Y") : "" %></p>
-            <p><strong>Date of Arrival:</strong><br>
- <%= @user_particular&.date_of_arrival ? @user_particular.date_of_arrival.strftime("%d-%m-%Y") : "" %></p>
-            <p><strong>Phone Number:</strong><br>
- <%= "+#{@user_particular&.full_phone_number&.gsub('-', '') || ''}" %></p>
+                    
+          <table>
+            <tr>
+                <td colspan="2"><strong>Full Name:</strong></td>
+            </tr>
+            <tr>
+                <td colspan="2"><%= @user_particular&.full_name.present? ? @user_particular.full_name : "<br>".html_safe %></td>
+            </tr>
+            <tr>
+                <td colspan="2"><strong>Unique Identifier:</strong></td>
+            </tr>
+            <tr>
+                <td colspan="2"><%= @user_particular&.unique_id || "" %></td>
+            </tr>
+          </table>
+
+          <div class= "section">
+            <table class="bordered-table">
+            <tr>
+                <td colspan="2"><strong>Gender:</strong></td>
+                <td colspan="2"><strong>Date of Birth:</strong></td>
+            </tr>
+            <tr>
+                <td colspan="2"><%= @user_particular&.gender.present? ? @user_particular.gender : "<br>".html_safe %></td>
+
+                <td colspan="2"><%= @user_particular&.date_of_birth.present? ? @user_particular.date_of_birth.strftime("%d-%m-%Y") : "<br>".html_safe %></td>
+            </tr>
+            <tr>
+                <td colspan="2"><strong>Ethnicity:</strong></td>
+                <td colspan="2"><strong>Date of Arrival:</strong></td>
+            </tr>
+            <tr>
+                <td colspan="2"><%= @user_particular&.ethnicity.present? ? @user_particular.ethnicity : "<br>".html_safe %></td>
+                <td colspan="2"><%= @user_particular&.date_of_arrival.present? ? @user_particular.date_of_arrival.strftime("%d-%m-%Y") : "<br>".html_safe %></td>
+            </tr>
+            <tr>
+                <td colspan="2"><strong>Religion:</strong></td>
+                <td colspan="2"><strong>Phone Number:</strong></td>
+            </tr>
+            <tr>
+                <td colspan="2"><%= @user_particular&.religion.present? ? @user_particular.religion : "<br>".html_safe %></td>
+                <td colspan="2"><%= "+#{@user_particular&.full_phone_number&.gsub('-', '') || ''}" %></td>
+            </tr>
+            <tr>
+                <td colspan="2"><strong>Country of Origin:</strong></td>
+            </tr>
+            <tr>
+                <td colspan="2"><%= @user_particular&.country_of_origin || "" %></td>
+            </tr>
+        </table>
+
           </div>
         </div>
       </div>
-      <button class="toggle-button-1" type="button" onclick="toggleDetails(this)">Show details</button>
-      <div class="card-footer text-muted d-flex justify-content-between">
-        <% if @user_particular.nil? %>
-          <span>EnableID - Pending your action</span>
-        <% else %>
-          <% if @user_particular.status == 'pending' %>
-            <span class="custom-pending-verification-text-1">EnableID - Pending verification from an NGO <i class="custom-pending-verification fas fa-check"></i></span>
-          <% elsif @user_particular.status == 'verified' %>
-            <span>EnableID - Verified by <%= @user_particular.verifier_ngo %> <i class="custom-verified fas fa-check"></i></span>
-          <% else %>
-            <span class="custom-pending-verification-text-1">EnableID - Pending verification from an NGO</span>
-          <% end %>
-        <% end %>
+      <div class="qr-code">
+        <%= image_tag 'qrcode.png', alt: "QR Code", class: 'img-fluid' %>        
+      </div>
+      <div class="card-footer">
+        EnableID - Pending Verification from an NGO <i class="custom-verified fas fa-check"></i>
       </div>
     </div>
   </div>
-  <script>
-    function toggleDetails(button) {
-        const collapse = button.previousElementSibling;
-        collapse.classList.toggle('show');
-        button.classList.toggle('show');
-        button.textContent = collapse.classList.contains('show') ? 'Hide details' : 'Show details';
-    }
-  </script>
 </body>
