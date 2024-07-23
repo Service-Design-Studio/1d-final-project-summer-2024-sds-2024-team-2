@@ -70,9 +70,13 @@
   <button class="customhome-button">
     <i class="fas fa-history"></i> Activity History 
   </button>
-  <%= link_to edit_user_particular_path(@user_particular), class: 'customhome-button' do %>
+  <!--<%= link_to edit_user_particular_path(@user_particular), class: 'customhome-button' do %>
     <i class="fas fa-user"></i> Personal 
   <% end %>
+  -->
+  <button class="customhome-button">
+    <i class="fas fa-user"></i> Personal
+  </button>
   <button class="customhome-button">
     <i class="fas fa-users"></i> Family
   </button>
@@ -89,8 +93,7 @@
       <!-- Right Side (Bulletin Board) -->
       <div class="col-md-9">
         <div class="card">
-          <div class="card-header">Bulletin Board</div>
-          <div class="card-body">
+          <div class="card-body" style="background-color: #fdc6cf;">            
             <%= render 'bulletin' %>
           </div>
         </div>
