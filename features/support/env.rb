@@ -18,7 +18,7 @@ After { Warden.test_reset! } # devise inherits from warden, putting this here en
 # Previous content of test helper now starts here
 
 require 'cucumber/rails'
-Capybara.default_driver = :selenium_chrome_headless
+Capybara.default_driver = :selenium_chrome
 Capybara.server_port = 3001
 Capybara.app_host = 'http://127.0.0.1:3001'
 # By default, any exception happening in your Rails application will bubble up
