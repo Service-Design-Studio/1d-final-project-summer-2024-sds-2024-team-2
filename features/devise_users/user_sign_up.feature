@@ -6,7 +6,18 @@ Feature: Registering for an account
 Background:
     Given I am on the "Login" page
     When I press the "Register for EnableID" button
-    Then I should be on the "Registration" page
+    Then I should be redirected to the "Registration" page
+
+Scenario: All valid fields in Register for EnableID
+    Given I fill in the following fields
+    | Field                   | Value        |
+    | Username                | User12345 |
+    | Password (Please ensure you can remember this)  | 123123 |
+    | Password confirmation   | 123123          |
+    | Email                   | abcdefg@mail.com  |
+    | Contact number          | 12341234    |
+    And I press the "Register" button
+    Then I should be redirected to the "Home" page
 
 Scenario: All invalid fields in Register for EnableID
     Given I fill in the following fields

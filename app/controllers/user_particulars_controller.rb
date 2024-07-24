@@ -6,6 +6,7 @@ class UserParticularsController < ApplicationController
 
   def show
     @bulletins = Bulletin.all.order(updated_at: :desc)
+    logger.debug "OVER HERE! SHOW! #{@user_particular.status}"
   end
   # No need for content when using @user_particular from before_action
 
