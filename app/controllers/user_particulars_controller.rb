@@ -6,6 +6,15 @@ class UserParticularsController < ApplicationController
 
   def show
     @bulletins = Bulletin.all
+
+    if @user_particular
+      if @user_particular.profile_picture.attached?
+        logger.debug "\n\n\n\n\Profile picture is attached.\n\n\n\n\n"
+      else
+        logger.debug "\n\n\n\nNo profile picture attached.\n\n\n\n\n"
+      end
+    end
+    
   end
   # No need for content when using @user_particular from before_action
 
@@ -13,15 +22,20 @@ class UserParticularsController < ApplicationController
   # No need for content when using @user_particular from before_action
 
   def create
-    error_messages_arr = validate_user_particulars(UserParticular.create_user_particular(user_particular_params))
+    error_messages_arr = validate_user_particulars(UserParticular.new(user_particular_params))
     flash[:error] = error_messages_arr
 
     # Check if validation passes
     if error_messages_arr.empty?
-      logger.debug "OVER HERE! #{user_particular_params}"
+      logger.debug "\n\n\n\nprofile_picture #{params[:user_particular][:profile_picture].inspect}\n\n\n\n\n\n"
       @user_particular = UserParticular.create_user_particular(user_particular_params)
+
       # Check if user particular creation was successful
       if @user_particular.persisted?
+        @user_particular.assign_unique_id
+        @user_particular.reload
+        @user_particular.profile_picture.attach(params[:user_particular][:profile_picture])
+
         flash[:success] = 'Digital ID was successfully created!'
         redirect_to @user_particular # redirects to /user_particulars/:id
       else
@@ -38,7 +52,7 @@ class UserParticularsController < ApplicationController
 
   def new
     # Fills up form with previously entered data
-    @user_particular = UserParticular.new(session.fetch(session[:user_particular_params].except(:profile_picture)    , {}))
+    @user_particular = UserParticular.new(session.fetch(session[:user_particular_params], {}))
     set_dropdown_options
   end
 
@@ -108,7 +122,7 @@ class UserParticularsController < ApplicationController
                                             :ethnicity, :religion, :gender, :date_of_birth, :date_of_arrival,
                                             :photo_url, :birth_certificate_url, :passport_url, :user_id,
                                             :phone_number_country_code, :secondary_phone_number_country_code,
-                                            :full_phone_number, :full_secondary_phone_number).tap do |whitelisted|
+                                            :full_phone_number, :full_secondary_phone_number, :profile_picture).tap do |whitelisted|
       # Check if ethnicity, religion, or gender is "Others" and replace with values from others hash if present
       if whitelisted[:ethnicity] == 'Others' && params[:others].present?
         whitelisted[:ethnicity] =

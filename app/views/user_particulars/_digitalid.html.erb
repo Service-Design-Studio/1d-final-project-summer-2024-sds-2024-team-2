@@ -9,7 +9,15 @@
       </div>
       <div class="card-1-body">
         <div class="photo-1">
-          <%= image_tag 'default.png', alt: "Default image", class: 'img-fluid', style: 'border: 2px solid black;' %>
+          <% if @user_particular%>
+            <% if @user_particular.profile_picture.attached? %>
+              <%= image_tag @user_particular.profile_picture, alt: "User's profile picture", class: 'img-fluid', style: 'border: 2px solid black;' %>
+            <% else %>
+              <%= image_tag 'default.png', alt: "Default image", class: 'img-fluid', style: 'border: 2px solid black;' %>
+            <% end %>
+          <% else %>
+              <%= image_tag 'default.png', alt: "Default image", class: 'img-fluid', style: 'border: 2px solid black;' %>
+          <% end %>
         </div>
         <div class="details-1">
                     

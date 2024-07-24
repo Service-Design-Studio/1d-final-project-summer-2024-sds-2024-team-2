@@ -70,7 +70,6 @@
         label.appendChild(img);
       };
       reader.readAsDataURL(file);
-      fileInput.value = '';
     }
   });
 
@@ -120,6 +119,9 @@
 
     label.innerHTML = '';
     label.appendChild(img);
+
+    // Store the captured photo dataUrl for later use
+    document.getElementById('cameraInput').setAttribute('data-captured-photo', dataUrl);
 
     // Close the modal programmatically using Bootstrap's modal methods
     const modal = bootstrap.Modal.getInstance(document.getElementById('cameraModal'));
