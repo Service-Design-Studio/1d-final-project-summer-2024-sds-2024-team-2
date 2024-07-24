@@ -197,6 +197,7 @@
                     <th>Size</th>
                     <th>Date</th>
                     <th>Status</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody id="documentTableBody">
@@ -392,6 +393,7 @@
                     <td>${formatFileSize(file.size)}</td>
                     <td>${formatDate(new Date())}</td>
                     <td class="status-unverified">Unverified</td>
+                    <td><button class="btn btn-danger btn-sm" onclick="deleteDocument(this)">Delete</button></td>
                 `;
                 uploadedDocumentsTable.appendChild(newRow);
             });
@@ -402,6 +404,12 @@
             } else {
                 document.getElementById('uploadedDocumentsContainer').style.display = 'none';
             }
+        }
+
+        // Function to delete a document
+        function deleteDocument(button) {
+            var row = button.closest('tr');
+            row.remove();
         }
     </script>
 </body>
