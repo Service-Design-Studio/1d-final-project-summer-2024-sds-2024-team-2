@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_23_175714) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_24_114127) do
   create_table "bulletins", force: :cascade do |t|
     t.string "title"
     t.datetime "date"
@@ -20,6 +20,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_23_175714) do
     t.boolean "saved"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "images", force: :cascade do |t|
+    t.string "attachable_type", null: false
+    t.integer "attachable_id", null: false
+    t.string "image_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["attachable_type", "attachable_id"], name: "index_images_on_attachable"
+    t.index ["attachable_type", "attachable_id"], name: "index_images_on_attachable_type_and_attachable_id"
   end
 
   create_table "ngo_users", force: :cascade do |t|
