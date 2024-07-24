@@ -32,12 +32,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :bulletins do
-    member do
-      get 'index'
-      get 'update'
-    end
-  end
+  resources :bulletins
 
 
 end
