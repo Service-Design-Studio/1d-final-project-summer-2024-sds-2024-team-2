@@ -6,7 +6,6 @@ class UserParticularsController < ApplicationController
 
   def show
     @bulletins = Bulletin.all.order(updated_at: :desc)
-    logger.debug "OVER HERE! SHOW! #{@user_particular&.status}"
   end
   # No need for content when using @user_particular from before_action
 
@@ -54,6 +53,7 @@ class UserParticularsController < ApplicationController
   end
 
   def confirm
+    session[:user_particular_params] = user_particular_params # Use the session to store the model
     @user_particular = UserParticular.new(user_particular_params) # The Model object to store the hidden keyed params
     error_messages_arr = validate_user_particulars(@user_particular)
     flash[:error] = error_messages_arr
@@ -63,7 +63,6 @@ class UserParticularsController < ApplicationController
       render :confirm
     else
       # Render error message(s) in form if validation fails
-      session[:user_particular_params] = user_particular_params # Use the session to store the model
       flash[:error_message] = 'Please fix the error(s) below:'
       redirect_to new_user_particular_path
     end
