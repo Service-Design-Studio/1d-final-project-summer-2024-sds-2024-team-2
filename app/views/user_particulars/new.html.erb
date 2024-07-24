@@ -41,8 +41,8 @@
       </div>
       <div class = 'col-3 d-flex flex-column justify-content-center align-items-center px-4'>
         <label class="m-0">Passport-Style Photo<span class="text-danger">*</span></label>
-        <label id="photoLabel" for="photo_url" class="p-1 mb-0 form-group d-flex flex-grow-1 justify-content-center align-items-center text-center text-muted" style="cursor: pointer; border: 5px dashed rgba(198, 198, 198, 0.65);">Upload a photo of yourself here</label>
-        <%= form.file_field :photo_url, id: "photo_url", accept: 'image/jpeg,image/gif,image/png,application/pdf', class: "form-control-file", style: "display: none;" %>
+        <label id="profilePictureLabel" for="profile_picture" class="p-1 mb-0 form-group d-flex flex-grow-1 justify-content-center align-items-center text-center text-muted" style="cursor: pointer; border: 5px dashed rgba(198, 198, 198, 0.65);">Upload a photo of yourself here</label>
+        <%= form.file_field :profile_picture, id: "profile_picture", accept: 'image/jpeg,image/gif,image/png,application/pdf', class: "form-control-file", style: "display: none;" %>
         <input type="file" accept="image/*" capture="camera" id="cameraInput" style="display: none;">
         <button type="button" class='mt-1 py-1 btn btn-dark' onclick="startCamera()" data-bs-toggle="modal" data-bs-target="#cameraModal">Or take one right now 📸</button>
       </div>
@@ -195,7 +195,7 @@
   <script>
 
     // Handles file upload change event
-    const fileInput = document.getElementById('photo_url');
+    const fileInput = document.getElementById('profile_picture');
     fileInput.addEventListener('change', function(event) {
       const file = event.target.files[0];
       if (file) {
@@ -207,7 +207,7 @@
           img.style.height = '100%';
           img.style.objectFit = 'cover';
 
-          const label = document.getElementById('photoLabel');
+          const label = document.getElementById('profilePictureLabel');
           label.innerHTML = ''; // Clear existing content
           label.appendChild(img);
         };
@@ -242,7 +242,7 @@
 
       function capturePhoto() {
         const video = document.getElementById('cameraFeed');
-        const label = document.getElementById('photoLabel');
+        const label = document.getElementById('profilePictureLabel');
         const labelWidth = label.clientWidth;
         const labelHeight = label.clientHeight;
 
