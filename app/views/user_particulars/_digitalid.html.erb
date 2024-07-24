@@ -41,16 +41,25 @@
         EnableID Digital Card
         <% if @user_particular.nil? %>
           <%= link_to new_user_particular_path(@user_particular), class: "edit-link-right-align edit-icon-link" do %>
-            <i class="fas fa-plus-circle "></i>
           <% end %>
               <% else %>
                   <%= link_to edit_user_particular_path(@user_particular), class: "edit-link-right-align edit-icon-link" do %>
                     <i class="fas fa-edit"></i>
                   <% end %>
                   <% end %>
-        
       </div>
-      <div class="card-1-body">   
+
+
+      
+      <div class="card-1-body">
+        <% if @user_particular.nil? %>
+        <div class="overlay">
+        <div style="display: flex; justify-content: center; align-items: center; height: 400px;">
+          <%= link_to "Fill in your particulars to get your Digital ID!", new_user_particular_path, class: "btn btn-danger big-btn high-z-index-btn", id: "fill-in-particulars-btn" %>
+        </div>          
+      </div>              
+      <% else %>
+      <% end %>   
         <div class="photo-1">
           <%= image_tag 'default.png', alt: "Default image", class: 'profile-image' %>
         </div>
@@ -109,6 +118,7 @@
           </div>
         </div>
       </div>
+     
       <div class="card-footer">
         EnableID - Pending Verification from an NGO <i class="custom-verified fas fa-check"></i><%= image_tag 'qrcode.png', alt: "QR Code", class: 'img-fluid qr-code'%>   
       </div>

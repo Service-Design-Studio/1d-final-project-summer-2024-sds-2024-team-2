@@ -119,3 +119,31 @@ box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Subtle shadow for depth */
     height: 10px;
   
 }
+
+
+.big-btn {
+    font-size: 20px; /* Increase font size */
+    padding: 15px 30px; /* Increase padding to make the button bigger */
+}
+
+.high-z-index-btn {
+    position: relative;
+    z-index: 1000; /* Ensure this is higher than the z-index of other elements */
+}
+
+.card-1-body {
+    position: relative; /* Step 1 */
+  }
+  
+  .overlay {
+    position: absolute; /* Step 2 */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10; /* Step 3: Ensure this is higher than any other content within card-1-body */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.507); /* Optional: Adds a see-through effect */
+  }
