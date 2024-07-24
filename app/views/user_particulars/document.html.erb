@@ -118,6 +118,7 @@
             width: 100%;
             max-width: 600px;
             margin: 0 auto;
+            display: none; /* Initially hidden */
         }
 
         .document-list table {
@@ -389,7 +390,7 @@
                 }
             });
 
-            // Show the uploaded documents section if there are files
+            // Show or hide the uploaded documents section based on the number of files
             if (uploadedDocumentsTable.children.length > 0) {
                 document.getElementById('uploadedDocumentsContainer').style.display = 'block';
             } else {
@@ -401,6 +402,11 @@
         function deleteDocument(button) {
             var row = button.closest('tr');
             row.remove();
+
+            // Check if there are remaining files and update the display accordingly
+            if (document.getElementById('documentTableBody').children.length === 0) {
+                document.getElementById('uploadedDocumentsContainer').style.display = 'none';
+            }
         }
 
         // Function to preview a document in a new tab
