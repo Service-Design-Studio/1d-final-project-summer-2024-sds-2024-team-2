@@ -14,7 +14,7 @@
   padding: 5px; /* Padding inside the button */
   border-radius: 30px; /* Rounded corners */
   box-shadow: 0 6px 6px rgba(0, 0, 0, 0.4); /* Subtle shadow for 3D effect */
-  font-size: 1em; /* Text size */
+  font-size: 0.8em; /* Text size */
   cursor: pointer; /* Pointer cursor on hover */
   display: flex;
   align-items: center; /* Center icon and text */

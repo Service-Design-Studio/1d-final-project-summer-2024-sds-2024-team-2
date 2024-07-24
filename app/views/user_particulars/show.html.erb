@@ -24,8 +24,8 @@
       <% end %>
       <!-- 2FA Container -->
         <div class="d-flex gap-2 my-2 w-100 justify-content-center align-items-center">
-          <button id="generate-2fa-btn" class="py-2 px-3 text-nowrap generate-2fa-button" style="font-size:0.9em;">Generate 2FA Passcode:</button>
-          <span id='two-fa-passcode' class='py-2 text-nowrap two-fa-passcode-input' style="font-size:0.9em;"><%= @user_particular&.two_fa_passcode || "2FA Passcode is not set up." %></span>
+          <button id="generate-2fa-btn" class="py-2 px-2 text-nowrap generate-2fa-button" style="font-size:0.8em;">Generate 2FA Passcode:</button>
+          <span id='two-fa-passcode' class='py-2 text-nowrap two-fa-passcode-input text-center' style="font-size:0.8em;"><%= @user_particular&.two_fa_passcode || "2FA unavailable" %></span>
         </div>
         <!-- Buttons Container, put under sub main container -->
         <div class="pri-container py-3 px-2 d-flex w-100 flex-column flex-wrap">

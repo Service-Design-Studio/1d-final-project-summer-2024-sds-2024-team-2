@@ -1,7 +1,3 @@
-<head>
-  <%= stylesheet_link_tag '_digitalid', media: 'all', 'data-turbolinks-track': 'reload' %>
-</head>
-<body>
   <div class="container d-flex justify-content-center p-0">
     <div class="card-1">
       <div class="card-1-header">
@@ -11,7 +7,7 @@
           <% end %>
               <% else %>
                 <% if @user_particular && @user_particular.id %>
-                  <%= link_to edit_user_particular_path(@user_particular), class: "edit-link-right-align edit-icon-link" do %>
+                  <%= link_to "#", class: "edit-link-right-align edit-icon-link", data: { bs_toggle: "modal", bs_target: "#verificationWarningModal" } do %>
                     <i class="fas fa-edit"></i>
                   <% end %>
                 <% end %>
@@ -94,11 +90,11 @@
       </div>
      
       <div class="card-footer">
-        <% if @user_particular.status == 'pending' %>
+        <% if @user_particular&.status == 'pending' %>
           <span>EnableID - Pending verification from an NGO</span>
           <i class="custom-verified fas fa-check"></i><%= image_tag 'qrcode.png', alt: "QR Code", class: 'img-fluid qr-code'%>  
-        <% elsif @user_particular.status == 'verified' %>
-          <span>EnableID - Verified by <%= @user_particular.verifier_ngo %></span>
+        <% elsif @user_particular&.status == 'verified' %>
+          <span>EnableID - Verified by <%= @user_particular&.verifier_ngo %></span>
           <i class="custom-verified fas fa-check"></i><%= image_tag 'qrcode.png', alt: "QR Code", class: 'img-fluid qr-code'%> 
         <% else %>
           <span>EnableID - Pending verification from an NGO</span>
@@ -107,4 +103,3 @@
       </div>
     </div>
   </div>
-</body>
