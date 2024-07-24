@@ -69,16 +69,11 @@
   document.addEventListener('DOMContentLoaded', function() {
     const checkboxes = document.querySelectorAll('.inputGroup input[type="checkbox"]');
     const verifyButton = document.getElementById('verify-btn');
+    let allCheckboxesChecked = false; // Flag to track the state of checkboxes
 
     function updateVerifyButtonState() {
-      // Debug: Log the current state of each checkbox
-      checkboxes.forEach((checkbox, index) => {
-        console.log(`Checkbox ${index}: ${checkbox.checked}`);
-      });
-
-      const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
-      verifyButton.disabled = !allChecked;
-      console.log('Verify Button Disabled:', verifyButton.disabled); // Debugging line
+      allCheckboxesChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+      verifyButton.disabled = !allCheckboxesChecked;
     }
 
     checkboxes.forEach(checkbox => {
@@ -86,7 +81,7 @@
     });
 
     verifyButton.addEventListener('click', function(event) {
-      if (this.disabled) {
+      if (!allCheckboxesChecked) { // Use the flag to determine if the alert should be shown
         event.preventDefault();
         alert('Please complete the checklist before verifying.');
       }
@@ -95,6 +90,7 @@
     updateVerifyButtonState(); // Initial check to ensure correct button state on page load
   });
 </script>
+
 
 <script>
 const cardsData = [

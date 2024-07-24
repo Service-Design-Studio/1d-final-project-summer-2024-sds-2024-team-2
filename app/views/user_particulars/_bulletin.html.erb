@@ -1,4 +1,4 @@
-<div id="bulletin" class="container add-small-shadow my-2 h-100 w-100 p-3 pb-3" style='max-height: 80vh; background-color: #fff1f1; border-radius: 30px; border: 15px solid #fdc6cf;'>
+<div id="bulletin" class="d-flex flex-column pri-container m-0 add-small-shadow my-2 p-3 pb-3" style='width:100%; max-height: 80vh;'>
   <h3 class='text-center'>Bulletin Board</h3>
   <div class="row mb-4">
     <div class="col d-flex justify-content-between align-items-center">
@@ -13,40 +13,42 @@
       </div>
     </div>
   </div>
-  <div class="row overflow-auto" style='max-height: 60vh;' id="event-cards-container">
-    <% @bulletins.each do |bulletin| %>
-      <div class="col-md-3 mb-4 event-card justify-content-center align-items-center" data-title="<%= bulletin.title.downcase %>" data-description="<%= bulletin.description.downcase %>" data-ngo-name="<%= bulletin.ngo_name.downcase %>">
-        <div class="card d-flex add-small-shadow justify-content-center">
-          <div class='d-flex w-100 align-items-center justify-content-center' style='min-width: 150px; height: 150px'>
-            <% ngo_user = @ngo_users.find { |user| user.name == bulletin.ngo_name } %>
-            <% if ngo_user&.image_url.present? %>
-              <%= image_tag ngo_user.image_url, alt: "#{ngo_user.name} image", style: 'max-width: 100%; max-height: 100%; object-fit: contain;' %>
-            <% else %>
-              <%= image_tag 'default.png', alt: "Event image", style: 'max-width: 100%; max-height: 100%; object-fit: contain;' %>
-            <% end %>
-          </div>
-          <div class="card-body p-2" style="font-size: 1em;">
-            <ul class="list-unstyled">
-              <div class='d-flex justify-content-between'>
-                <div>
-                  <h6 class="card-title" style="font-size: 1.2em;"><%= bulletin.title %></h6>
-                  <li>Date: <%= bulletin.date ? bulletin.date.strftime("%d %B %Y") : "Date not available" %></li>
+  <div class="d-flex flex-column flex-grow-1 overflow-auto" style="overflow-x: hidden;">
+    <div class="d-flex flex-wrap gap-3 overflow-auto" style='max-height: 100%;' id="event-cards-container">
+      <% @bulletins.each do |bulletin| %>
+        <span class="mb-4 mr-2 event-card justify-content-center align-items-center" style="width:250px;" data-title="<%= bulletin.title.downcase %>" data-description="<%= bulletin.description.downcase %>" data-ngo-name="<%= bulletin.ngo_name.downcase %>">
+          <div class="card d-flex add-small-shadow justify-content-center">
+            <div class='d-flex w-100 align-items-center justify-content-center' style='min-width: 150px; height: 150px'>
+              <% ngo_user = @ngo_users.find { |user| user.name == bulletin.ngo_name } %>
+              <% if ngo_user&.image_url.present? %>
+                <%= image_tag ngo_user.image_url, alt: "#{ngo_user.name} image", style: 'max-width: 100%; max-height: 100%; object-fit: contain;' %>
+              <% else %>
+                <%= image_tag 'default.png', alt: "Event image", style: 'max-width: 100%; max-height: 100%; object-fit: contain;' %>
+              <% end %>
+            </div>
+            <div class="card-body p-2" style="font-size: 1em;">
+              <ul class="list-unstyled">
+                <div class='d-flex justify-content-between'>
+                  <div>
+                    <h6 class="card-title" style="font-size: 1.2em;"><%= bulletin.title %></h6>
+                    <li>Date: <%= bulletin.date ? bulletin.date.strftime("%d %B %Y") : "Date not available" %></li>
+                  </div>
+                  <%= link_to '#', onclick: 'toggleSavePost(this)', style: 'text-decoration: none;' do %>
+                    <i style='text-decoration: none; color: black;' class="bi bi-bookmark fs-2"></i>
+                  <% end %>
                 </div>
-                <%= link_to '#', onclick: 'toggleSavePost(this)', style: 'text-decoration: none;' do %>
-                  <i style='text-decoration: none; color: black;' class="bi bi-bookmark fs-2"></i>
-                <% end %>
+                <li>Location: <%= bulletin.location %></li>
+                <p class='truncate-multiline'>Information: <%= bulletin.description %></p>
+              </ul>
+              <div class="mt-3 d-flex justify-content-between align-items-center" style="font-size: 0.9em;">
+                <small class="text-muted"><%= bulletin.ngo_name %></small>
+                <small class="text-muted"><%= time_ago_in_words(bulletin.created_at) %> ago</small>
               </div>
-              <li>Location: <%= bulletin.location %></li>
-              <p class='truncate-multiline'>Information: <%= bulletin.description %></p>
-            </ul>
-            <div class="mt-3 d-flex justify-content-between align-items-center" style="font-size: 0.9em;">
-              <small class="text-muted"><%= bulletin.ngo_name %></small>
-              <small class="text-muted"><%= time_ago_in_words(bulletin.created_at) %> ago</small>
             </div>
           </div>
-        </div>
-      </div>
-    <% end %>
+        </span>
+      <% end %>
+    </div>
   </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -66,4 +68,17 @@
       });
     });
   });
+</script>
+<script>
+  function toggleSavePost(element) {
+    // Toggle the 'saved' class or perform an action
+    element.querySelector('i').classList.toggle('bi-bookmark-fill');
+    element.querySelector('i').classList.toggle('bi-bookmark');
+
+    // Optionally, you can make an AJAX call to save the post on the server
+    // Example:
+    // fetch('/save_post', { method: 'POST', body: JSON.stringify({ post_id: 123 }) })
+    //   .then(response => response.json())
+    //   .then(data => console.log(data));
+  }
 </script>

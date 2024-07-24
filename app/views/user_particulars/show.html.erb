@@ -1,104 +1,54 @@
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profile Page</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <%= stylesheet_link_tag 'homebuttons', media: 'all', 'data-turbolinks-track': 'reload' %>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <% if @user_particular.present? %>
-    <script>
-      $(document).ready(function() {
-        // When the modal is opened
-        $('#verificationWarningModal').on('shown.bs.modal', function () {
-        $('body').css('overflow', 'hidden'); // Prevent scrolling when modal is open
-        });
-        // When the modal is closed
-        $('#verificationWarningModal').on('hidden.bs.modal', function () {
-        $('body').css('overflow', 'hidden'); // Re-enable scrolling when modal is closed
-        });
-        $('#generate-2fa-btn').click(function(e) {
-          e.preventDefault();
-          console.log('HELLO');
-          $.ajax({
-            url: '<%= generate_2fa_path(@user_particular) %>',
-            type: 'POST',
-            dataType: 'json',
-            headers: {
-              'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(data) {
-              $('#two-fa-passcode').text(data.two_fa_passcode);
-            },
-            error: function(xhr, status, error) {
-              console.error('AJAX Error:', status, error);
-            }
-          });
-        });
-      });
-    </script>
-  <% end %>
-</head>
-<body class="container">
-  <%# Start of EnableID card partial and filling in/edit button%>
-  <div class="alert alert-info text-center my-1">
-    Make sure to fill in your particulars correctly before being verified by a NGO admin!
-  </div>
-  <%# <h1 class="text-center rounded mt-3">Your <strong style="color: #f1536a;">EnableID</strong></h1> %>
-  <div class="row">
+  <div class="container-fluid mt-4 d-flex justify-content-center">
     <!-- Left Side (Digital ID, 2FA, Buttons) -->
-    <div class="col-md-4">
+    <div class="col-3">
       <!-- Digital ID Card Container -->
-      <div class="card mb-3 digital-card">
+      <div class="d-flex justify-content-between align-items-center">
         <%= render 'digitalid' %>
       </div>
-      <!-- 2FA Container -->
-      <div class="card mb-3 digital-card">
-        <div class="card-body d-flex justify-content-center align-items-center h-100">
-          <button id="generate-2fa-btn" class="generate-2fa-button">Generate 2FA Passcode:</button>
-          <span id='two-fa-passcode' class='two-fa-passcode-input'><%= @user_particular&.two_fa_passcode || "2FA Passcode is not set up." %></span>
+      <!--Display messages beneath the card -->
+      <%- if flash[:notice]%>
+        <div class="alert alert-info text-center"><%=flash[:notice]%></div>
+      <%- elsif flash[:success]%>
+        <div class="alert alert-success text-center"><%=flash[:success]%></div>
+      <%- elsif flash[:error_message].present? %>
+        <div class="alert alert-danger">
+          <ul><%= flash[:error_message] %></ul>
+          <% if flash[:error].present? %>
+            <ul>
+              <% flash[:error].each do |error| %>
+                <li><%= error %></li>
+              <% end %>
+            </ul>
+          <% end %>
         </div>
-      </div>
-      <!-- Buttons Container -->
-      <div class="card mb-3 digital-card">
-        <div class="card-body" style="background-color: #fdc6cf;">
-          <div class="buttonhome-container">
-            <% if @user&.nil? %>
-            <% else %>
-              <%= link_to user_document_path(@user), class: 'customhome-button', style: 'text-decoration: none;' do %>
-                <i class="fas fa-file-alt"></i> Documents
-              <% end %>
-              <%= link_to user_history_path(@user), class: 'customhome-button', style: 'text-decoration: none;' do %>
-                <i class="fas fa-history"></i> Activity History
-              <% end %>
-              <%= link_to new_user_particular_path, class: "customhome-button", id: "fill-in-particulars-btn", style: 'text-decoration: none;' do %>
-                <i class="fas fa-user"></i> Personal
-              <% end %>
-              <% if @user_particular&.status == 'verified' %>
-                <%= link_to edit_user_particular_path(@user), class: 'customhome-button', style: 'text-decoration: none;' do %>
-                  <i class="fas fa-user"></i> Personal
-                <% end %>
-              <% else %>
-                <%= link_to edit_user_particular_path(@user), class: 'customhome-button', style: 'text-decoration: none;' do %>
-                  <i class="fas fa-user"></i> Personal
-                <% end %>
-              <% end %>
+      <% end %>
+      <!-- 2FA Container -->
+        <div class="d-flex gap-2 my-3 w-100 justify-content-center align-items-center">
+          <button id="generate-2fa-btn" class="p-2 px-4 text-nowrap generate-2fa-button" style="font-size:1.2em;">Generate 2FA Passcode:</button>
+          <span id='two-fa-passcode' class='p-2 text-nowrap two-fa-passcode-input' style="font-size:1.2em;"><%= @user_particular&.two_fa_passcode || "2FA Passcode is not set up." %></span>
+        </div>
+        <!-- Buttons Container, put under sub main container -->
+        <div class="pri-container py-4 d-flex w-100 flex-column flex-wrap">
+          <div class="row mb-3 d-flex justify-content-center gap-2">
+            <%= link_to user_document_path(@user), class: 'col-5 p-3 customhome-button', style: 'text-decoration: none;' do %>
+              <i class="fas fa-file-alt fa-2x"></i> Documents
             <% end %>
-            <%= link_to user_particulars_family_path, class: 'customhome-button', style: 'text-decoration: none;' do %>
-              <i class="fas fa-users"></i> Family
+            <%= link_to user_history_path(@user), class: 'col-5 p-3 customhome-button', style: 'text-decoration: none;' do %>
+              <i class="fas fa-history fa-2x"></i> Activity History
             <% end %>
-            <%= link_to user_particulars_family_path, class: 'customhome-button', style: 'text-decoration: none;' do %>
-              <i class="fas fa-save"></i> Saved Post
+          </div>
+          <div class="row mb-3 d-flex justify-content-center gap-2">
+            <%= link_to user_particulars_family_path, class: 'col-5 p-3 customhome-button', style: 'text-decoration: none;' do %>
+              <i class="fas fa-save fa-2x"></i> Saved Post
             <% end %>
-            <%= link_to user_particulars_family_path, class: 'customhome-button', style: 'text-decoration: none;' do %>
-              <i class="fas fa-search"></i> Search NGOs
+            <%= link_to user_particulars_family_path, class: 'col-5 p-3 customhome-button', style: 'text-decoration: none;' do %>
+              <i class="fas fa-search fa-2x"></i> Search NGOs
             <% end %>
           </div>
         </div>
-      </div>
     </div>
-    <div class="col-md-1"></div>
     <!-- Right Side (Bulletin Board) -->
-    <div class="col-md-7">
+    <div class="col-8 mx-0 d-flex justify-content-center">
       <%= render 'bulletin' %>
     </div>
   </div>
