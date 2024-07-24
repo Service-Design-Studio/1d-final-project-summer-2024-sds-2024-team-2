@@ -17,7 +17,7 @@
     body {
       display: flex;
       flex-direction: column;
-      background: url('<%= asset_path('fingerprint.svg') %>') no-repeat center center;
+      background: url('<%= asset_path('NGOfingerprint.svg') %>') no-repeat center center;
       background-size: cover;
     }
     .content {
@@ -37,61 +37,39 @@
     }
   </style>
 </head>
-<body>
+<body class="ngo-page"> 
   <!-- Main Content -->
   <div class="content">
     <div class="overlay"></div>
-    <div class="container px-2 py-2">
-      <div class="row">
-        <div class="col-12 col-md-4 mb-4 mb-md-0">
-          <div class="text-center mb-3">
-            <%= image_tag @ngo_user.image_url, alt: "#{@ngo_user.name} image", class: "img-fluid", style:"max-width: 100%; height: auto; object-fit: contain;" %>
-          </div>
-          <div class="row">
-            <!-- Verify User button -->
-            <div class="col-6 d-flex justify-content-center p-2">
-              <%= link_to '#', class: "customhome-button btn btn-secondary", style: 'text-decoration: none; width: 100%; height: 100px;', data: { toggle: "modal", target: "#checkUserModal" } do %>
-                <i class="fas fa-user"></i> Verify User
-              <% end %>
-            </div>
-
-            <!-- Inbox button -->
-            <div class="col-6 d-flex justify-content-center p-2">
-              <%= link_to ngo_user_path, class: "customhome-button btn btn-secondary", style: 'text-decoration: none; width: 100%; height: 100px;' do %>
-                <i class="fas fa-inbox"></i> Inbox
-              <% end %>
-            </div>
-
-            <!-- Interaction History button -->
-            <div class="col-6 d-flex justify-content-center p-2">
-              <%= link_to ngo_user_path, class: "customhome-button btn btn-secondary", style: 'text-decoration: none; width: 100%; height: 100px;' do %>
-                <i class="fas fa-history"></i> Interaction History
-              <% end %>
-            </div>
-
-            <!-- Events button -->
-            <div class="col-6 d-flex justify-content-center p-2">
-              <%= link_to ngo_user_path, class: "customhome-button btn btn-secondary", style: 'text-decoration: none; width: 100%; height: 100px;' do %>
-                <i class="fas fa-calendar"></i> Events
-              <% end %>
-            </div>
-
-            <%# Check if the flag is set to true %>
-            <% if @show_add_bulletin_button %>
-              <!-- "+" Button -->
-              <div class="col-6 d-flex justify-content-center p-2">
-                <button type="button" class="customhome-button btn btn-secondary" style="width: 100%; height: 100px;" data-toggle="modal" data-target="#addBulletinModal">
-                  <i class="fas fa-plus"></i> Add Bulletin Post
-                </button>
+        <div class="row mt-2 justify-content-center">
+          <div class="col-3">
+              <div class="text-center mb-3" style="max-height: 200px;">
+                <%= image_tag @ngo_user.image_url, alt: "#{@ngo_user.name} image", class: "img-fluid", style: "max-width: 100%; max-height: 180px; height: auto; object-fit: contain;" %>              </div>
+              <div class="pri-container py-3 px-2 d-flex w-100 flex-column flex-wrap">
+                <div class="row mb-2 d-flex justify-content-center gap-2">
+                  <%= link_to '#', class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;', data: { toggle: "modal", target: "#checkUserModal" } do %>
+                    <i class="fas fa-user ml-2"></i> Verify User
+                  <% end %>
+                  <%= link_to ngo_user_path, class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
+                    <i class="fas fa-inbox ml-2"></i> Inbox
+                  <% end %>
+                </div>
+                <div class="row d-flex justify-content-center gap-2">
+                  <%= link_to ngo_user_path, class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
+                    <i class="fas fa-history ml-2"></i> Interaction History
+                  <% end %>
+                  <%= link_to ngo_user_path, class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
+                    <i class="fas fa-calendar ml-2"></i> Events
+                  <% end %>
+                </div>
               </div>
-            <% end %>
+          </div>
+          
+          <!-- Right Side (Bulletin Board) -->
+          <div class="col-8 mx-0 d-flex justify-content-center">
+            <%= render 'user_particulars/bulletin' %>
           </div>
         </div>
-        <!-- Bulletin Board Column -->
-        <div class="col-12 col-md-8 mt-4 mt-md-0" id="bulletins-container"> 
-          <%= render 'user_particulars/bulletin' %>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -163,10 +141,15 @@
             <%= f.text_field :location, class: 'form-control' %>
           </div>
           <div class="form-group">
-            <%= f.label :ngo_name %>
-            <%= f.text_field :ngo_name, class: 'form-control' %>
+            <%= f.hidden_field :ngo_name, value: @ngo_user.name %>
           </div>
-          <%= f.submit "Post", class: 'btn btn-primary' %>
+          <div class="d-flex justify-content-center gap-2">
+            <%= link_to '#', class: 'btn btn-secondary', data: { dismiss: 'modal' } do %>
+              Cancel
+            <% end %>
+            <%= f.submit "Add Post", class: 'btn btn-primary' %>
+          </div>
+          
         <% end %>
       </div>
     </div>
