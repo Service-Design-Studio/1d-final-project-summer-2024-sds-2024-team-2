@@ -6,6 +6,7 @@
   <title>EnableID Verification</title>
   <!-- Bootstrap CSS -->
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <%= stylesheet_link_tag 'homebuttons', media: 'all', 'data-turbolinks-track': 'reload' %>
   <!-- Font Awesome CSS -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
   <style>
@@ -48,21 +49,25 @@
           </div>
           <div class="text-center" style="display: flex; flex-wrap: wrap; justify-content: space-between;">
             <!-- Start of Check User Button -->
-            <button type="button" class="btn btn-secondary mt-3" data-toggle="modal" data-target="#checkUserModal" style="flex: 1 1 45%; margin: 5px;">
-              Check User
-            </button>
+            <!-- Verify User button -->
+            <%= link_to '#', class: "customhome-button btn btn-secondary mt-3", style: 'text-decoration: none; flex: 1 1 45%; margin: 5px;', data: { toggle: "modal", target: "#checkUserModal" } do %>
+              <i class="fas fa-user"></i> Verify User
+            <% end %>
+
             <!-- Inbox button -->
-            <button type="button" class="btn btn-secondary mt-3" style="flex: 1 1 45%; margin: 5px;">
-              Inbox
-            </button>
-            <!-- Interaction history button -->
-            <button type="button" class="btn btn-secondary mt-3" style="flex: 1 1 45%; margin: 5px;">
-              Interaction History
-            </button>
+            <%= link_to ngo_user_path, class: "customhome-button btn btn-secondary mt-3", style: 'text-decoration: none; flex: 1 1 45%; margin: 5px;' do %>
+              <i class="fas fa-inbox"></i> Inbox
+            <% end %>
+
+            <!-- Interaction History button -->
+            <%= link_to ngo_user_path, class: "customhome-button btn btn-secondary mt-3", style: 'text-decoration: none; flex: 1 1 45%; margin: 5px;' do %>
+              <i class="fas fa-history"></i> Interaction History
+            <% end %>
+
             <!-- Events button -->
-            <button type="button" class="btn btn-secondary mt-3" style="flex: 1 1 45%; margin: 5px;">
-              Events
-            </button>
+            <%= link_to ngo_user_path, class: "customhome-button btn btn-secondary mt-3", style: 'text-decoration: none; flex: 1 1 45%; margin: 5px;' do %>
+              <i class="fas fa-calendar"></i> Events
+            <% end %>
           </div>
         </div>
         <!-- Bulletin Board Column -->
