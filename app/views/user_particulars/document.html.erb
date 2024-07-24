@@ -45,9 +45,8 @@
             font-size: 16px;
         }
 
-        /* Style for the dropdown menu and preview button */
-        .dropdown-menu,
-        .preview-button {
+        /* Style for the dropdown menu */
+        .dropdown-menu {
             margin-top: 10px;
         }
 
@@ -172,9 +171,6 @@
 
             <!-- File description (hidden initially) -->
             <textarea class="form-control mt-3" id="fileDescription" placeholder="Description of the file..." style="display: none;"></textarea>
-
-            <!-- Preview button (hidden initially) -->
-            <button type="button" class="btn btn-primary preview-button mt-3" style="display: none;">Preview</button>
         </form>
 
         <!-- Status message -->
@@ -227,13 +223,11 @@
                 fileListContainer.appendChild(fileItem);
             });
 
-            // Show the description field and preview button if files are selected
+            // Show the description field if files are selected
             if (selectedFiles.length > 0) {
                 document.getElementById('fileDescription').style.display = 'block';
-                document.querySelector('.preview-button').style.display = 'block';
             } else {
                 document.getElementById('fileDescription').style.display = 'none';
-                document.querySelector('.preview-button').style.display = 'none';
             }
         }
 
@@ -330,23 +324,6 @@
             updateFileList(); // Update the file list display
             document.getElementById('statusMessage').innerText = 'Files attached successfully!';
             addUploadedDocumentsToList(files); // Add uploaded documents to the list
-        });
-
-        // Event listener for the preview button
-        document.querySelector('.preview-button').addEventListener('click', () => {
-            if (selectedFiles.length === 0) {
-                document.getElementById('statusMessage').innerText = 'No files to preview.';
-                return;
-            }
-
-            var filePreviewContainer = document.getElementById('filePreview');
-            filePreviewContainer.innerHTML = ''; // Clear previous previews
-            selectedFiles.forEach(file => {
-                const fileURL = URL.createObjectURL(file);
-                const img = document.createElement('img');
-                img.src = fileURL;
-                filePreviewContainer.appendChild(img);
-            });
         });
 
         // Event listener for form submission to handle the file upload process
