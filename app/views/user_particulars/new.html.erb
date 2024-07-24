@@ -193,6 +193,29 @@
     toggleOtherField('gender_select', 'gender_other_field');
   </script>
   <script>
+
+    // Handles file upload change event
+    const fileInput = document.getElementById('photo_url');
+    fileInput.addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const img = document.createElement('img');
+          img.src = e.target.result;
+          img.style.width = '100%';
+          img.style.height = '100%';
+          img.style.objectFit = 'cover';
+
+          const label = document.getElementById('photoLabel');
+          label.innerHTML = ''; // Clear existing content
+          label.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Handles camera input change event
     function startCamera() {
       const video = document.getElementById('cameraFeed');
 
@@ -238,10 +261,6 @@
 
         label.innerHTML = '';
         label.appendChild(img);
-
-        // Set the value of the hidden file input field
-        const photoInput = document.getElementById('photo_url');
-        photoInput.value = dataUrl; // This one saves dataUrl into the photoInput.value, to be passed. Should be photo!
 
         // Close the modal programmatically using Bootstrap's modal methods
         const modal = bootstrap.Modal.getInstance(document.getElementById('cameraModal'));
