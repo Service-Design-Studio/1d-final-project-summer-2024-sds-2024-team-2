@@ -126,7 +126,7 @@
 
         .document-list {
             width: 100%;
-            max-width: 300px;
+            max-width: 600px;
             margin: 0 auto;
         }
 
@@ -202,11 +202,12 @@
             <thead>
                 <tr>
                     <th>Name</th>
+                    <th>Size</th>
+                    <th>Date</th>
                     <th>Status</th>
                 </tr>
             </thead>
-            <tbody>
-                <!-- Initial entries removed -->
+            <tbody id="documentTableBody">
             </tbody>
         </table>
     </div>
@@ -392,14 +393,16 @@
 
         // Function to add uploaded documents to the list of uploaded documents
         function addUploadedDocumentsToList(files) {
-            var uploadedDocumentsTable = document.getElementById('uploadedDocumentsTable').getElementsByTagName('tbody')[0];
+            var uploadedDocumentsTable = document.getElementById('documentTableBody');
             files.forEach(file => {
-                var newRow = uploadedDocumentsTable.insertRow();
-                var nameCell = newRow.insertCell(0);
-                var statusCell = newRow.insertCell(1);
-                nameCell.textContent = file.name;
-                statusCell.textContent = 'Unverified';
-                statusCell.classList.add('status-unverified');
+                var newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td>${file.name}</td>
+                    <td>${formatFileSize(file.size)}</td>
+                    <td>${formatDate(new Date())}</td>
+                    <td class="status-unverified">Unverified</td>
+                `;
+                uploadedDocumentsTable.appendChild(newRow);
             });
         }
     </script>
