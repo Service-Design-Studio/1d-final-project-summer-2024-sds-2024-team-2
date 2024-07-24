@@ -154,8 +154,16 @@ class UserParticularsController < ApplicationController
 
     if user_particular[:secondary_phone_number] =~ /[^0-9-]/
       error_messages_arr << 'Secondary phone number can only contain numbers and hyphens.'
-
     end
+
+    if user_particular[:secondary_phone_number_country_code].present? || user_particular[:secondary_phone_number].present?
+      if user_particular[:secondary_phone_number_country_code].blank?
+        errors.add('Secondary phone number country code must exist if ')
+      end
+      
+      if user_particular[:secondary_phone_number].blank?
+      
+      end
 
     # Check if selected option is in dropdown options
     unless user_particular[:country_of_origin].in? country_options
