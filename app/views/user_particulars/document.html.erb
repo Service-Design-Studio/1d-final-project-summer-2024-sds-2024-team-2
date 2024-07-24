@@ -205,7 +205,7 @@
     <!-- Existing Documents -->
     <div class="container document-list">
         <h2 class="text-center">Uploaded Documents</h2>
-        <table class="table">
+        <table class="table" id="uploadedDocumentsTable">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -231,7 +231,6 @@
                 </tr>
             </tbody>
         </table>
-        <button type="button" class="btn btn-primary btn-block">Upload</button>
     </div>
 
     <!-- Document Preview -->
@@ -402,6 +401,11 @@
             xhr.onload = function () {
                 if (xhr.status === 200) {
                     document.getElementById('uploadStatus').innerText = 'Files uploaded successfully!';
+                    // Add uploaded files to the uploaded documents list
+                    addUploadedDocumentsToList(selectedFiles);
+                    // Clear selected files after upload
+                    selectedFiles = [];
+                    updateFileList();
                 } else {
                     document.getElementById('uploadStatus').innerText = 'File upload failed! Status: ' + xhr.status + ' Response: ' + xhr.responseText;
                 }
@@ -411,9 +415,26 @@
             };
             xhr.send(formData);
         });
+
+        // Function to add uploaded documents to the list of uploaded documents
+        function addUploadedDocumentsToList(files) {
+            var uploadedDocumentsTable = document.getElementById('uploadedDocumentsTable').getElementsByTagName('tbody')[0];
+            files.forEach(file => {
+                var newRow = uploadedDocumentsTable.insertRow();
+                var nameCell = newRow.insertCell(0);
+                var statusCell = newRow.insertCell(1);
+                nameCell.textContent = file.name;
+                statusCell.textContent = 'Unverified';
+                statusCell.classList.add('status-unverified');
+            });
+        }
     </script>
 </body>
 </html>
+
+
+
+
 
 
 
