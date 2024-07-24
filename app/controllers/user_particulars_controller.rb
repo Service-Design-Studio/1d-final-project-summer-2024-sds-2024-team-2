@@ -1,7 +1,7 @@
 class UserParticularsController < ApplicationController
   include UserParticularsHelper
   before_action :authenticate_user!
-  before_action :set_user_particular, only: %i[show edit]
+  before_action :set_user_particular
   before_action :set_ngo_users
 
   def show

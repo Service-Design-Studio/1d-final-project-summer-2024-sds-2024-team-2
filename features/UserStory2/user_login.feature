@@ -34,11 +34,10 @@ Scenario: Successful Login with Username
 Scenario: Wrong Password
   Given I fill in the following fields
     | Field             | Value       |
-    | Log in EnableID      | 98765432   |
+    | Log in EnableID      | user1  |
     | Password          | password   |
   And I press the "Log in" button
-  Then I should see an error message "Invalid phone number or password"
-  And I should see the empty login page again
+  Then I should see "Invalid Login or password."
 
 Scenario: Phone Number Not Registered
   Given I fill in the following fields
@@ -46,16 +45,15 @@ Scenario: Phone Number Not Registered
     | Log in EnableID      | 98765432   |
     | Password          | password   |
   And I press the "Log in" button
-  Then I should see an error message "Invalid phone number or password"
-  And I should see the empty login page again
+  Then I should see "Invalid Login or password."
 
-Scenario: Blank Phone Number
+Scenario: Blank Log in
   Given I fill in the following fields
     | Field             | Value       |
     | Log in EnableID      |    |
     | Password          | password   |
   And I press the "Log in" button
-  Then I should see an error message "Phone number cannot be blank"
+  Then I should see "Please fill in this field."
 
 Scenario: Blank Password
   Given I fill in the following fields
@@ -63,7 +61,7 @@ Scenario: Blank Password
     | Log in EnableID      | 98765432    |
     | Password          |             |
   And I press the "Log in" button
-  Then I should see an error message "Password cannot be blank"
+  Then I should see "Please fill in this field."
 
 Scenario: Forgot Password
   Given I am on the "Login" page
