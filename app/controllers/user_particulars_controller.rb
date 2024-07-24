@@ -158,12 +158,13 @@ class UserParticularsController < ApplicationController
 
     if user_particular[:secondary_phone_number_country_code].present? || user_particular[:secondary_phone_number].present?
       if user_particular[:secondary_phone_number_country_code].blank?
-        errors.add('Secondary phone number country code must exist if ')
+        error_messages_arr << 'Secondary country code must exist if secondary phone number exists.'
       end
       
       if user_particular[:secondary_phone_number].blank?
-      
+        error_messages_arr << 'Secondary phone number must exist if secondary country code exists.'
       end
+    end
 
     # Check if selected option is in dropdown options
     unless user_particular[:country_of_origin].in? country_options
