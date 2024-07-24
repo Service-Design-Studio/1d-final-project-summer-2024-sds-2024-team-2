@@ -123,6 +123,42 @@
             text-align: center;
             margin-top: 20px;
         }
+
+        .document-list {
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .document-list table {
+            width: 100%;
+        }
+
+        .document-list table th,
+        .document-list table td {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            text-align: left;
+        }
+
+        .document-list table th {
+            background-color: #f8f8f8;
+        }
+
+        .document-list .status-verified {
+            color: green;
+        }
+
+        .document-list .status-unverified {
+            color: red;
+        }
+
+        .document-preview img {
+            width: 100%;
+            max-width: 500px;
+            display: block;
+            margin: 0 auto;
+        }
     </style>
 </head>
 <body>
@@ -164,6 +200,44 @@
         <div id="filePreview" class="file-preview"></div>
         <!-- Upload status -->
         <div id="uploadStatus" class="upload-status"></div>
+    </div>
+
+    <!-- Existing Documents -->
+    <div class="container document-list">
+        <h2 class="text-center">Uploaded Documents</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Birth Certificate</td>
+                    <td class="status-verified">Verified</td>
+                </tr>
+                <tr>
+                    <td>Passport</td>
+                    <td class="status-verified">Verified</td>
+                </tr>
+                <tr>
+                    <td>Marriage Certificate</td>
+                    <td class="status-verified">Verified</td>
+                </tr>
+                <tr>
+                    <td>Education Certificate</td>
+                    <td class="status-unverified">Unverified</td>
+                </tr>
+            </tbody>
+        </table>
+        <button type="button" class="btn btn-primary btn-block">Upload</button>
+    </div>
+
+    <!-- Document Preview -->
+    <div class="container document-preview mt-3">
+        <img src="/mnt/data/image.png" alt="Sample Document">
+        <button type="button" class="btn btn-danger btn-block mt-3">Delete</button>
     </div>
 
     <!-- jQuery, Popper.js, and Bootstrap JS for Bootstrap functionality -->
@@ -340,5 +414,6 @@
     </script>
 </body>
 </html>
+
 
 
