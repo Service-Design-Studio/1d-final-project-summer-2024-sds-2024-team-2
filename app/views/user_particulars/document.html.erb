@@ -196,7 +196,7 @@
     </div>
 
     <!-- Existing Documents -->
-    <div class="container document-list">
+    <div class="container document-list" id="uploadedDocumentsContainer" style="display: none;">
         <h2 class="text-center">Uploaded Documents</h2>
         <table class="table" id="uploadedDocumentsTable">
             <thead>
@@ -404,16 +404,14 @@
                 `;
                 uploadedDocumentsTable.appendChild(newRow);
             });
+
+            // Show the uploaded documents section if there are files
+            if (uploadedDocumentsTable.children.length > 0) {
+                document.getElementById('uploadedDocumentsContainer').style.display = 'block';
+            } else {
+                document.getElementById('uploadedDocumentsContainer').style.display = 'none';
+            }
         }
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
