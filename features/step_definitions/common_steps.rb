@@ -1,5 +1,5 @@
 Then(/^I should see "([^"]*)"$/) do |name|
-  expect(page).to have_content("#{name}")
+  expect(page).to have_content("#{name}", wait: 2) # Wait for up to 2 seconds
 end
 
 Then(/^I should be redirected to the "([^"]*)" page$/) do |page_name|
