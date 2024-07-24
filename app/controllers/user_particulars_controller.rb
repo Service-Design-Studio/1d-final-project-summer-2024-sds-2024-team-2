@@ -42,13 +42,17 @@ class UserParticularsController < ApplicationController
 
   def new
     @back_path = root_path
-    # Fills up form with previously entered data
-    @user_particular = UserParticular.new(session.fetch(session[:user_particular_params], {}))
+    # Fill up form with previously filled up data, if not create empty object
+    if session[:user_particular_params].present?
+      @user_particular = UserParticular.new(session[:user_particular_params])
+    else
+      @user_particular = UserParticular.new
+    end
+
     set_dropdown_options
   end
 
   def confirm
-    session[:user_particular_params] = user_particular_params # Use the session to store the model
     @user_particular = UserParticular.new(user_particular_params) # The Model object to store the hidden keyed params
     error_messages_arr = validate_user_particulars(@user_particular)
     flash[:error] = error_messages_arr
@@ -58,10 +62,12 @@ class UserParticularsController < ApplicationController
       render :confirm
     else
       # Render error message(s) in form if validation fails
+      session[:user_particular_params] = user_particular_params # Use the session to store the model
       flash[:error_message] = 'Please fix the error(s) below:'
       redirect_to new_user_particular_path
     end
   end
+
 
   def edit
     @back_path = root_path
