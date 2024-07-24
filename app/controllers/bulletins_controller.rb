@@ -8,10 +8,12 @@ class BulletinsController < ApplicationController
   end
 
   def create
+    logger.debug "User ID: #{params[:user_id]}"
+    @ngo_user = NgoUser.find_by_id(params[:bulletin][:user_id])
     @bulletin = Bulletin.new(bulletin_params)
     if @bulletin.save
       flash[:success] = "Post added successfully."
-      redirect_to bulletins_path # Adjust the redirect path as needed
+      redirect_to ngo_user_path(@ngo_user.id) # Adjust the redirect path as needed
     else
       flash[:error] = "Failed to add post."
       render :index

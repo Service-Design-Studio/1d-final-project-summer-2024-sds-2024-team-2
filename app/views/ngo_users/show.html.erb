@@ -145,6 +145,7 @@
       </div>
       <div class="modal-body">
         <%= form_for :bulletin, url: bulletins_path, method: :post do |f| %>
+          <%= f.hidden_field :user_id, value: @ngo_user.id %>
           <div class="form-group">
             <%= f.label :title %>
             <%= f.text_field :title, class: 'form-control' %>
