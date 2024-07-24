@@ -1,120 +1,117 @@
-.container-1 {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: left;
-    align-items: center;
-    width: 100%; /* Cover the full width */ 
-    padding: 20px;
-    
-}
-
 .card-1 {
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 500px;
-    background: linear-gradient(to right, #ff8989, #ffb9b9); /* Left to right gradient */
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 500px;
+  background: linear-gradient(
+    to right,
+    #ff8989,
+    #ffb9b9
+  ); /* Left to right gradient */
 }
 
 .card-1-header {
-    background-color: #FB7C7C;
-    color: black;
-    text-align: center;
-    padding: 10px;
-    font-weight: bold;
+  background-color: #fb7c7c;
+  color: black;
+  text-align: center;
+  padding: 10px;
+  font-weight: bold;
 }
 
 .verification-icon {
-    width: 24px;
-    height: 24px;
+  width: 24px;
+  height: 24px;
 }
 
 .fingerprint-icon {
-    right:400px;
-    width: 80px;
-    height: 80px;
-    background-color: white;
-    border-radius: 20%;
-    z-index: 1; /* Ensure it floats above other content */
+  right: 400px;
+  width: 80px;
+  height: 80px;
+  background-color: white;
+  border-radius: 20%;
+  z-index: 1; /* Ensure it floats above other content */
 }
 
 .photo-1 {
-    float: left;
-    padding: 10px
+  float: left;
+  padding: 10px;
 }
 
 .profile-image {
-    width: 100px;
-    height: 100px;
-    border: 1px solid black;
+  width: 100px;
+  height: 100px;
+  border: 1px solid black;
 }
 
 .details-1 {
-    padding: 4px;
+  padding: 4px;
 }
 
 .details-1 p {
-    margin: 2px 0;
+  margin: 2px 0;
 }
 
 .details-1 .section {
-    margin-top: 2px; /* Adjust the margin to create separation */
+  margin-top: 2px; /* Adjust the margin to create separation */
 }
 
 .card-footer {
-    background-color: #FB7C7C;
-    color: black;
-    text-align: center;
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  background-color: #fb7c7c;
+  color: black;
+  text-align: center;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .details-1 p {
-    margin: 1px 0;
-    line-height: 1.4;
-}
-
-.generate-2fa-button {
-    background-color: #333; /* Dark gray background */
-    color: white; /* White text color */
-    border: none; /* No border */
-    padding: 10px 20px; /* Padding around text */
-    font-size: 16px; /* Font size */
-    border-radius: 5px; /* Slightly rounded corners */
-    cursor: pointer; /* Cursor indicates clickable */
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3); /* Subtle shadow for depth */
-    transition: background-color 0.3s; /* Smooth transition for hover effect */
+  margin: 1px 0;
+  line-height: 1.4;
 }
 
 .two-fa-passcode-input {
-background-color: #f0f0f0; /* Light gray background */
-border: 2px solid #ccc; /* Gray border */
-border-radius: 5px; /* Rounded corners */
-padding: 10px 20px; /* Padding inside the input */
-width: 120px; /* Fixed width */
-text-align: center; /* Center text alignment */
-font-size: 16px; /* Font size */
-box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Subtle shadow for depth */
+  background-color: #333; /* Dark gray background */
+  color: white; /* White text color */
+  border: none; /* No border */
+  padding: 10px 20px; /* Padding around text */
+  font-size: 16px; /* Font size */
+  border-radius: 5px; /* Slightly rounded corners */
+  cursor: pointer; /* Cursor indicates clickable */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.two-fa-passcode-input {
+  color: black;
+  background-color: #f0f0f0; /* Light gray background */
+  border: 2px solid #ccc; /* Gray border */
+  border-radius: 5px; /* Rounded corners */
+  padding: 10px 20px; /* Padding inside the input */
+  width: 120px; /* Fixed width */
+  text-align: center; /* Center text alignment */
+  font-size: 16px; /* Font size */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
 }
 
 .bordered-table {
-    width: 100%;
-    border-collapse: collapse;
+  width: 100%;
+  border-collapse: collapse;
 }
-.bordered-table td, .bordered-table th {
-    padding: 1px;
-    vertical-align: top;
+.bordered-table td,
+.bordered-table th {
+  padding: 1px;
+  vertical-align: top;
 }
 
 .qr-code {
-    text-align: right;
-    width: 30px;
-    height: 30px;
+  text-align: right;
+  width: 30px;
+  height: 30px;
 }
 
 .qr-code img {
+<<<<<<< Updated upstream
     width: 10px;
     height: 10px;
   
@@ -147,3 +144,8 @@ box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Subtle shadow for depth */
     align-items: center;
     background-color: rgba(0, 0, 0, 0.507); /* Optional: Adds a see-through effect */
   }
+=======
+  width: 10px;
+  height: 10px;
+}
+>>>>>>> Stashed changes

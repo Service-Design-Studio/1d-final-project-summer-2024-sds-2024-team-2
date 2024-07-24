@@ -39,13 +39,9 @@
   <% end %>
 </head>
 <body class="container">
-  <%# Start of EnableID card partial and filling in/edit button%>
-  <%# <div class="alert alert-info text-center my-1">
-    Make sure to fill in your particulars correctly before being verified by a NGO admin!
-  </div> %>
-  <%# <h1 class="text-center rounded mt-3">Your <strong style="color: #f1536a;">EnableID</strong></h1> %>
   <div class="row">
     <!-- Left Side (Digital ID, 2FA, Buttons) -->
+<<<<<<< Updated upstream
 <div class="col-md-4 mb-4 mb-md-0">
 
   <!-- Digital ID Card Container -->
@@ -58,42 +54,49 @@
         <div class="card-body d-flex justify-content-center align-items-center h-100">
           <button id="generate-2fa-btn" class="generate-2fa-button">Generate 2FA Passcode:</button>
           <span id='two-fa-passcode' class='two-fa-passcode-input'><%= @user_particular&.two_fa_passcode || "2FA Passcode is not set up." %></span>
+=======
+    <div class="col-4 d-flex flex-column justify-content-center align-items-center">
+      <!-- Digital ID Card Container -->
+      <%= render 'digitalid' %>
+      <!-- 2FA Container, put under sub main container -->
+      <div class="container d-flex flex-column justify-content-center">
+        <div class="my-2 gap-2 d-flex align-items-center justify-content-center w-100">
+          <button id="generate-2fa-btn" class="px-4 py-2 generate-2fa-button" style='font-size: 1.1em;'>Generate 2FA Passcode:</button>
+          <span id='two-fa-passcode' class='px-4 py-2 two-fa-passcode-input' style='font-size: 1.1em;'><%= @user_particular&.two_fa_passcode || "2FA Passcode is not set up." %></span>
+>>>>>>> Stashed changes
         </div>
-      </div>
-      <!-- Buttons Container -->
-        <div class="text-center mb-3" style="background-color: #fdc6cf;">
-          <div class="buttonhome-container">
-            <% if @user&.nil? %>
-            <% else %>
-              <%= link_to user_document_path(@user), class: 'customhome-button', style: 'text-decoration: none;' do %>
-                <i class="fas fa-file-alt"></i> Documents
-              <% end %>
-              <%= link_to user_history_path(@user), class: 'customhome-button', style: 'text-decoration: none;' do %>
-                <i class="fas fa-history"></i> Activity History
-              <% end %>
-              <%= link_to new_user_particular_path, class: "customhome-button", id: "fill-in-particulars-btn", style: 'text-decoration: none;' do %>
+        <!-- Buttons Container, put under sub main container -->
+        <div class="pri-container d-flex flex-wrap w-100">
+          <% if @user&.nil? %>
+          <% else %>
+            <%= link_to user_document_path(@user), class: 'customhome-button', style: 'text-decoration: none;' do %>
+              <i class="fas fa-file-alt"></i> Documents
+            <% end %>
+            <%= link_to user_history_path(@user), class: 'customhome-button', style: 'text-decoration: none;' do %>
+              <i class="fas fa-history"></i> Activity History
+            <% end %>
+            <%= link_to new_user_particular_path, class: "customhome-button", id: "fill-in-particulars-btn", style: 'text-decoration: none;' do %>
+              <i class="fas fa-user"></i> Personal
+            <% end %>
+            <% if @user_particular&.status == 'verified' %>
+              <%= link_to edit_user_particular_path(@user), class: 'customhome-button', style: 'text-decoration: none;' do %>
                 <i class="fas fa-user"></i> Personal
               <% end %>
-              <% if @user_particular&.status == 'verified' %>
-                <%= link_to edit_user_particular_path(@user), class: 'customhome-button', style: 'text-decoration: none;' do %>
-                  <i class="fas fa-user"></i> Personal
-                <% end %>
-              <% else %>
-                <%= link_to edit_user_particular_path(@user), class: 'customhome-button', style: 'text-decoration: none;' do %>
-                  <i class="fas fa-user"></i> Personal
-                <% end %>
-              <% end %> 
+            <% else %>
+              <%= link_to edit_user_particular_path(@user), class: 'customhome-button', style: 'text-decoration: none;' do %>
+                <i class="fas fa-user"></i> Personal
+              <% end %>
             <% end %>
-            <%= link_to user_particulars_family_path, class: 'customhome-button', style: 'text-decoration: none;' do %>
-              <i class="fas fa-users"></i> Family
-            <% end %>
-            <%= link_to user_particulars_family_path, class: 'customhome-button', style: 'text-decoration: none;' do %>
-              <i class="fas fa-save"></i> Saved Post
-            <% end %>
-            <%= link_to user_particulars_family_path, class: 'customhome-button', style: 'text-decoration: none;' do %>
-              <i class="fas fa-search"></i> Search NGOs
-            <% end %>
-
+          <% end %>
+          <%= link_to user_particulars_family_path, class: 'customhome-button', style: 'text-decoration: none;' do %>
+            <i class="fas fa-users"></i> Family
+          <% end %>
+          <%= link_to user_particulars_family_path, class: 'customhome-button', style: 'text-decoration: none;' do %>
+            <i class="fas fa-save"></i> Saved Post
+          <% end %>
+          <%= link_to user_particulars_family_path, class: 'customhome-button', style: 'text-decoration: none;' do %>
+            <i class="fas fa-search"></i> Search NGOs
+          <% end %>
         </div>
       </div>
     </div>
