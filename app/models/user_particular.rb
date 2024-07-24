@@ -1,5 +1,6 @@
-class UserParticular < ActiveRecord::Base
+class UserParticular < ApplicationRecord
   belongs_to :user
+  has_one_attached :profile_picture
 
   def self.create_user_particular(attributes)
     UserParticular.create(attributes)

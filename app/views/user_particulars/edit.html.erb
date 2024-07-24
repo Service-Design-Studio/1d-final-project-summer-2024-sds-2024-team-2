@@ -20,13 +20,13 @@
       </div>
     </div>
     <div class="form-group">
-      <%= form.label :secondary_phone_number, "Secondary phone number (optional)" %>
+      <%= form.label :secondary_phone_number, "Secondary phone number (optional)" %>  
       <div class="row">
         <div class="col" style="max-width: 125px; min-width: 125px;">
-          <%= form.select :secondary_phone_number_country_code, options_for_select(@country_code_options, @user_particular["secondary_phone_number_country_code"]), {}, { class: "form-control", required: true, id: "country_code_select_secondary" } %>
+          <%= form.select :secondary_phone_number_country_code, options_for_select([['', '']] + @country_code_options, @user_particular["secondary_phone_number_country_code"]), {}, { class: "form-control", id: "country_code_select_secondary" } %>
         </div>
         <div class="col">
-          <%= form.telephone_field :secondary_phone_number, class: "form-control", required: true, id: "phone_number_field_secondary" %>
+          <%= form.telephone_field :secondary_phone_number, class: "form-control", id: "phone_number_field_secondary" %>
         </div>
       </div>
     </div>
