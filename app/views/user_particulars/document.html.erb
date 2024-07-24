@@ -300,19 +300,17 @@
             files.forEach(file => {
                 if (!['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg'].includes(file.type)) {
                     document.getElementById('statusMessage').innerText = 'Unsupported file type. Please upload a PDF, DOCX, or JPG file.';
-                    return;
-                }
-                if (file.size > 5242880) { // 5MB limit
+                } else if (file.size > 5242880) { // 5MB limit
                     document.getElementById('statusMessage').innerText = 'File size exceeds the maximum limit of 5MB. Please upload a smaller file.';
-                    return;
+                } else {
+                    selectedFiles.push(file);
                 }
-                selectedFiles.push(file);
             });
             updateFileList(); // Update the file list display
-            if (document.getElementById('statusMessage').innerText === '') {
+            if (selectedFiles.length > 0) {
                 document.getElementById('statusMessage').innerText = 'Files attached successfully!';
             }
-            addUploadedDocumentsToList(files); // Add uploaded documents to the list
+            addUploadedDocumentsToList(files.filter(file => ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg'].includes(file.type))); // Add uploaded documents to the list
         });
 
         fileInput.addEventListener('change', (event) => {
@@ -320,19 +318,17 @@
             files.forEach(file => {
                 if (!['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg'].includes(file.type)) {
                     document.getElementById('statusMessage').innerText = 'Unsupported file type. Please upload a PDF, DOCX, or JPG file.';
-                    return;
-                }
-                if (file.size > 5242880) { // 5MB limit
+                } else if (file.size > 5242880) { // 5MB limit
                     document.getElementById('statusMessage').innerText = 'File size exceeds the maximum limit of 5MB. Please upload a smaller file.';
-                    return;
+                } else {
+                    selectedFiles.push(file);
                 }
-                selectedFiles.push(file);
             });
             updateFileList(); // Update the file list display
-            if (document.getElementById('statusMessage').innerText === '') {
+            if (selectedFiles.length > 0) {
                 document.getElementById('statusMessage').innerText = 'Files attached successfully!';
             }
-            addUploadedDocumentsToList(files); // Add uploaded documents to the list
+            addUploadedDocumentsToList(files.filter(file => ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg'].includes(file.type))); // Add uploaded documents to the list
         });
 
         // Event listener for form submission to handle the file upload process
@@ -372,19 +368,22 @@
         // Function to add uploaded documents to the list of uploaded documents
         function addUploadedDocumentsToList(files) {
             var uploadedDocumentsTable = document.getElementById('documentTableBody');
+            uploadedDocumentsTable.innerHTML = ''; // Clear the existing list
             files.forEach(file => {
-                var newRow = document.createElement('tr');
-                newRow.innerHTML = `
-                    <td>${file.name}</td>
-                    <td>${formatFileSize(file.size)}</td>
-                    <td>${formatDate(new Date())}</td>
-                    <td class="status-unverified">Unverified</td>
-                    <td class="action-buttons">
-                        <button class="btn btn-primary btn-sm" onclick="previewDocument('${URL.createObjectURL(file)}')">Preview</button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteDocument(this)">Delete</button>
-                    </td>
-                `;
-                uploadedDocumentsTable.appendChild(newRow);
+                if (['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg'].includes(file.type)) {
+                    var newRow = document.createElement('tr');
+                    newRow.innerHTML = `
+                        <td>${file.name}</td>
+                        <td>${formatFileSize(file.size)}</td>
+                        <td>${formatDate(new Date())}</td>
+                        <td class="status-unverified">Unverified</td>
+                        <td class="action-buttons">
+                            <button class="btn btn-primary btn-sm" onclick="previewDocument('${URL.createObjectURL(file)}')">Preview</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteDocument(this)">Delete</button>
+                        </td>
+                    `;
+                    uploadedDocumentsTable.appendChild(newRow);
+                }
             });
 
             // Show the uploaded documents section if there are files
