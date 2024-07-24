@@ -309,7 +309,9 @@
                 selectedFiles.push(file);
             });
             updateFileList(); // Update the file list display
-            document.getElementById('statusMessage').innerText = 'Files attached successfully!';
+            if (document.getElementById('statusMessage').innerText === '') {
+                document.getElementById('statusMessage').innerText = 'Files attached successfully!';
+            }
             addUploadedDocumentsToList(files); // Add uploaded documents to the list
         });
 
@@ -327,7 +329,9 @@
                 selectedFiles.push(file);
             });
             updateFileList(); // Update the file list display
-            document.getElementById('statusMessage').innerText = 'Files attached successfully!';
+            if (document.getElementById('statusMessage').innerText === '') {
+                document.getElementById('statusMessage').innerText = 'Files attached successfully!';
+            }
             addUploadedDocumentsToList(files); // Add uploaded documents to the list
         });
 
