@@ -3,173 +3,175 @@
   <!-- user_particulars_confirm_path leads to the confirm function!-->
   <%= form_with model:@user_particular, url: user_particulars_confirm_path, method: :get, class: 'form', local: true, id: "form" do |form| %>
     <%= form.hidden_field :user_id, value: current_user.id %>
-    <div class="form-group">
-      <%= form.label :full_name, "Full Name" %><span class="text-danger">*</span>
-      <%= form.text_field :full_name, class: "form-control", required: true %>
-    </div>
-    <div class="form-group">
-      <%= form.label :phone_number, "Phone number" %><span class="text-danger">*</span>
-      <!--Yiqing your code goes here-->
-      <div class="row">
-        <div class="col" style="max-width: 125px; min-width: 125px;">
-          <%= form.select :phone_number_country_code, options_for_select(@country_code_options, @user_particular["phone_number_country_code"]), {}, { class: "form-control", required: true, id: "country_code_select" } %>
+    <div class='row'>
+      <div class = 'col-9'>
+        <div class="form-group">
+          <%= form.label :full_name, "Full Name" %><span class="text-danger">*</span>
+          <%= form.text_field :full_name, class: "form-control", required: true %>
         </div>
-        <div class="col">
-          <%= form.telephone_field :phone_number, class: "form-control", required: true, id: "phone_number_field" %>
+        <div class="form-group">
+          <%= form.label :phone_number, "Phone number" %><span class="text-danger">*</span>
+          <!--Yiqing your code goes here-->
+          <div class="row">
+            <div class="col" style="max-width: 125px; min-width: 125px;">
+              <%= form.select :phone_number_country_code, options_for_select(@country_code_options, @user_particular["phone_number_country_code"]), {}, { class: "form-control", required: true, id: "country_code_select" } %>
+            </div>
+            <div class="col">
+              <%= form.telephone_field :phone_number, class: "form-control", required: true, id: "phone_number_field" %>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <%= form.label :secondary_phone_number, "Secondary phone number (optional)" %>
+          <div class="row">
+            <div class="col" style="max-width: 125px; min-width: 125px;">
+              <%= form.select :secondary_phone_number_country_code, options_for_select(@country_code_options, @user_particular["secondary_phone_number_country_code"]), {}, { class: "form-control", required: true, id: "country_code_select_secondary" } %>
+            </div>
+            <div class="col">
+              <%= form.telephone_field :secondary_phone_number, class: "form-control", required: true, id: "phone_number_field_secondary" %>
+            </div>
+            <div class="form-group m-0">
+              <%= form.hidden_field :full_phone_number, class: "form-control", id: "full_phone_number_field", readonly: true %>
+            </div>
+            <div class="form-group m-0">
+              <%= form.hidden_field :full_secondary_phone_number, class: "form-control", id: "full_secondary_phone_number_field", readonly: true %>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="form-group">
-      <%= form.label :secondary_phone_number, "Secondary phone number (optional)" %>
-      <div class="row">
-        <div class="col" style="max-width: 125px; min-width: 125px;">
-          <%= form.select :secondary_phone_number_country_code, options_for_select(@country_code_options, @user_particular["secondary_phone_number_country_code"]), {}, { class: "form-control", required: true, id: "country_code_select_secondary" } %>
+      <div class = 'col-3 d-flex flex-column px-4'>
+        <label class="m-0">Passport-Style Photo<span class="text-danger">*</span></label>
+        <div class="form-group d-flex flex-grow-1 p-4 mb-0 justify-content-center align-items-center" style="border: 5px dashed rgba(198, 198, 198, 0.65);">
+          <label for="photo_url" class="m-0 p-0 mb-auto" style="font-size:8em; cursor: pointer;">+</label>
+          <%= form.file_field :photo_url, id: "photo_url", accept: 'image/jpeg,image/gif,image/png,application/pdf', class: "form-control-file", style: "display: none;" %>        </div>
+        <input type="file" accept="image/*" capture="environment" id="cameraInput" style="display: none;">
+        <button type="button" class='mt-0 py-2 btn btn-dark' onclick="document.getElementById('cameraInput').click();">Or take one right now 📸</button>
+      </div>
+      <div class="form-group">
+        <%= form.label :country_of_origin, "Country of Origin" %><span class="text-danger">*</span>
+        <%= form.select :country_of_origin, options_for_select(@countries, @user_particular["country_of_origin"]), {}, { class: "form-control", required: true } %>
+      </div>
+      <div class="form-group">
+        <%= form.label :ethnicity, "Ethnicity" %><span class="text-danger">*</span>
+        <%= form.select :ethnicity, options_for_select(@ethnicities, @user_particular["ethnicity"]), {}, { class: "form-control", required: true, id: "ethnicity_select" } %>
+        <!-- Hidden Text Field for Ethnicity -->
+        <div id="ethnicity_other_field" style="display: none;">
+          <input name="others[ethnicity]" type="text" class="form-control" placeholder="Specify other ethnicity">
         </div>
-        <div class="col">
-          <%= form.telephone_field :secondary_phone_number, class: "form-control", required: true, id: "phone_number_field_secondary" %>
+      </div>
+      <div class="form-group">
+        <%= form.label :religion, "Religion" %><span class="text-danger">*</span>
+        <%= form.select :religion, options_for_select(@religions, @user_particular["religion"]), {}, { class: "form-control", required: true, id: "religion_select" } %>
+        <!-- Hidden Religion Other Field -->
+        <div id="religion_other_field" style="display: none;">
+          <input name="others[religion]" type="text" class="form-control" placeholder="Specify other ethnicity">
         </div>
       </div>
-    </div>
-    <div class="form-group">
-      <%= form.hidden_field :full_phone_number, class: "form-control", id: "full_phone_number_field", readonly: true %>
-    </div>
-    <div class="form-group">
-      <%= form.hidden_field :full_secondary_phone_number, class: "form-control", id: "full_secondary_phone_number_field", readonly: true %>
-    </div>
-    <div class="form-group">
-      <%= form.label :country_of_origin, "Country of Origin" %><span class="text-danger">*</span>
-      <%= form.select :country_of_origin, options_for_select(@countries, @user_particular["country_of_origin"]), {}, { class: "form-control", required: true } %>
-    </div>
-    <div class="form-group">
-      <%= form.label :ethnicity, "Ethnicity" %><span class="text-danger">*</span>
-      <%= form.select :ethnicity, options_for_select(@ethnicities, @user_particular["ethnicity"]), {}, { class: "form-control", required: true, id: "ethnicity_select" } %>
-      <!-- Hidden Text Field for Ethnicity -->
-      <div id="ethnicity_other_field" style="display: none;">
-        <input name="others[ethnicity]" type="text" class="form-control" placeholder="Specify other ethnicity">
+      <div class="form-group">
+        <%= form.label :gender, "Gender" %><span class="text-danger">*</span>
+        <%= form.select :gender, options_for_select(['Male', 'Female', 'Others'], @user_particular["gender"]), {}, { class: "form-control", required: true, id: "gender_select" } %>
+        <!-- Hidden Text Field for Gender -->
+        <div id="gender_other_field" style="display: none;">
+          <input name="others[gender]" type="text" class="form-control" placeholder="Specify other ethnicity">
+        </div>
       </div>
-    </div>
-    <div class="form-group">
-      <%= form.label :religion, "Religion" %><span class="text-danger">*</span>
-      <%= form.select :religion, options_for_select(@religions, @user_particular["religion"]), {}, { class: "form-control", required: true, id: "religion_select" } %>
-      <!-- Hidden Religion Other Field -->
-      <div id="religion_other_field" style="display: none;">
-        <input name="others[religion]" type="text" class="form-control" placeholder="Specify other ethnicity">
+      <div class="form-group">
+        <%= form.label :date_of_birth, "Date of Birth" %><span class="text-danger">*</span>
+        <%= form.date_field :date_of_birth, class: "form-control", required: true %>
       </div>
-    </div>
-    <div class="form-group">
-      <%= form.label :gender, "Gender" %><span class="text-danger">*</span>
-      <%= form.select :gender, options_for_select(['Male', 'Female', 'Others'], @user_particular["gender"]), {}, { class: "form-control", required: true, id: "gender_select" } %>
-      <!-- Hidden Text Field for Gender -->
-      <div id="gender_other_field" style="display: none;">
-        <input name="others[gender]" type="text" class="form-control" placeholder="Specify other ethnicity">
+      <div class="form-group">
+        <%= form.label :date_of_arrival, "Date of Arrival in Malaysia" %><span class="text-danger">*</span>
+        <%= form.date_field :date_of_arrival, class: "form-control", required: true %>
       </div>
-    </div>
-    <div class="form-group">
-      <%= form.label :date_of_birth, "Date of Birth" %><span class="text-danger">*</span>
-      <%= form.date_field :date_of_birth, class: "form-control", required: true %>
-    </div>
-    <div class="form-group">
-      <%= form.label :date_of_arrival, "Date of Arrival in Malaysia" %><span class="text-danger">*</span>
-      <%= form.date_field :date_of_arrival, class: "form-control", required: true %>
-    </div>
-    <div class="form-group">
-      <%= form.label :photo_url, "Upload a copy of your passport size photo (optional)"%>
-      <%= form.file_field :photo_url, accept: 'image/jpeg,image/gif,image/png,application/pdf', class: "form-control-file"%>
-    </div>
-    <div class="form-group">
-      <%= form.label :documents, "I have the following documents (optional)" %><br>
-      <%= form.check_box :birth_certificate_url, id: 'birth_certificate' %> <label for="birth_certificate">Birth certificate</label><br>
-      <%= form.check_box :passport_url, id: 'passport' %> <label for="passport">Passport</label><br>
-    </div>
-    <div class="text-center">
-      <%= link_to "Back", root_path, class: "btn btn-secondary mx-2" %>
-      <%= form.submit "Submit", class: "btn btn-danger mx-2" %>
-    </div>
-  <% end %>
-</div>
-<%# For concatenating the numbers to full number %>
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    // Simplify element selection by using an object to group related elements
-    const elements = {
-      primary: {
-        countryCodeSelect: document.getElementById("country_code_select"),
-        phoneNumberField: document.getElementById("phone_number_field"),
-        fullPhoneNumberField: document.getElementById("full_phone_number_field")
-      },
-      secondary: {
-        countryCodeSelect: document.getElementById("country_code_select_secondary"),
-        phoneNumberField: document.getElementById("phone_number_field_secondary"),
-        fullPhoneNumberField: document.getElementById("full_secondary_phone_number_field")
+      <div class="text-center">
+        <%= link_to "Back", root_path, class: "btn btn-secondary mx-2" %>
+        <%= form.submit "Submit", class: "btn btn-danger mx-2" %>
+      </div>
+    <% end %>
+  </div>
+  <%# For concatenating the numbers to full number %>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Simplify element selection by using an object to group related elements
+      const elements = {
+        primary: {
+          countryCodeSelect: document.getElementById("country_code_select"),
+          phoneNumberField: document.getElementById("phone_number_field"),
+          fullPhoneNumberField: document.getElementById("full_phone_number_field")
+        },
+        secondary: {
+          countryCodeSelect: document.getElementById("country_code_select_secondary"),
+          phoneNumberField: document.getElementById("phone_number_field_secondary"),
+          fullPhoneNumberField: document.getElementById("full_secondary_phone_number_field")
+        }
+      };
+
+      // Consolidate the full phone number update logic into a single function
+      function updateFullPhoneNumber(elementGroup) {
+        elementGroup.fullPhoneNumberField.value = (elementGroup.countryCodeSelect.value + '-' + elementGroup.phoneNumberField.value).slice(1);
       }
-    };
 
-    // Consolidate the full phone number update logic into a single function
-    function updateFullPhoneNumber(elementGroup) {
-      elementGroup.fullPhoneNumberField.value = (elementGroup.countryCodeSelect.value + '-' + elementGroup.phoneNumberField.value).slice(1);
-    }
+      // Update both primary and secondary phone number fields
+      function updateAllFullPhoneNumbers() {
+        updateFullPhoneNumber(elements.primary);
+        updateFullPhoneNumber(elements.secondary);
+      }
 
-    // Update both primary and secondary phone number fields
-    function updateAllFullPhoneNumbers() {
-      updateFullPhoneNumber(elements.primary);
-      updateFullPhoneNumber(elements.secondary);
-    }
+      // Simplify the event listener setup for both select elements
+      function setupEventListeners(elementGroup) {
+        const { countryCodeSelect, phoneNumberField } = elementGroup;
 
-    // Simplify the event listener setup for both select elements
-    function setupEventListeners(elementGroup) {
-      const { countryCodeSelect, phoneNumberField } = elementGroup;
+        countryCodeSelect.addEventListener("change", () => updateAllFullPhoneNumbers());
+        phoneNumberField.addEventListener("input", () => updateAllFullPhoneNumbers());
 
-      countryCodeSelect.addEventListener("change", () => updateAllFullPhoneNumbers());
-      phoneNumberField.addEventListener("input", () => updateAllFullPhoneNumbers());
-
-      // Combine the focus and blur event listeners into a single function
-      function handleSelectElementEvents(event) {
-        const selectElement = event.target;
-        // Iterate over all options in the select element
-        for (let option of selectElement.options) {
-          // Retrieve the full text from the data attribute or use the option's text if not available
-          const fullText = option.getAttribute("data-full-text") || option.text;
-          // On focus, set the option's text to its full text for display
-          if (event.type === "focus") {
-            option.text = fullText;
-            // Ensure the full text is stored in the data attribute for future reference
-            option.setAttribute("data-full-text", fullText);
-          } else if (event.type === "blur") {
-            // On blur, revert the option's text to its value for a simplified display
-            option.text = option.value;
+        // Combine the focus and blur event listeners into a single function
+        function handleSelectElementEvents(event) {
+          const selectElement = event.target;
+          // Iterate over all options in the select element
+          for (let option of selectElement.options) {
+            // Retrieve the full text from the data attribute or use the option's text if not available
+            const fullText = option.getAttribute("data-full-text") || option.text;
+            // On focus, set the option's text to its full text for display
+            if (event.type === "focus") {
+              option.text = fullText;
+              // Ensure the full text is stored in the data attribute for future reference
+              option.setAttribute("data-full-text", fullText);
+            } else if (event.type === "blur") {
+              // On blur, revert the option's text to its value for a simplified display
+              option.text = option.value;
+            }
           }
         }
+
+        countryCodeSelect.addEventListener("focus", handleSelectElementEvents);
+        countryCodeSelect.addEventListener("blur", handleSelectElementEvents);
+        countryCodeSelect.dispatchEvent(new Event('change')); // Initialize display
       }
 
-      countryCodeSelect.addEventListener("focus", handleSelectElementEvents);
-      countryCodeSelect.addEventListener("blur", handleSelectElementEvents);
-      countryCodeSelect.dispatchEvent(new Event('change')); // Initialize display
+      // Apply event listeners to both primary and secondary elements
+      setupEventListeners(elements.primary);
+      setupEventListeners(elements.secondary);
+
+      // Initial update for both phone number fields
+      updateAllFullPhoneNumbers();
+    });
+
+    // Others options
+      // Function to toggle visibility of input fields
+    function toggleOtherField(selectElementId, otherFieldId) {
+      const selectElement = document.getElementById(selectElementId);
+      const otherField = document.getElementById(otherFieldId);
+      selectElement.addEventListener('change', function() {
+        if (this.value === 'Others') {
+          otherField.style.display = 'block';
+        } else {
+          otherField.style.display = 'none';
+        }
+      });
     }
 
-    // Apply event listeners to both primary and secondary elements
-    setupEventListeners(elements.primary);
-    setupEventListeners(elements.secondary);
-
-    // Initial update for both phone number fields
-    updateAllFullPhoneNumbers();
-  });
-
-  // Others options
-    // Function to toggle visibility of input fields
-  function toggleOtherField(selectElementId, otherFieldId) {
-    const selectElement = document.getElementById(selectElementId);
-    const otherField = document.getElementById(otherFieldId);
-    selectElement.addEventListener('change', function() {
-      if (this.value === 'Others') {
-        otherField.style.display = 'block';
-      } else {
-        otherField.style.display = 'none';
-      }
-    });
-  }
-
-  // Initialize toggle for each dropdown
-  toggleOtherField('religion_select', 'religion_other_field');
-  toggleOtherField('ethnicity_select', 'ethnicity_other_field');
-  toggleOtherField('gender_select', 'gender_other_field');
-</script>
+    // Initialize toggle for each dropdown
+    toggleOtherField('religion_select', 'religion_other_field');
+    toggleOtherField('ethnicity_select', 'ethnicity_other_field');
+    toggleOtherField('gender_select', 'gender_other_field');
+  </script>

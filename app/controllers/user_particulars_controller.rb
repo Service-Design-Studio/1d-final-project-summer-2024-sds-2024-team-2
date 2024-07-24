@@ -194,5 +194,6 @@ class UserParticularsController < ApplicationController
 
   def set_ngo_users
     @ngo_users = NgoUser.all
+    @user = current_user
   end
 end

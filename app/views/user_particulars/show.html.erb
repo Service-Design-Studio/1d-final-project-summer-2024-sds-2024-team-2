@@ -38,7 +38,7 @@
     </script>
   <% end %>
 </head>
-<body>
+<body class="container">
   <%# Start of EnableID card partial and filling in/edit button%>
   <div class="alert alert-info text-center my-1">
     Make sure to fill in your particulars correctly before being verified by a NGO admin!
@@ -62,23 +62,23 @@
       <div class="card mb-3 digital-card">
         <div class="card-body" style="background-color: #fdc6cf;">
           <div class="buttonhome-container">
-            <%= link_to user_document_path, class: 'customhome-button', style: 'text-decoration: none;' do %>
-              <i class="fas fa-file-alt"></i> Documents
-            <% end %>
-            <%= link_to user_history_path(@user_particular), class: 'customhome-button', style: 'text-decoration: none;' do %>
-              <i class="fas fa-history"></i> Activity History
-            <% end %>
-            <% if @user_particular.nil? %>
+            <% if @user&.nil? %>
+            <% else %>
+              <%= link_to user_document_path(@user), class: 'customhome-button', style: 'text-decoration: none;' do %>
+                <i class="fas fa-file-alt"></i> Documents
+              <% end %>
+              <%= link_to user_history_path(@user), class: 'customhome-button', style: 'text-decoration: none;' do %>
+                <i class="fas fa-history"></i> Activity History
+              <% end %>
               <%= link_to new_user_particular_path, class: "customhome-button", id: "fill-in-particulars-btn", style: 'text-decoration: none;' do %>
                 <i class="fas fa-user"></i> Personal
               <% end %>
-            <% else %>
-              <% if @user_particular.status == 'verified' %>
-                <%= link_to edit_user_particular_path(@user_particular), class: 'customhome-button', style: 'text-decoration: none;' do %>
+              <% if @user_particular&.status == 'verified' %>
+                <%= link_to edit_user_particular_path(@user), class: 'customhome-button', style: 'text-decoration: none;' do %>
                   <i class="fas fa-user"></i> Personal
                 <% end %>
               <% else %>
-                <%= link_to edit_user_particular_path(@user_particular), class: 'customhome-button', style: 'text-decoration: none;' do %>
+                <%= link_to edit_user_particular_path(@user), class: 'customhome-button', style: 'text-decoration: none;' do %>
                   <i class="fas fa-user"></i> Personal
                 <% end %>
               <% end %>
@@ -96,8 +96,9 @@
         </div>
       </div>
     </div>
+    <div class="col-md-1"></div>
     <!-- Right Side (Bulletin Board) -->
-    <div class="col-md-7">        
+    <div class="col-md-7">
       <%= render 'bulletin' %>
     </div>
   </div>
