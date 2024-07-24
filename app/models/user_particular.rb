@@ -2,6 +2,9 @@ class UserParticular < ApplicationRecord
   belongs_to :user
   has_one_attached :profile_picture
 
+  before_create :assign_unique_id
+  before_create :generate_2fa_secret
+
   def self.create_user_particular(attributes)
     UserParticular.create(attributes)
   end
