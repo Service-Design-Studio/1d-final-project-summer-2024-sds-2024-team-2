@@ -2,6 +2,7 @@ class UserParticularsController < ApplicationController
   include UserParticularsHelper
   before_action :authenticate_user!
   before_action :set_user_particular, only: %i[show edit]
+  before_action :set_ngo_users
 
   def show
     @bulletins = Bulletin.all
@@ -187,5 +188,11 @@ class UserParticularsController < ApplicationController
 
   def family
     @user_particular = current_user.user_particular
+  end
+
+  private
+
+  def set_ngo_users
+    @ngo_users = NgoUser.all
   end
 end
