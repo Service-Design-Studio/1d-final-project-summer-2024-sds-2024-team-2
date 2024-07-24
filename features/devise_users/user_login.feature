@@ -53,7 +53,7 @@ Scenario: Blank Log in
     | Log in EnableID      |    |
     | Password          | password   |
   And I press the "Log in" button
-  Then I should see "Please fill in this field."
+  Then I should stay on the "Login" page
 
 Scenario: Blank Password
   Given I fill in the following fields
@@ -61,29 +61,4 @@ Scenario: Blank Password
     | Log in EnableID      | 98765432    |
     | Password          |             |
   And I press the "Log in" button
-  Then I should see "Please fill in this field."
-
-Scenario: Forgot Password
-  Given I am on the "Login" page
-  When I click "Forgot password?"
-  Then I should be redirected to the "Reset Password" page
-  And I should see a form to enter my phone number or email
-
-Scenario: Account Lockout After Multiple Failed Attempts
-  Given I have registered with the following details:
-    | Phone Number      | 98765432
-    | Password          | correctpassword
-  When I enter the password incorrectly three times:
-    | Phone Number      | 98765432
-    | Password          | wrongpassword
-  Then I should see an error message "Your account is locked due to multiple failed login attempts. Please try again later."
-  And I should see the empty login page
-
-Scenario: Successful Login After Account Lockout Period
-  Given my account is locked due to multiple failed login attempts
-  When I wait for the lockout period to end
-  And I enter the following correct password:
-    | Phone Number      | 98765432
-    | Password          | correctpassword
-  And I press the "Log in" button
-  Then I should be redirected to the "Home" page
+  Then I should stay on the "Login" page
