@@ -30,7 +30,7 @@ class NgoUsersController < ApplicationController
       redirect_to verify_ngo_user_path(@ngo_user, unique_id: @user_particular.unique_id)
     else
       flash[:alert] = 'User not found. Please check your Unique ID and 2FA Code.'
-      redirect_to ngo_user_path(@ngo_user.id)
+      redirect_to ngo_user_path(@ngo_user.id, modal: 'check_user')
     end
   end
 

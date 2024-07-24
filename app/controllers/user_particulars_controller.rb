@@ -6,15 +6,6 @@ class UserParticularsController < ApplicationController
 
   def show
     @bulletins = Bulletin.all.order(updated_at: :desc)
-
-    if @user_particular
-      if @user_particular.profile_picture.attached?
-        logger.debug "\n\n\n\n\Profile picture is attached.\n\n\n\n\n"
-      else
-        logger.debug "\n\n\n\nNo profile picture attached.\n\n\n\n\n"
-      end
-    end
-
   end
   # No need for content when using @user_particular from before_action
 
@@ -27,13 +18,10 @@ class UserParticularsController < ApplicationController
 
     # Check if validation passes
     if error_messages_arr.empty?
-      logger.debug "\n\n\n\nprofile_picture #{params[:user_particular][:profile_picture].inspect}\n\n\n\n\n\n"
       @user_particular = UserParticular.create_user_particular(user_particular_params)
 
       # Check if user particular creation was successful
       if @user_particular.persisted?
-        @user_particular.assign_unique_id
-        @user_particular.reload
         @user_particular.profile_picture.attach(params[:user_particular][:profile_picture])
 
         flash[:success] = 'Digital ID was successfully created!'
