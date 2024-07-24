@@ -21,7 +21,7 @@ users_data = [
       gender: 'Male',
       date_of_birth: Date.new(1990, 3, 25),
       date_of_arrival: Date.new(2017, 9, 10),
-      status: 'pending',
+      status: 'verified',
       photo_url: 'https://example.com/rohingya_aung_photo.jpg',
       birth_certificate_url: 'https://example.com/rohingya_aung_birth_certificate.jpg',
       passport_url: 'https://example.com/rohingya_aung_passport.jpg',

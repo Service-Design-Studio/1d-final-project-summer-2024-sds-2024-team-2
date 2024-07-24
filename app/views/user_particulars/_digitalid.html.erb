@@ -119,7 +119,16 @@
       </div>
      
       <div class="card-footer">
-        EnableID - Pending Verification from an NGO <i class="custom-verified fas fa-check"></i><%= image_tag 'qrcode.png', alt: "QR Code", class: 'img-fluid qr-code'%>   
+        <% if @user_particular.status == 'pending' %>
+          <span>EnableID - Pending verification from an NGO</span>
+          <i class="custom-verified fas fa-check"></i><%= image_tag 'qrcode.png', alt: "QR Code", class: 'img-fluid qr-code'%>  
+        <% elsif @user_particular.status == 'verified' %>
+          <span>EnableID - Verified by <%= @user_particular.verifier_ngo %></span>
+          <i class="custom-verified fas fa-check"></i><%= image_tag 'qrcode.png', alt: "QR Code", class: 'img-fluid qr-code'%> 
+        <% else %>
+          <span>EnableID - Pending verification from an NGO</span>
+          <i class="custom-verified fas fa-check"></i><%= image_tag 'qrcode.png', alt: "QR Code", class: 'img-fluid qr-code'%>   
+        <% end %>
       </div>
     </div>
   </div>
