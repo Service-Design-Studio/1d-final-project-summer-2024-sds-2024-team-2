@@ -18,9 +18,9 @@ After { Warden.test_reset! } # devise inherits from warden, putting this here en
 # Previous content of test helper now starts here
 
 require 'cucumber/rails'
-Capybara.default_driver = :selenium_chrome
-Capybara.server_port = 3001
-Capybara.app_host = 'http://127.0.0.1:3001'
+Capybara.default_driver = :selenium_chrome_headless
+Capybara.server_port = 3002
+Capybara.app_host = 'http://127.0.0.1:3002'
 # By default, any exception happening in your Rails application will bubble up
 # to Cucumber so that your scenario will fail. This is a different from how
 # your application behaves in the production environment, where an error page will

@@ -10,7 +10,9 @@ Scenario: Redirect to "Fill Particulars” page
 
 Scenario: Redirect to "Edit your particulars!" page
     Given I am now on the user particulars home page as a verified user
-    When I press the "Edit your particulars!" button
+    When I press the "Edit" button
+    Then I should see "Caution!"
+    When I press the "Proceed" button
     Then I should see "Edit your particulars"
 
 Scenario: Redirect to "Upload Documents!" page
@@ -28,7 +30,5 @@ Scenario: Redirect to "Upload Documents!" page
     | Date of Arrival in Malaysia | 20-01-2020 |
     And I press the "Submit" button
 
-Scenario: On the Upload Documents page
-    Given I am now on the upload documents page
 
 

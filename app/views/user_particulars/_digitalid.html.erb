@@ -1,103 +1,102 @@
-  <div class="container d-flex justify-content-center p-0">
-    <div class="card-1">
-      <div class="card-1-header">
-        EnableID Digital Card
-        <% if @user_particular.nil? %>
-          <%= link_to new_user_particular_path(@user_particular), class: "edit-link-right-align edit-icon-link" do %>
+  
+<div class="container d-flex justify-content-center p-0">
+  <div class="card-1">
+    <div class="card-1-header">
+      EnableID Digital Card
+      <% if @user_particular.nil? %>
+        <%= link_to new_user_particular_path(@user_particular), class: "edit-link-right-align edit-icon-link" do %>
+        <% end %>
+      <% else %>
+        <% if @user_particular && @user_particular.id %>
+          <%= link_to "#", class: "edit-link-right-align edit-icon-link", data: { bs_toggle: "modal", bs_target: "#verificationWarningModal" }, aria: { label: "Edit" } do %>
+            <i class="fas fa-edit"></i>
           <% end %>
-              <% else %>
-                <% if @user_particular && @user_particular.id %>
-                  <%= link_to "#", class: "edit-link-right-align edit-icon-link", data: { bs_toggle: "modal", bs_target: "#verificationWarningModal" } do %>
-                    <i class="fas fa-edit"></i>
-                  <% end %>
-                <% end %>
-                  <% end %>
-      </div>
-      
-      <div class="card-1-body">
-        <% if @user_particular.nil? %>
-          <div class="overlayhome">
-            <div style="display: flex; justify-content: center; align-items: center; height: 300px;">
-              <%= link_to "Fill in your particulars to get your Digital ID!", new_user_particular_path, class: "btn btn-danger big-btn high-z-index-btn", id: "fill-in-particulars-btn" %>
-            </div>          
-          </div>              
-        <% end %>   
-        <div class="photo-1 px-2">
-          <% if @user_particular %>
-            <% if @user_particular.profile_picture.attached? %>
-              <%= image_tag @user_particular.profile_picture, alt: "User's profile picture", class: 'img-fluid', style: 'border: 2px solid black; max-width: 80px; max-height: 80px;' %>
-            <% else %>
-              <%= image_tag 'default.png', alt: "Default image", class: 'img-fluid', style: 'border: 2px solid black; max-width: 80px; max-height: 80px;' %>
-            <% end %>
+        <% end %>
+      <% end %>
+    </div>
+    <div class="card-1-body">
+      <% if @user_particular.nil? %>
+        <div class="overlayhome">
+          <div style="display: flex; justify-content: center; align-items: center; height: 300px;">
+            <%= link_to "Fill in your particulars to get your Digital ID!", new_user_particular_path, class: "btn btn-danger big-btn high-z-index-btn", id: "fill-in-particulars-btn" %>
+          </div>
+        </div>
+      <% end %>
+      <div class="photo-1 px-2">
+        <% if @user_particular %>
+          <% if @user_particular.profile_picture.attached? %>
+            <%= image_tag @user_particular.profile_picture, alt: "User's profile picture", class: 'img-fluid', style: 'border: 2px solid black; max-width: 80px; max-height: 80px;' %>
           <% else %>
             <%= image_tag 'default.png', alt: "Default image", class: 'img-fluid', style: 'border: 2px solid black; max-width: 80px; max-height: 80px;' %>
           <% end %>
-        </div>
-        <!--table for name and UID-->   
-        <div class="details-1 px-2">
-          <table>
+        <% else %>
+          <%= image_tag 'default.png', alt: "Default image", class: 'img-fluid', style: 'border: 2px solid black; max-width: 80px; max-height: 80px;' %>
+        <% end %>
+      </div>
+      <!--table for name and UID-->
+      <div class="details-1 px-2">
+        <table>
+          <tr>
+            <td colspan="2"><strong>Full Name:</strong></td>
+          </tr>
+          <tr>
+            <td colspan="2"><%= @user_particular&.full_name.present? ? @user_particular.full_name : "<br>".html_safe %></td>
+          </tr>
+          <tr>
+            <td colspan="2"><strong>Unique Identifier:</strong></td>
+          </tr>
+          <tr>
+            <td colspan="2"><%= @user_particular&.unique_id || "" %></td>
+          </tr>
+        </table>
+        <!--table for others-->
+        <div class= "section">
+          <table class="bordered-table">
             <tr>
-                <td colspan="2"><strong>Full Name:</strong></td>
+              <td colspan="2"><strong>Gender:</strong></td>
+              <td colspan="2"><strong>Date of Birth:</strong></td>
             </tr>
             <tr>
-                <td colspan="2"><%= @user_particular&.full_name.present? ? @user_particular.full_name : "<br>".html_safe %></td>
+              <td colspan="2"><%= @user_particular&.gender.present? ? @user_particular.gender : "<br>".html_safe %></td>
+              <td colspan="2"><%= @user_particular&.date_of_birth.present? ? @user_particular.date_of_birth.strftime("%d-%m-%Y") : "<br>".html_safe %></td>
             </tr>
             <tr>
-                <td colspan="2"><strong>Unique Identifier:</strong></td>
+              <td colspan="2"><strong>Ethnicity:</strong></td>
+              <td colspan="2"><strong>Date of Arrival:</strong></td>
             </tr>
             <tr>
-                <td colspan="2"><%= @user_particular&.unique_id || "" %></td>
+              <td colspan="2"><%= @user_particular&.ethnicity.present? ? @user_particular.ethnicity : "<br>".html_safe %></td>
+              <td colspan="2"><%= @user_particular&.date_of_arrival.present? ? @user_particular.date_of_arrival.strftime("%d-%m-%Y") : "<br>".html_safe %></td>
+            </tr>
+            <tr>
+              <td colspan="2"><strong>Religion:</strong></td>
+              <td colspan="2"><strong>Phone Number:</strong></td>
+            </tr>
+            <tr>
+              <td colspan="2"><%= @user_particular&.religion.present? ? @user_particular.religion : "<br>".html_safe %></td>
+              <td colspan="2"><%= "+#{@user_particular&.full_phone_number&.gsub('-', '') || ''}" %></td>
+            </tr>
+            <tr>
+              <td colspan="2"><strong>Country of Origin:</strong></td>
+              <td colspan="2"><strong>Secondary Phone Number:</strong></td>
+            </tr>
+            <tr>
+              <td colspan="2"><%= @user_particular&.country_of_origin || "" %></td>
+              <td colspan="2"><%= "+#{@user_particular&.secondary_phone_number&.gsub('-', '') || ''}" %></td>
             </tr>
           </table>
-          <!--table for others--> 
-          <div class= "section">
-            <table class="bordered-table">
-            <tr>
-                <td colspan="2"><strong>Gender:</strong></td>
-                <td colspan="2"><strong>Date of Birth:</strong></td>
-            </tr>
-            <tr>
-                <td colspan="2"><%= @user_particular&.gender.present? ? @user_particular.gender : "<br>".html_safe %></td>
-                <td colspan="2"><%= @user_particular&.date_of_birth.present? ? @user_particular.date_of_birth.strftime("%d-%m-%Y") : "<br>".html_safe %></td>
-            </tr>
-            <tr>
-                <td colspan="2"><strong>Ethnicity:</strong></td>
-                <td colspan="2"><strong>Date of Arrival:</strong></td>
-            </tr>
-            <tr>
-                <td colspan="2"><%= @user_particular&.ethnicity.present? ? @user_particular.ethnicity : "<br>".html_safe %></td>
-                <td colspan="2"><%= @user_particular&.date_of_arrival.present? ? @user_particular.date_of_arrival.strftime("%d-%m-%Y") : "<br>".html_safe %></td>
-            </tr>
-            <tr>
-                <td colspan="2"><strong>Religion:</strong></td>
-                <td colspan="2"><strong>Phone Number:</strong></td>
-            </tr>
-            <tr>
-                <td colspan="2"><%= @user_particular&.religion.present? ? @user_particular.religion : "<br>".html_safe %></td>
-                <td colspan="2"><%= "+#{@user_particular&.full_phone_number&.gsub('-', '') || ''}" %></td>
-            </tr>
-            <tr>
-                <td colspan="2"><strong>Country of Origin:</strong></td>
-                <td colspan="2"><strong>Secondary Phone Number:</strong></td>
-            </tr>
-            <tr>
-                <td colspan="2"><%= @user_particular&.country_of_origin || "" %></td>
-                <td colspan="2"><%= "+#{@user_particular&.secondary_phone_number&.gsub('-', '') || ''}" %></td>
-            </tr>
-        </table>
-          </div>
         </div>
       </div>
-     
-      <div class="card-footer">
-        <% if @user_particular&.status == 'pending' %>
-          <span>EnableID - Pending verification from an NGO</span>
-        <% elsif @user_particular&.status == 'verified' %>
-          <span>EnableID - Verified by <%= @user_particular&.verifier_ngo %></span>
-        <% else %>
-          <span>EnableID - Pending verification from an NGO</span>
-        <% end %>
-        <i class="custom-verified fas fa-check"></i><%= image_tag 'qrcode.png', alt: "QR Code", class: 'img-fluid qr-code'%>
-      </div>
+    </div>
+    <div class="card-footer">
+      <% if @user_particular&.status == 'pending' %>
+        <span>EnableID - Pending verification from an NGO</span>
+      <% elsif @user_particular&.status == 'verified' %>
+        <span>EnableID - Verified by <%= @user_particular&.verifier_ngo %></span>
+      <% else %>
+        <span>EnableID - Pending verification from an NGO</span>
+      <% end %>
+      <i class="custom-verified fas fa-check"></i><%= image_tag 'qrcode.png', alt: "QR Code", class: 'img-fluid qr-code'%>
     </div>
   </div>
+</div>

@@ -2,16 +2,26 @@ Then(/^I should see "([^"]*)"$/) do |name|
   expect(page).to have_content("#{name}")
 end
 
+Then(/^I should be redirected to the "([^"]*)" page$/) do |page_name|
+  expect(current_path).to eq(path_to(page_name))
+end
+
+Given(/^that a User account by the Username of "([^"]*)", Email of "([^"]*)", Phone Number of "([^"]*)" exist$/) do |username, email, phone_number|
+  user = User.find_by(username:, email:, phone_number:)
+  expect(user).not_to be_nil, "No user found with Username: #{username}, Email: #{email}, Phone Number: #{phone_number}"
+end
+
 When(/^I press the "([^"]*)" button$/) do |btn_name|
   if has_button?(btn_name)
     click_button(btn_name)
   elsif has_link?(btn_name)
     click_link(btn_name)
+  elsif has_css?("[aria-label='#{btn_name}']")
+    find("[aria-label='#{btn_name}']").click
   else
     raise "No button or link found with name '#{btn_name}'"
   end
 end
-
 # Step to navigate to a specific page
 Given(/^I am on the "([^"]*)" page$/) do |page|
   puts "Current URL: #{current_url}"
