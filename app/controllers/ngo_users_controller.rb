@@ -1,4 +1,5 @@
 class NgoUsersController < ApplicationController
+  before_action :set_ngo_page_true
   def new
   end
 
@@ -51,4 +52,9 @@ class NgoUsersController < ApplicationController
     flash[:success] = "Verification successful for unique ID: #{@user_particular.unique_id}."
     redirect_to ngo_user_path(@ngo_user), status: :found
   end
+
+  def set_ngo_page_true
+    @ngo_page = true
+  end
+
 end

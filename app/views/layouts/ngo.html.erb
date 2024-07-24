@@ -13,18 +13,18 @@
         crossorigin="anonymous"
     />
 </head> 
-<body class="d-flex flex-column min-vh-100" style="overflow-x: hidden;"> 
-    <div class="container-fluid justify-content-center p-0" style="background-color: #f1536a; color: white;">
+<body class="ngo-page d-flex flex-column min-vh-100" style="overflow-x: hidden;"> 
+    <div class="container-fluid justify-content-center p-0" style="background-color: #0eac95; color: white;">
       <div class="row align-items-center py-2">
         <div class="col-auto">
           <%= button_to "Back", @back_path, class: "btn btn-light text-nowrap", method: :get %>
         </div>
         <div class="col d-flex justify-content-center">
-          <!--<h4 class="m-0 text-nowrap" style="background-color: #f1536a; color: white; margin-bottom:0;"><%= @ngo_user&.name || "NGO" %></h4>-->
+          <!--<h4 class="m-0 text-nowrap" style="background-color: #0eac95; color: white; margin-bottom:0;"><%= @ngo_user&.name || "NGO" %></h4>-->
           <% if controller_name == 'ngo_users' && action_name == 'verify' %>
-              <h4 class="m-0 text-nowrap" style="background-color: #f1536a; color: white; margin-bottom:0;"><%= @ngo_user&.name %> - EnableID Verification</h4>
+              <h4 class="m-0 text-nowrap" style="background-color: #0eac95; color: white; margin-bottom:0;"><%= @ngo_user&.name %> - EnableID Verification</h4>
           <% else %>
-              <h4 class="m-0 text-nowrap" style="background-color: #f1536a; color: white; margin-bottom:0;"><%= @ngo_user&.name || "NGO" %></h4>
+              <h4 class="m-0 text-nowrap" style="background-color: #0eac95; color: white; margin-bottom:0;"><%= @ngo_user&.name || "NGO" %></h4>
           <% end %>
         </div>
         <div class="col-auto"></div> <!-- Empty column to balance the layout -->
