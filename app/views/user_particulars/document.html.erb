@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -45,7 +46,8 @@
         }
 
         /* Style for the dropdown menu and preview button */
-        .dropdown-menu, .preview-button {
+        .dropdown-menu,
+        .preview-button {
             margin-top: 10px;
         }
 
@@ -98,17 +100,6 @@
             margin-right: 10px;
         }
 
-        .file-list-item button {
-            background: none;
-            border: none;
-            color: red;
-            cursor: pointer;
-        }
-
-        .file-list-item button:focus {
-            outline: none;
-        }
-
         .file-preview {
             text-align: center;
             margin-top: 20px;
@@ -154,12 +145,13 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container mt-5">
         <!-- Title and instruction -->
         <h1 class="text-center">Select documents to upload</h1>
         <p class="text-center">Drag and drop your documents below. Supported formats: PDF, DOCX, JPG. Max size: 5MB.</p>
-        
+
         <!-- Form for file upload -->
         <form id="uploadForm">
             <!-- File upload wrapper -->
@@ -180,15 +172,15 @@
 
             <!-- File description (hidden initially) -->
             <textarea class="form-control mt-3" id="fileDescription" placeholder="Description of the file..." style="display: none;"></textarea>
-            
+
             <!-- Preview button (hidden initially) -->
             <button type="button" class="btn btn-primary preview-button mt-3" style="display: none;">Preview</button>
         </form>
-        
+
         <!-- Status message -->
         <div id="statusMessage" class="text-center mt-3"></div>
         <!-- List of selected files -->
-        <ul id="fileList" class="file-list"></ul>
+        <ul id="fileList" class="file-list" style="display: none;"></ul>
         <!-- File preview -->
         <div id="filePreview" class="file-preview"></div>
         <!-- Upload status -->
@@ -196,7 +188,7 @@
     </div>
 
     <!-- Existing Documents -->
-    <div class="container document-list" id="uploadedDocumentsContainer" style="display: none;">
+    <div class="container document-list" id="uploadedDocumentsContainer">
         <h2 class="text-center">Uploaded Documents</h2>
         <table class="table" id="uploadedDocumentsTable">
             <thead>
@@ -230,8 +222,7 @@
                 var fileItem = document.createElement('li');
                 fileItem.classList.add('file-list-item');
                 var fileTypeIcon = getFileTypeIcon(file.type);
-                fileItem.innerHTML = `<span><img src="${fileTypeIcon}" alt="icon">${file.name} (${formatFileSize(file.size)}) - ${formatDate(new Date())}</span>
-                                      <button onclick="removeFile('${file.name}')"><img src="https://image.flaticon.com/icons/png/512/1828/1828843.png" alt="delete" width="20"></button>`;
+                fileItem.innerHTML = `<span><img src="${fileTypeIcon}" alt="icon">${file.name} (${formatFileSize(file.size)}) - ${formatDate(new Date())}</span>`;
                 fileListContainer.appendChild(fileItem);
             });
 
@@ -247,7 +238,7 @@
 
         // Function to get file type icon
         function getFileTypeIcon(fileType) {
-            switch(fileType) {
+            switch (fileType) {
                 case 'application/pdf':
                     return 'https://image.flaticon.com/icons/svg/337/337946.svg';
                 case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
@@ -358,7 +349,7 @@
         });
 
         // Event listener for form submission to handle the file upload process
-        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+        document.getElementById('uploadForm').addEventListener('submit', function (event) {
             event.preventDefault(); // Prevent default form submission
             if (selectedFiles.length === 0) {
                 document.getElementById('statusMessage').innerText = 'Please select files to upload.';
@@ -414,4 +405,5 @@
         }
     </script>
 </body>
+
 </html>
