@@ -3,10 +3,12 @@ class UserParticularsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user_particular, only: %i[show edit]
 
-  def show; end
+  def show
+    @bulletins = Bulletin.all
+  end
   # No need for content when using @user_particular from before_action
 
-  def page2; end
+  def document; end
   # No need for content when using @user_particular from before_action
 
   def create
@@ -57,15 +59,15 @@ class UserParticularsController < ApplicationController
 
   def edit
     set_dropdown_options
-  
+
     if params[:user_particular]
       @user_particular = UserParticular.new(user_particular_params)
-      @user_particular.id = params[:id]  # Required for error flow
+      @user_particular.id = params[:id] # Required for error flow
     else
       @user_particular = UserParticular.find(params[:id])
     end
   end
-  
+
   def update
     error_messages_arr = validate_user_particulars(UserParticular.new(user_particular_params))
     flash[:error] = error_messages_arr

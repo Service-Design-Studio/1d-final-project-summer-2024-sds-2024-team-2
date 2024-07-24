@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   get 'user_particulars/confirm'
   post 'user_particulars/:id/generate_2fa', to: 'user_particulars#generate_2fa', as: 'generate_2fa'
   get 'user_particulars/:id/history', to: 'user_particulars#history', as: 'user_history'
+  get 'user_particulars/:id/document', to: 'user_particulars#document', as: 'user_document'
   get 'user_particulars/family'
   # Resources: UserParticulars
   resources :user_particulars do
