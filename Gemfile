@@ -79,4 +79,5 @@ end
 group :production do
   gem 'appengine', '~> 0.6'
   gem 'pg', '~> 1.5.6' # for gcloud deployment
+  gem 'google-cloud-storage', '~> 1.44' # for gcloud storage
 end

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -44,8 +45,8 @@
             font-size: 16px;
         }
 
-        /* Style for the dropdown menu and preview button */
-        .dropdown-menu, .preview-button {
+        /* Style for the dropdown menu */
+        .dropdown-menu {
             margin-top: 10px;
         }
 
@@ -98,17 +99,6 @@
             margin-right: 10px;
         }
 
-        .file-list-item button {
-            background: none;
-            border: none;
-            color: red;
-            cursor: pointer;
-        }
-
-        .file-list-item button:focus {
-            outline: none;
-        }
-
         .file-preview {
             text-align: center;
             margin-top: 20px;
@@ -128,6 +118,7 @@
             width: 100%;
             max-width: 600px;
             margin: 0 auto;
+            display: none; /* Initially hidden */
         }
 
         .document-list table {
@@ -152,14 +143,32 @@
         .document-list .status-unverified {
             color: red;
         }
+
+        .document-list .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
     </style>
 </head>
+
 <body>
     <div class="container mt-5">
+        <!-- Guide on what to do on this page -->
+        <div class="alert alert-info" role="alert">
+            <h4 class="alert-heading">Guide</h4>
+            <p>To upload your documents, please follow these steps:</p>
+            <ol>
+                <li>Drag and drop your documents into the designated area or click to select files.</li>
+                <li>Choose the document type from the dropdown menu.</li>
+                <li>Once all documents are uploaded, they will appear in the 'Uploaded Documents' section below.</li>
+                <li>You can preview or delete the uploaded documents from the list.</li>
+            </ol>
+        </div>
+
         <!-- Title and instruction -->
         <h1 class="text-center">Select documents to upload</h1>
         <p class="text-center">Drag and drop your documents below. Supported formats: PDF, DOCX, JPG. Max size: 5MB.</p>
-        
+
         <!-- Form for file upload -->
         <form id="uploadForm">
             <!-- File upload wrapper -->
@@ -180,15 +189,12 @@
 
             <!-- File description (hidden initially) -->
             <textarea class="form-control mt-3" id="fileDescription" placeholder="Description of the file..." style="display: none;"></textarea>
-            
-            <!-- Preview button (hidden initially) -->
-            <button type="button" class="btn btn-primary preview-button mt-3" style="display: none;">Preview</button>
         </form>
-        
+
         <!-- Status message -->
         <div id="statusMessage" class="text-center mt-3"></div>
         <!-- List of selected files -->
-        <ul id="fileList" class="file-list"></ul>
+        <ul id="fileList" class="file-list" style="display: none;"></ul>
         <!-- File preview -->
         <div id="filePreview" class="file-preview"></div>
         <!-- Upload status -->
@@ -196,7 +202,7 @@
     </div>
 
     <!-- Existing Documents -->
-    <div class="container document-list" id="uploadedDocumentsContainer" style="display: none;">
+    <div class="container document-list" id="uploadedDocumentsContainer">
         <h2 class="text-center">Uploaded Documents</h2>
         <table class="table" id="uploadedDocumentsTable">
             <thead>
@@ -205,6 +211,7 @@
                     <th>Size</th>
                     <th>Date</th>
                     <th>Status</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody id="documentTableBody">
@@ -230,24 +237,21 @@
                 var fileItem = document.createElement('li');
                 fileItem.classList.add('file-list-item');
                 var fileTypeIcon = getFileTypeIcon(file.type);
-                fileItem.innerHTML = `<span><img src="${fileTypeIcon}" alt="icon">${file.name} (${formatFileSize(file.size)}) - ${formatDate(new Date())}</span>
-                                      <button onclick="removeFile('${file.name}')"><img src="https://image.flaticon.com/icons/png/512/1828/1828843.png" alt="delete" width="20"></button>`;
+                fileItem.innerHTML = `<span><img src="${fileTypeIcon}" alt="icon">${file.name} (${formatFileSize(file.size)}) - ${formatDate(new Date())}</span>`;
                 fileListContainer.appendChild(fileItem);
             });
 
-            // Show the description field and preview button if files are selected
+            // Show the description field if files are selected
             if (selectedFiles.length > 0) {
                 document.getElementById('fileDescription').style.display = 'block';
-                document.querySelector('.preview-button').style.display = 'block';
             } else {
                 document.getElementById('fileDescription').style.display = 'none';
-                document.querySelector('.preview-button').style.display = 'none';
             }
         }
 
         // Function to get file type icon
         function getFileTypeIcon(fileType) {
-            switch(fileType) {
+            switch (fileType) {
                 case 'application/pdf':
                     return 'https://image.flaticon.com/icons/svg/337/337946.svg';
                 case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
@@ -306,59 +310,46 @@
             event.preventDefault();
             dropArea.classList.remove('hover'); // Remove hover effect on drop
             const files = Array.from(event.dataTransfer.files); // Get files from drop event
+            let validFiles = [];
             files.forEach(file => {
                 if (!['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg'].includes(file.type)) {
                     document.getElementById('statusMessage').innerText = 'Unsupported file type. Please upload a PDF, DOCX, or JPG file.';
-                    return;
-                }
-                if (file.size > 5242880) { // 5MB limit
+                } else if (file.size > 5242880) { // 5MB limit
                     document.getElementById('statusMessage').innerText = 'File size exceeds the maximum limit of 5MB. Please upload a smaller file.';
-                    return;
+                } else {
+                    selectedFiles.push(file);
+                    validFiles.push(file);
                 }
-                selectedFiles.push(file);
             });
             updateFileList(); // Update the file list display
-            document.getElementById('statusMessage').innerText = 'Files attached successfully!';
-            addUploadedDocumentsToList(files); // Add uploaded documents to the list
+            if (validFiles.length > 0) {
+                document.getElementById('statusMessage').innerText = 'Files attached successfully!';
+            }
+            addUploadedDocumentsToList(validFiles); // Add uploaded documents to the list
         });
 
         fileInput.addEventListener('change', (event) => {
             const files = Array.from(event.target.files); // Get files from file input
+            let validFiles = [];
             files.forEach(file => {
                 if (!['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg'].includes(file.type)) {
                     document.getElementById('statusMessage').innerText = 'Unsupported file type. Please upload a PDF, DOCX, or JPG file.';
-                    return;
-                }
-                if (file.size > 5242880) { // 5MB limit
+                } else if (file.size > 5242880) { // 5MB limit
                     document.getElementById('statusMessage').innerText = 'File size exceeds the maximum limit of 5MB. Please upload a smaller file.';
-                    return;
+                } else {
+                    selectedFiles.push(file);
+                    validFiles.push(file);
                 }
-                selectedFiles.push(file);
             });
             updateFileList(); // Update the file list display
-            document.getElementById('statusMessage').innerText = 'Files attached successfully!';
-            addUploadedDocumentsToList(files); // Add uploaded documents to the list
-        });
-
-        // Event listener for the preview button
-        document.querySelector('.preview-button').addEventListener('click', () => {
-            if (selectedFiles.length === 0) {
-                document.getElementById('statusMessage').innerText = 'No files to preview.';
-                return;
+            if (validFiles.length > 0) {
+                document.getElementById('statusMessage').innerText = 'Files attached successfully!';
             }
-
-            var filePreviewContainer = document.getElementById('filePreview');
-            filePreviewContainer.innerHTML = ''; // Clear previous previews
-            selectedFiles.forEach(file => {
-                const fileURL = URL.createObjectURL(file);
-                const img = document.createElement('img');
-                img.src = fileURL;
-                filePreviewContainer.appendChild(img);
-            });
+            addUploadedDocumentsToList(validFiles); // Add uploaded documents to the list
         });
 
         // Event listener for form submission to handle the file upload process
-        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+        document.getElementById('uploadForm').addEventListener('submit', function (event) {
             event.preventDefault(); // Prevent default form submission
             if (selectedFiles.length === 0) {
                 document.getElementById('statusMessage').innerText = 'Please select files to upload.';
@@ -395,23 +386,46 @@
         function addUploadedDocumentsToList(files) {
             var uploadedDocumentsTable = document.getElementById('documentTableBody');
             files.forEach(file => {
-                var newRow = document.createElement('tr');
-                newRow.innerHTML = `
-                    <td>${file.name}</td>
-                    <td>${formatFileSize(file.size)}</td>
-                    <td>${formatDate(new Date())}</td>
-                    <td class="status-unverified">Unverified</td>
-                `;
-                uploadedDocumentsTable.appendChild(newRow);
+                if (['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg'].includes(file.type) && file.size <= 5242880) {
+                    var newRow = document.createElement('tr');
+                    newRow.innerHTML = `
+                        <td>${file.name}</td>
+                        <td>${formatFileSize(file.size)}</td>
+                        <td>${formatDate(new Date())}</td>
+                        <td class="status-unverified">Unverified</td>
+                        <td class="action-buttons">
+                            <button class="btn btn-primary btn-sm" onclick="previewDocument('${URL.createObjectURL(file)}')">Preview</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteDocument(this)">Delete</button>
+                        </td>
+                    `;
+                    uploadedDocumentsTable.appendChild(newRow);
+                }
             });
 
-            // Show the uploaded documents section if there are files
+            // Show or hide the uploaded documents section based on the number of files
             if (uploadedDocumentsTable.children.length > 0) {
                 document.getElementById('uploadedDocumentsContainer').style.display = 'block';
             } else {
                 document.getElementById('uploadedDocumentsContainer').style.display = 'none';
             }
         }
+
+        // Function to delete a document
+        function deleteDocument(button) {
+            var row = button.closest('tr');
+            row.remove();
+
+            // Check if there are remaining files and update the display accordingly
+            if (document.getElementById('documentTableBody').children.length === 0) {
+                document.getElementById('uploadedDocumentsContainer').style.display = 'none';
+            }
+        }
+
+        // Function to preview a document in a new tab
+        function previewDocument(fileUrl) {
+            window.open(fileUrl, '_blank');
+        }
     </script>
 </body>
+
 </html>

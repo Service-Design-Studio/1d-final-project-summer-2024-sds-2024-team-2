@@ -1,24 +1,29 @@
-<div id="bulletin" class="d-flex flex-column pri-container m-0 add-small-shadow my-2 p-3 pb-3" style='width:100%; max-height: 80vh;'>
-  <h3 class='text-center'>Bulletin Board</h3>
-  <div class="row mb-4">
-    <div class="col d-flex justify-content-between align-items-center">
-      <div class="input-group bg-dark search-bar py-2 px-2" style='border-radius: 40px;'>
-        <span class="input-group-text bg-dark border-0 text-white" style="font-size: 1em;">
+<div id="bulletin" class="d-flex flex-column pri-container m-0 add-small-shadow p-3 pb-3" style='width:100%; max-height: 75vh;'>
+  <div class="d-flex mb-4">
+    <div class="flex-column flex w-100">
+      <h5 class='text-center'>Bulletin Board</h5>
+      <div class="input-group w-100 bg-dark search-bar p-1" style='border-radius: 40px;'>
+        <span class="input-group-text border-0 text-white" style="font-size: 0.7em; background-color:transparent;">
           <i class="fas fa-bars"></i>
         </span>
         <input type="search" class="form-control bg-dark text-white border-0" id="search-input" placeholder="Search Post" aria-label="Search" aria-describedby="search-addon" style="font-size: 1em;"/>
-        <span class="input-group-text bg-dark border-0 text-white" style="font-size: 1em;">
+        <span class="input-group-text border-0 text-white" style="font-size: 0.7em; background-color:transparent;">
           <i class="fas fa-search"></i>
         </span>
       </div>
     </div>
+    <% if @ngo_page %>
+      <button type="button" class="customhome-button" data-toggle="modal" data-target="#addBulletinModal" style="background-color: #0eac95; color: white;" >
+        Add Bulletin Post
+      </button>
+    <% end %>
   </div>
   <div class="d-flex flex-column flex-grow-1 overflow-auto" style="overflow-x: hidden;">
-    <div class="d-flex flex-wrap gap-3 overflow-auto" style='max-height: 100%;' id="event-cards-container">
+    <div class="d-flex flex-wrap gap-2 overflow-auto" style='max-height: 100%;' id="event-cards-container">
       <% @bulletins.each do |bulletin| %>
-        <span class="mb-4 mr-2 event-card justify-content-center align-items-center" style="width:250px;" data-title="<%= bulletin.title.downcase %>" data-description="<%= bulletin.description.downcase %>" data-ngo-name="<%= bulletin.ngo_name.downcase %>">
+        <span class="event-card justify-content-center align-items-center" style="width:170px;" data-title="<%= bulletin.title.downcase %>" data-description="<%= bulletin.description.downcase %>" data-ngo-name="<%= bulletin.ngo_name.downcase %>">
           <div class="card d-flex add-small-shadow justify-content-center">
-            <div class='d-flex w-100 align-items-center justify-content-center' style='min-width: 150px; height: 150px'>
+            <div class='d-flex w-100 align-items-center justify-content-center' style='min-width: 100px; height: 90px'>
               <% ngo_user = @ngo_users.find { |user| user.name == bulletin.ngo_name } %>
               <% if ngo_user&.image_url.present? %>
                 <%= image_tag ngo_user.image_url, alt: "#{ngo_user.name} image", style: 'max-width: 100%; max-height: 100%; object-fit: contain;' %>
@@ -26,7 +31,7 @@
                 <%= image_tag 'default.png', alt: "Event image", style: 'max-width: 100%; max-height: 100%; object-fit: contain;' %>
               <% end %>
             </div>
-            <div class="card-body p-2" style="font-size: 1em;">
+            <div class="card-body p-2" style="font-size: 0.7em;">
               <ul class="list-unstyled">
                 <div class='d-flex justify-content-between'>
                   <div>
