@@ -265,7 +265,7 @@ users_data.each do |user_data|
   end
   particulars_data = user_data[:particulars]
   if particulars_data.nil?
-    puts 'nil'
+    #puts 'nil'
   else
     # Create/modify user data
     user_particular = user.user_particular || user.build_user_particular
@@ -286,22 +286,16 @@ bulletin_data.each do |each_bulletin_data|
   bulletin.update!(each_bulletin_data)
 end
 
-users_history = []
-15.times do
-  users_history << {
+# Seed user history data for user_id 1
+(1..15).each do |i|
+  history_data = {
     activity_type: 'Event',
     activity_title: Faker::Lorem.words(number: rand(1..5)).join(' '),
     description: Faker::Lorem.words(number: rand(1..20)).join(' '),
     date: DateTime.now - rand(1..30),
-    user_id: User.first.id
+    user_id: 1
   }
-end
-puts users_history
-# Ensure there is at least one UserParticular record
-if User.first.nil?
-  puts 'No UserParticular records found. Please create one before proceeding.'
-else
-  users_history.each do |history_data|
-    UserHistory.create!(history_data)
-  end
+  
+  user_history = UserHistory.find_or_initialize_by(id: i)
+  user_history.update!(history_data)
 end
