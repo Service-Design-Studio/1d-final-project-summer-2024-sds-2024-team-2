@@ -250,7 +250,6 @@ RSpec.describe UserParticularsController, type: :controller do
         expect(error_messages).to include('Secondary phone number must exist if secondary country code exists.')
       end
     end
-    
 
     context 'with invalid dropdown options' do
       it 'adds error messages for invalid country of origin' do
