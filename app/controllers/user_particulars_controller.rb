@@ -38,13 +38,13 @@ class UserParticularsController < ApplicationController
 
   def new
     # Fills up form with previously entered data
-    @user_particular = UserParticular.create_user_particular(session.fetch(:user_particular_params, {}))
+    @user_particular = UserParticular.new(session.fetch(session[:user_particular_params].except(:profile_picture)    , {}))
     set_dropdown_options
   end
 
   def confirm
     session[:user_particular_params] = user_particular_params # Use the session to store the model
-    @user_particular = UserParticular.create_user_particular(user_particular_params) # The Model object to store the hidden keyed params
+    @user_particular = UserParticular.new(user_particular_params) # The Model object to store the hidden keyed params
     error_messages_arr = validate_user_particulars(@user_particular)
     flash[:error] = error_messages_arr
 
@@ -108,7 +108,7 @@ class UserParticularsController < ApplicationController
                                             :ethnicity, :religion, :gender, :date_of_birth, :date_of_arrival,
                                             :photo_url, :birth_certificate_url, :passport_url, :user_id,
                                             :phone_number_country_code, :secondary_phone_number_country_code,
-                                            :full_phone_number, :full_secondary_phone_number, :profile_picture).tap do |whitelisted|
+                                            :full_phone_number, :full_secondary_phone_number).tap do |whitelisted|
       # Check if ethnicity, religion, or gender is "Others" and replace with values from others hash if present
       if whitelisted[:ethnicity] == 'Others' && params[:others].present?
         whitelisted[:ethnicity] =
