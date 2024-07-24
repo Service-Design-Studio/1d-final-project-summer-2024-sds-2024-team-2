@@ -114,7 +114,7 @@
     const context = canvas.getContext('2d');
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    const dataUrl = canvas.toDataURL('image/png');
+    const dataUrl = canvas.toDataURL('image/png'); //base64-encoded image representation string
     const img = document.createElement('img');
     img.src = dataUrl; // This one saves dataUrl into the img.src
     img.style.width = '100%';
@@ -124,14 +124,34 @@
     label.innerHTML = '';
     label.appendChild(img);
 
-    // Store the captured photo dataUrl for later use
-    document.getElementById('cameraInput').setAttribute('data-captured-photo', dataUrl);
+    // Convert base64 string to Blob and then to file
+    const blob = dataURLToBlob(dataUrl);
+    const file = new File([blob], 'profile_picture.png', { type: 'image/png' });
+
+    // Simulates user selecting a file manually
+    const fileInput = document.getElementById('profile_picture');
+    const dataTransfer = new DataTransfer(); 
+    dataTransfer.items.add(file);
+    fileInput.files = dataTransfer.files; 
 
     // Close the modal programmatically using Bootstrap's modal methods
     const modal = bootstrap.Modal.getInstance(document.getElementById('cameraModal'));
     modal.hide();
 
     closeModal();
+  }
+
+  function dataURLToBlob(dataURL) {
+    const [header, data] = dataURL.split(',');
+    const mime = header.match(/:(.*?);/)[1];
+    const binary = atob(data);
+    const array = [];
+
+    for (let i = 0; i < binary.length; i++) {
+      array.push(binary.charCodeAt(i));
+    }
+
+    return new Blob([new Uint8Array(array)], { type: mime });
   }
 
   // Start camera when modal is shown
