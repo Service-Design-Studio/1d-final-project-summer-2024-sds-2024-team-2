@@ -1,37 +1,5 @@
 <head>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <% if @user_particular.present? %>
-    <script>
-      $(document).ready(function() {
-        // When the modal is opened
-        $('#verificationWarningModal').on('shown.bs.modal', function () {
-        $('body').css('overflow', 'hidden'); // Prevent scrolling when modal is open
-        });
-        // When the modal is closed
-        $('#verificationWarningModal').on('hidden.bs.modal', function () {
-        $('body').css('overflow', 'hidden'); // Re-enable scrolling when modal is closed
-        });
-        $('#generate-2fa-btn').click(function(e) {
-          e.preventDefault();
-          console.log('HELLO');
-          $.ajax({
-            url: '<%= generate_2fa_path(@user_particular) %>',
-            type: 'POST',
-            dataType: 'json',
-            headers: {
-              'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(data) {
-              $('#two-fa-passcode').text(data.two_fa_passcode);
-            },
-            error: function(xhr, status, error) {
-              console.error('AJAX Error:', status, error);
-            }
-          });
-        });
-      });
-    </script>
-  <% end %>
+  <%= stylesheet_link_tag '_digitalid', media: 'all', 'data-turbolinks-track': 'reload' %>
 </head>
 <body>
   <div class="container d-flex justify-content-center p-0">
@@ -60,7 +28,15 @@
       <% else %>
       <% end %>   
         <div class="photo-1 px-4">
-          <%= image_tag 'default.png', alt: "Default image", class: 'profile-image' %>
+          <% if @user_particular%>
+            <% if @user_particular.profile_picture.attached? %>
+              <%= image_tag @user_particular.profile_picture, alt: "User's profile picture", class: 'img-fluid', style: 'border: 2px solid black;' %>
+            <% else %>
+              <%= image_tag 'default.png', alt: "Default image", class: 'img-fluid', style: 'border: 2px solid black;' %>
+            <% end %>
+          <% else %>
+              <%= image_tag 'default.png', alt: "Default image", class: 'img-fluid', style: 'border: 2px solid black;' %>
+          <% end %>
         </div>
         <!--table for name and UID-->   
         <div class="details-1 px-4">

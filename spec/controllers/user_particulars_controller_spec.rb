@@ -76,12 +76,11 @@ RSpec.describe UserParticularsController, type: :controller do
     end
   end
 
-  # Need to change name accordingly when controller action changes
-  describe 'GET #page2' do
-    it 'renders page2 template' do
+  describe 'GET #document' do
+    it 'renders document template' do
       @user_particular = UserParticular.create_user_particular(@valid_attributes)
-      get :page2, params: { id: @user_particular.id }
-      expect(response).to render_template(:page2)
+      get :document, params: { id: @user_particular.id }
+      expect(response).to render_template(:document)
     end
   end
 
@@ -225,11 +224,30 @@ RSpec.describe UserParticularsController, type: :controller do
     end
 
     context 'with invalid phone numbers' do
-      it 'adds error messages for invalid phone numbers' do
-        invalid_attributes = @valid_attributes.merge(phone_number: '123-ABCD', secondary_phone_number: '123abc456')
+      it 'adds an error message when phone number is invalid' do
+        invalid_attributes = @valid_attributes.merge(phone_number: '123-ABCD')
         error_messages = validate_user_particulars(invalid_attributes)
         expect(error_messages).to include('Phone number can only contain numbers and hyphens.')
+      end
+
+      it 'adds an error message when secondary phone number is invalid' do
+        invalid_attributes = @valid_attributes.merge(secondary_phone_number: '123abc456')
+        error_messages = validate_user_particulars(invalid_attributes)
         expect(error_messages).to include('Secondary phone number can only contain numbers and hyphens.')
+      end
+    end
+
+    context 'with missing secondary phone number details' do
+      it 'adds an error message when secondary phone number exists without country code' do
+        invalid_attributes = @valid_attributes.merge(secondary_phone_number: '1234567890', secondary_phone_number_country_code: '')
+        error_messages = validate_user_particulars(invalid_attributes)
+        expect(error_messages).to include('Secondary country code must exist if secondary phone number exists.')
+      end
+    
+      it 'adds an error message when secondary country code exists without phone number' do
+        invalid_attributes = @valid_attributes.merge(secondary_phone_number: '', secondary_phone_number_country_code: '1')
+        error_messages = validate_user_particulars(invalid_attributes)
+        expect(error_messages).to include('Secondary phone number must exist if secondary country code exists.')
       end
     end
 
