@@ -36,23 +36,7 @@
           <%= button_to "Sign out", destroy_user_session_path, method: 'delete', class: "text-nowrap btn btn-light" %>
         </div>
       </div>
-      <!--Display messages at the top of the page-->
-      <%- if flash[:notice]%>
-      <div class="alert alert-info text-center"><%=flash[:notice]%></div>
-      <%- elsif flash[:success]%>
-      <div class="alert alert-success text-center"><%=flash[:success]%></div>
-      <%- elsif flash[:error_message].present? %>
-        <div class="alert alert-danger">
-          <ul><%= flash[:error_message] %></ul>
-          <% if flash[:error].present? %>
-            <ul>
-              <% flash[:error].each do |error| %>
-                <li><%= error %></li>
-              <% end %>
-            </ul>
-          <% end %>
-        </div>
-      <% end %>
+      
 
     <%= yield %>
 

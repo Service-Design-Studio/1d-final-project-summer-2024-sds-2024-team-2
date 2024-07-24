@@ -79,6 +79,22 @@
   }
 }
 
+/* Add this CSS to your stylesheet to change the verify button's color based on its disabled state */
+
+/* When the verify button is disabled, it will appear grey */
+#verify-btn:disabled {
+  background-color: grey;
+  border-color: grey;
+}
+
+/* When the verify button is enabled (all checkboxes are ticked), it will appear green */
+#verify-btn:not(:disabled) {
+  background-color: green;
+  border-color: green;
+}
+
+
+
 
 body {
   background-color: #FEFEFE;
