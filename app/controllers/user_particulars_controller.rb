@@ -121,7 +121,7 @@ class UserParticularsController < ApplicationController
                                             :ethnicity, :religion, :gender, :date_of_birth, :date_of_arrival,
                                             :photo_url, :birth_certificate_url, :passport_url, :user_id,
                                             :phone_number_country_code, :secondary_phone_number_country_code,
-                                            :full_phone_number, :full_secondary_phone_number, :profile_picture).tap do |whitelisted|
+                                            :full_phone_number, :full_secondary_phone_number, :status, :profile_picture).tap do |whitelisted|
       # Check if ethnicity, religion, or gender is "Others" and replace with values from others hash if present
       if whitelisted[:ethnicity] == 'Others' && params[:others].present?
         whitelisted[:ethnicity] =
