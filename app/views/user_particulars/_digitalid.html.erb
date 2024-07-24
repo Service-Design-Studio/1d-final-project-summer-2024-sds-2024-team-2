@@ -9,37 +9,34 @@
         <% if @user_particular.nil? %>
           <%= link_to new_user_particular_path(@user_particular), class: "edit-link-right-align edit-icon-link" do %>
           <% end %>
-              <% else %>
-                  <%= link_to edit_user_particular_path(@user_particular), class: "edit-link-right-align edit-icon-link" do %>
-                    <i class="fas fa-edit"></i>
-                  <% end %>
-                  <% end %>
-      </div>
+        <% else %>
+          <%= link_to edit_user_particular_path(@user_particular), class: "edit-link-right-align edit-icon-link" do %>
+            <i class="fas fa-edit"></i>
+          <% end %>
+        <% end %>
+      </div>    
 
-
-      
       <div class="card-1-body">
         <% if @user_particular.nil? %>
-        <div class="overlayhome">
-        <div style="display: flex; justify-content: center; align-items: center; height: 400px;">
-          <%= link_to "Fill in your particulars to get your Digital ID!", new_user_particular_path, class: "btn btn-danger big-btn high-z-index-btn", id: "fill-in-particulars-btn" %>
-        </div>          
-      </div>              
-      <% else %>
-      <% end %>   
-        <div class="photo-1 px-4">
-          <% if @user_particular%>
+          <div class="overlayhome">
+            <div style="display: flex; justify-content: center; align-items: center; height: 300px;">
+              <%= link_to "Fill in your particulars to get your Digital ID!", new_user_particular_path, class: "btn btn-danger big-btn high-z-index-btn", id: "fill-in-particulars-btn" %>
+            </div>          
+          </div>              
+        <% end %>   
+        <div class="photo-1 px-2">
+          <% if @user_particular %>
             <% if @user_particular.profile_picture.attached? %>
-              <%= image_tag @user_particular.profile_picture, alt: "User's profile picture", class: 'img-fluid', style: 'border: 2px solid black;' %>
+              <%= image_tag @user_particular.profile_picture, alt: "User's profile picture", class: 'img-fluid', style: 'border: 2px solid black; max-width: 80px; max-height: 80px;' %>
             <% else %>
-              <%= image_tag 'default.png', alt: "Default image", class: 'img-fluid', style: 'border: 2px solid black;' %>
+              <%= image_tag 'default.png', alt: "Default image", class: 'img-fluid', style: 'border: 2px solid black; max-width: 80px; max-height: 80px;' %>
             <% end %>
           <% else %>
-              <%= image_tag 'default.png', alt: "Default image", class: 'img-fluid', style: 'border: 2px solid black;' %>
+            <%= image_tag 'default.png', alt: "Default image", class: 'img-fluid', style: 'border: 2px solid black; max-width: 80px; max-height: 80px;' %>
           <% end %>
         </div>
         <!--table for name and UID-->   
-        <div class="details-1 px-4">
+        <div class="details-1 px-2">
           <table>
             <tr>
                 <td colspan="2"><strong>Full Name:</strong></td>

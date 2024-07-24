@@ -23,29 +23,30 @@
         </div>
       <% end %>
       <!-- 2FA Container -->
-        <div class="d-flex gap-2 my-3 w-100 justify-content-center align-items-center">
-          <button id="generate-2fa-btn" class="p-2 px-4 text-nowrap generate-2fa-button" style="font-size:1.2em;">Generate 2FA Passcode:</button>
-          <span id='two-fa-passcode' class='p-2 text-nowrap two-fa-passcode-input' style="font-size:1.2em;"><%= @user_particular&.two_fa_passcode || "2FA Passcode is not set up." %></span>
+        <div class="d-flex gap-2 my-2 w-100 justify-content-center align-items-center">
+          <button id="generate-2fa-btn" class="py-2 px-3 text-nowrap generate-2fa-button" style="font-size:0.9em;">Generate 2FA Passcode:</button>
+          <span id='two-fa-passcode' class='py-2 text-nowrap two-fa-passcode-input' style="font-size:0.9em;"><%= @user_particular&.two_fa_passcode || "2FA Passcode is not set up." %></span>
         </div>
         <!-- Buttons Container, put under sub main container -->
-        <div class="pri-container py-4 d-flex w-100 flex-column flex-wrap">
-          <div class="row mb-3 d-flex justify-content-center gap-2">
-            <%= link_to user_document_path(@user), class: 'col-5 p-3 customhome-button', style: 'text-decoration: none;' do %>
-              <i class="fas fa-file-alt fa-2x"></i> Documents
+        <div class="pri-container py-3 px-2 d-flex w-100 flex-column flex-wrap">
+          <div class="row mb-2 d-flex justify-content-center gap-2">
+            <%= link_to user_document_path(@user), class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
+              <i class="fas fa-file-alt"></i> Documents
             <% end %>
-            <%= link_to user_history_path(@user), class: 'col-5 p-3 customhome-button', style: 'text-decoration: none;' do %>
-              <i class="fas fa-history fa-2x"></i> Activity History
+            <%= link_to user_history_path(@user), class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
+              <i class="fas fa-history"></i> Activity History
             <% end %>
           </div>
           <div class="row d-flex justify-content-center gap-2">
-            <%= link_to user_particulars_family_path, class: 'col-5 p-3 customhome-button', style: 'text-decoration: none;' do %>
-              <i class="fas fa-save fa-2x"></i> Saved Post
+            <%= link_to user_particulars_family_path, class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
+              <i class="fas fa-save"></i> Saved Post
             <% end %>
-            <%= link_to user_particulars_family_path, class: 'col-5 p-3 customhome-button', style: 'text-decoration: none;' do %>
-              <i class="fas fa-search fa-2x"></i> Search NGOs
+            <%= link_to user_particulars_family_path, class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
+              <i class="fas fa-search"></i> Search NGOs
             <% end %>
           </div>
         </div>
+
     </div>
     <!-- Right Side (Bulletin Board) -->
     <div class="col-8 mx-0 d-flex justify-content-center">
@@ -91,3 +92,28 @@
     </div>
   </div>
 </div>
+
+<% if @user_particular.present? %>
+  <script>
+    $(document).ready(function() {
+      $('#generate-2fa-btn').click(function(e) {
+        e.preventDefault();
+        console.log('HELLO');
+        $.ajax({
+          url: '<%= generate_2fa_path(@user_particular) %>',
+          type: 'POST',
+          dataType: 'json',
+          headers: {
+            'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+          },
+          success: function(data) {
+            $('#two-fa-passcode').text(data.two_fa_passcode);
+          },
+          error: function(xhr, status, error) {
+            console.error('AJAX Error:', status, error);
+          }
+        });
+      });
+    });
+  </script>
+<% end %>

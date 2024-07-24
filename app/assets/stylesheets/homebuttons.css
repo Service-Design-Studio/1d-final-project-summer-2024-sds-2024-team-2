@@ -71,7 +71,8 @@
 }
 
 .digital-card {
-  width: 500px; /* Adjust the width as needed */
+  width: auto; /* Adjust the width as needed */
+  min-width: 300px;
   height: auto; /* Adjust the height as needed */
   outline: none; /* Remove outline */
 }
