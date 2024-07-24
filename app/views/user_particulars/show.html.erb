@@ -1,52 +1,34 @@
-  <div class="row d-flex justify-content-center">
+  <div class="row mt-4 d-flex justify-content-center">
     <!-- Left Side (Digital ID, 2FA, Buttons) -->
-  <div class="py-2 col-md-4 mb-4 mb-md-0">
-
-    <!-- Digital ID Card Container -->
-    <div class="mb-3 d-flex justify-content-between align-items-center" style="padding:0px 10px 0px 0px;">
-      <%= render 'digitalid' %>
-    </div>
-  
+    <div class="py-2 col-4">
+      <!-- Digital ID Card Container -->
+      <div class="d-flex justify-content-between align-items-center">
+        <%= render 'digitalid' %>
+      </div>
       <!-- 2FA Container -->
-      <div class="text-center mb-3">
-        <div class="card-body d-flex justify-content-center align-items-center h-100">
-          <button id="generate-2fa-btn" class="text-nowrap generate-2fa-button">Generate 2FA Passcode:</button>
-          <span id='two-fa-passcode' class='text-nowrap two-fa-passcode-input'><%= @user_particular&.two_fa_passcode || "2FA Passcode is not set up." %></span>
+        <div class="d-flex gap-2 my-3 w-100 justify-content-center align-items-center">
+          <button id="generate-2fa-btn" class="p-2 px-4 text-nowrap generate-2fa-button" style="font-size:1.2em;">Generate 2FA Passcode:</button>
+          <span id='two-fa-passcode' class='p-2 text-nowrap two-fa-passcode-input' style="font-size:1.2em;"><%= @user_particular&.two_fa_passcode || "2FA Passcode is not set up." %></span>
         </div>
         <!-- Buttons Container, put under sub main container -->
-        <div class="pri-container d-flex flex-wrap w-100">
-          <% if @user&.nil? %>
-          <% else %>
-            <%= link_to user_document_path(@user), class: 'customhome-button', style: 'text-decoration: none;' do %>
-              <i class="fas fa-file-alt"></i> Documents
+        <div class="pri-container py-4 d-flex w-100 flex-column flex-wrap">
+          <div class="row mb-3 d-flex justify-content-evenly">
+            <%= link_to user_document_path(@user), class: 'col-5 p-3 customhome-button', style: 'text-decoration: none;' do %>
+              <i class="fas fa-file-alt fa-2x"></i> Documents
             <% end %>
-            <%= link_to user_history_path(@user), class: 'customhome-button', style: 'text-decoration: none;' do %>
-              <i class="fas fa-history"></i> Activity History
+            <%= link_to user_history_path(@user), class: 'col-5 p-3 customhome-button', style: 'text-decoration: none;' do %>
+              <i class="fas fa-history fa-2x"></i> Activity History
             <% end %>
-            <%= link_to new_user_particular_path, class: "customhome-button", id: "fill-in-particulars-btn", style: 'text-decoration: none;' do %>
-              <i class="fas fa-user"></i> Personal
+          </div>
+          <div class="row mb-3 d-flex justify-content-evenly">
+            <%= link_to user_particulars_family_path, class: 'col-5 p-3 customhome-button', style: 'text-decoration: none;' do %>
+              <i class="fas fa-save fa-2x"></i> Saved Post
             <% end %>
-            <% if @user_particular&.status == 'verified' %>
-              <%= link_to edit_user_particular_path(@user), class: 'customhome-button', style: 'text-decoration: none;' do %>
-                <i class="fas fa-user"></i> Personal
-              <% end %>
-            <% else %>
-              <%= link_to edit_user_particular_path(@user), class: 'customhome-button', style: 'text-decoration: none;' do %>
-                <i class="fas fa-user"></i> Personal
-              <% end %>
+            <%= link_to user_particulars_family_path, class: 'col-5 p-3 customhome-button', style: 'text-decoration: none;' do %>
+              <i class="fas fa-search fa-2x"></i> Search NGOs
             <% end %>
-          <% end %>
-          <%= link_to user_particulars_family_path, class: 'customhome-button', style: 'text-decoration: none;' do %>
-            <i class="fas fa-users"></i> Family
-          <% end %>
-          <%= link_to user_particulars_family_path, class: 'customhome-button', style: 'text-decoration: none;' do %>
-            <i class="fas fa-save"></i> Saved Post
-          <% end %>
-          <%= link_to user_particulars_family_path, class: 'customhome-button', style: 'text-decoration: none;' do %>
-            <i class="fas fa-search"></i> Search NGOs
-          <% end %>
+          </div>
         </div>
-      </div>
     </div>
     <!-- Right Side (Bulletin Board) -->
     <div class="col-md-7">
