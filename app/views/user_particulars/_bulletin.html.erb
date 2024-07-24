@@ -22,7 +22,7 @@
     <div class="d-flex flex-wrap gap-2 overflow-auto" style='max-height: 100%;' id="event-cards-container">
       <% @bulletins.each do |bulletin| %>
         <span class="event-card justify-content-center align-items-center" style="width:170px;" data-title="<%= bulletin.title.downcase %>" data-description="<%= bulletin.description.downcase %>" data-ngo-name="<%= bulletin.ngo_name.downcase %>">
-          <div class="card d-flex add-small-shadow justify-content-center">
+          <div class="card d-flex add-small-shadow justify-content-center" style="font-size: 0.7em; height:100%;">
             <div class='d-flex w-100 align-items-center justify-content-center' style='min-width: 100px; height: 90px'>
               <% ngo_user = @ngo_users.find { |user| user.name == bulletin.ngo_name } %>
               <% if ngo_user&.image_url.present? %>
@@ -31,7 +31,7 @@
                 <%= image_tag 'default.png', alt: "Event image", style: 'max-width: 100%; max-height: 100%; object-fit: contain;' %>
               <% end %>
             </div>
-            <div class="card-body p-2" style="font-size: 0.7em;">
+            <div class="card-body p-2" >
               <ul class="list-unstyled">
                 <div class='d-flex justify-content-between'>
                   <div>

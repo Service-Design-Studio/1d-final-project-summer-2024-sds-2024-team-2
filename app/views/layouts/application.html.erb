@@ -28,9 +28,11 @@
   <body class="d-flex flex-column min-vh-100 bg-light" style="overflow-x:hidden;">
     <div class="container-fluid justify-content-center p-0">
       <div class="row flex-nowrap align-items-center justify-content-between p-2", style="background-color: #f1536a; color: white; margin-bottom:0;">
-        <div class="col-1 d-flex justify-content-start align-items-center">
-          <%= button_to "Back", destroy_user_session_path, method: 'delete', class: "text-nowrap btn btn-light" %>
-        </div>
+          <div class="col-1 d-flex justify-content-start align-items-center">
+            <% if @back_path.present? %>
+              <%= button_to "Back", @back_path, method: 'get', class: "text-nowrap btn btn-light" %>
+            <% end %>
+          </div>
         <h5 class="text-center m-0 col-10 text-nowrap">Welcome, <%= @user_particular&.full_name || current_user.email %>!</h5>
         <div class="col-1 d-flex justify-content-end align-items-center">
           <%= button_to "Sign out", destroy_user_session_path, method: 'delete', class: "text-nowrap btn btn-light" %>

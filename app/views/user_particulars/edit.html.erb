@@ -1,5 +1,5 @@
 <div class="container py-3">
-  <h4 class="text-center" style="color: black">Edit your particulars</h4>
+  <h5 class="text-center" style="color: black">Edit your particulars</h5>
   <!-- user_particulars_confirm_path leads to the confirm function!-->
   <%=form_with model: @user_particular, url: user_particular_path(@user_particular), method: :put, local: true do |form|%>
     <%= form.hidden_field :user_id, value: current_user.id %>
@@ -72,13 +72,8 @@
       <%= form.label :date_of_arrival, "Date of Arrival in Malaysia" %><span class="text-danger">*</span>
       <%= form.date_field :date_of_arrival, class: "form-control", required: true %>
     </div>
-    <div class="form-group">
-      <%= form.label :photo_url, "Upload a copy of your passport size photo (optional)"%>
-      <%= form.file_field :photo_url, accept: 'image/jpeg,image/gif,image/png,application/pdf', class: "form-control-file"%>
-    </div>
     <div class="text-center">
-      <%= link_to "Back", root_path, class: "btn btn-secondary mx-2" %>
-      <%= form.submit "Update", class: "btn btn-danger mx-2" %>
+      <%= form.submit "Update", class: "px-3 btn btn-danger" %>
     </div>
   <% end %>
 </div>

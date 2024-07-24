@@ -3,6 +3,7 @@
   display: block;
   margin: 10px 0;
   position: relative;
+  border-radius: 10px;
 
   label {
     padding: 12px 30px;
@@ -15,13 +16,14 @@
     z-index: 2;
     transition: color 200ms ease-in;
     overflow: hidden;
+    border-radius: 10px;
 
     &:before {
       width: 10px;
       height: 10px;
       border-radius: 50%;
       content: '';
-      background-color: #faa2af;
+      background-color: #cef9f8;
       position: absolute;
       left: 50%;
       top: 50%;
@@ -52,7 +54,7 @@
   }
 
   input:checked ~ label {
-    color: #fff;
+    color: black;
     &:before { 
       transform: translate(-50%, -50%) scale3d(110, 110, 1);
       opacity: 1;
@@ -89,8 +91,8 @@
 
 /* When the verify button is enabled (all checkboxes are ticked), it will appear green */
 #verify-btn:not(:disabled) {
-  background-color: green;
-  border-color: green;
+  background-color: #4ec694;
+  border-color: #cef9f8;
 }
 
 

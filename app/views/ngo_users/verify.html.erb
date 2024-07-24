@@ -8,55 +8,51 @@
     overflow-y: scroll;
   }
 </style>
-
-<div class="container">
-  <h1 class="text-center rounded mt-3">Your <strong style="color: #f1536a;">EnableID</strong></h1>
-  <% if @user_particular.present? %>
-    <div class="row mt-4">
-      <div class="col-md-8">
+<div class='p-5 row d-flex justify-content-between'>
+  <div class="ml-5 col-3 p-3" style='font-size: 0.8em'>
+    <h4 class="text-center rounded mt-3">Verify the User's <strong style="color: #f1536a;">EnableID</strong></h4>
         <%= render partial: "user_particulars/digitalid", locals: { user_particular: @user_particular } %>
-        <div id="app" v-scroll="onScroll">
-           <div class="card_2" v-for="(card, index) in styledCards" :style="card.style" :key="index">
-            <div class="card_content_2">
-              <h3>{{card.title}}</h3>
-              <p>{{card.description}}</p>
-            </div>
-           </div>
+  </div>
+  <div class='col-5 p-3" style='font-size: 0.8em'>
+    <div id="app" v-scroll="onScroll">
+      <div class="card_2" v-for="(card, index) in styledCards" :style="card.style" :key="index">
+        <div class="card_content_2">
+          <h3>{{card.title}}</h3>
+          <p>{{card.description}}</p>
         </div>
       </div>
-      
-    <div class="col-md-4"> <!-- Add a margin top to create space -->
-      
-      <%= form_with url: confirm_verify_ngo_user_path(@ngo_user), method: :post, local: true, id: "verify" do %>
-        <input type="hidden" name="unique_id" value="<%= @user_particular.unique_id %>">
-        <h4>Please ensure that all these information is present before verifying:</h4>
-        <div class="inputGroup">
-          <input id="option1" name="option1" type="checkbox"/>
-          <label for="option1">Full name</label>
-        </div> 
-        <div class="inputGroup">
-          <input id="option2" name="option2" type="checkbox"/>
-          <label for="option2">Country of Origin</label>
-        </div>
-        <div class="inputGroup">
-          <input id="option3" name="option3" type="checkbox"/>
-          <label for="option3">Date of Birth</label>
-        </div>
-        <div class="inputGroup">
-          <input id="option4" name="option4" type="checkbox"/>
-          <label for="option4">Date of Arrival</label>
-        </div>
-        <div class="inputGroup">
-          <input id="option5" name="option5" type="checkbox"/>
-          <label for="option5">Phone Number</label>
-        </div>
-
-
-        <%= submit_tag "Verify", class: "btn btn-success mt-3", id: "verify-btn", disabled: true%>
-        <%= button_tag "Keep in View", type: 'button', class: "btn btn-primary mt-3", id: "keep-in-view-btn" %>
-      <% end %>
     </div>
-  <% end %>
+  </div>
+  <div class="col-3 formcol p-3" style='font-size: 0.8em'> <!-- Add a margin top to create space -->
+    <%= form_with url: confirm_verify_ngo_user_path(@ngo_user), method: :post,local: true, id: "verify" do %>
+      <input type="hidden" name="unique_id" value="<%= @user_particular.unique_id %>">
+      <h5 style='color:white;'>Please ensure that all these information is present before verifying:</h5>
+      <div class="inputGroup">
+        <input id="option1" name="option1" type="checkbox"/>
+        <label for="option1">Full name</label>
+      </div>
+      <div class="inputGroup">
+        <input id="option2" name="option2" type="checkbox"/>
+        <label for="option2">Country of Origin</label>
+      </div>
+      <div class="inputGroup">
+        <input id="option3" name="option3" type="checkbox"/>
+        <label for="option3">Date of Birth</label>
+      </div>
+      <div class="inputGroup">
+        <input id="option4" name="option4" type="checkbox"/>
+        <label for="option4">Date of Arrival</label>
+      </div>
+      <div class="inputGroup">
+        <input id="option5" name="option5" type="checkbox"/>
+        <label for="option5">Phone Number</label>
+      </div>
+      <div class='d-flex justify-content-around gap-1 mt-auto mb-2 '>
+      <%= button_tag "Keep in View", type: 'button', class: "btn btn-primary mt-3", id: "keep-in-view-btn" %>
+      <%= submit_tag "Verify", class: "px-5 btn btn-info mt-3", id: "verify-btn", disabled: true%>
+      </div>
+    <% end %>
+  </div>
 </div>
 
 <script type="text/javascript">

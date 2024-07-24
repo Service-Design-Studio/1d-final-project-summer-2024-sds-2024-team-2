@@ -9,7 +9,9 @@ class UserParticularsController < ApplicationController
   end
   # No need for content when using @user_particular from before_action
 
-  def document; end
+  def document
+    @back_path = root_path
+  end
   # No need for content when using @user_particular from before_action
 
   def create
@@ -39,6 +41,7 @@ class UserParticularsController < ApplicationController
   end
 
   def new
+    @back_path = root_path
     # Fills up form with previously entered data
     @user_particular = UserParticular.new(session.fetch(session[:user_particular_params], {}))
     set_dropdown_options
@@ -61,6 +64,7 @@ class UserParticularsController < ApplicationController
   end
 
   def edit
+    @back_path = root_path
     set_dropdown_options
 
     if params[:user_particular]
@@ -97,6 +101,7 @@ class UserParticularsController < ApplicationController
   end
 
   def history
+    @back_path = root_path
     @user_history = UserHistory.where(user_id: params[:id]).order(updated_at: :desc)
   end
 
@@ -198,6 +203,7 @@ class UserParticularsController < ApplicationController
   end
 
   def family
+    @back_path = root_path
     @user_particular = current_user.user_particular
   end
 
