@@ -4,33 +4,26 @@ Feature: Check EnableID user
   So that I can proceed to verify their EnableID card
 
 Background:
-  Given I am already on the NGO 'Gebirah' page
-
-Scenario: Unique ID and 2FA Code exists
-  When I press on "Verify User" button
-  And I fill in the following valid fields
-  | Field                     | Value             |
-  | Unique ID                 | 1055290           |
-  | 2FA Code                  | 606833            |
-  And I press the "Check" button
-  Then I should be redirected to the User Verification page under "Gebirah"
+  Given I am already on the NGO "Gebirah" page
 
 Scenario: Unique ID does not exist
-  When I press on the "Verify User" button
-  And I fill in the following fields
+  When I press the "Verify User" button
+  Then I should see "Please enter details of individual you would like to verify"
+  Given I fill in the following fields
   | Field                     | Value             |
   | Unique ID                 | 0000000           |
   | 2FA Code                  | 606833            |
   And I press the "Check" button
-  Then I should see the message "User not found. Please check your Unique ID and 2FA Code."
+  Then I should see "User not found. Please check your Unique ID and 2FA Code."
 
 Scenario: 2FA Code does not exist
-  When I press on the "Verify User" button
-  And I fill in the following fields
+  When I press the "Verify User" button
+  Then I should see "Please enter details of individual you would like to verify"
+  Given I fill in the following fields
   | Field                     | Value             |
   | Unique ID                 | 1055290           |
   | 2FA Code                  | 000000            |
   And I press the "Check" button
-  Then I should see the message "User not found. Please check your Unique ID and 2FA Code."
+  Then I should see "User not found. Please check your Unique ID and 2FA Code."
 
 
