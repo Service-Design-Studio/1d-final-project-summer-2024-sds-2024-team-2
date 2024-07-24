@@ -3,8 +3,8 @@
   <div class="card-1">
     <div class="card-1-header">
       EnableID Digital Card
-<% if @user_particular.present? %>
-  <% case @user_particular.status %>
+<% if @user_particular&.present? %>
+  <% case @user_particular&.status %>
   <% when "pending" %>
     <%= link_to new_user_particular_path(@user_particular), class: "edit-link-right-align edit-icon-link" do %>
       <i class="fas fa-edit"></i>
