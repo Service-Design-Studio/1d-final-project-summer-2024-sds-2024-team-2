@@ -333,6 +333,7 @@
             });
             updateFileList(); // Update the file list display
             document.getElementById('statusMessage').innerText = 'Files attached successfully!';
+            addUploadedDocumentsToList(files); // Add uploaded documents to the list
         });
 
         fileInput.addEventListener('change', (event) => {
@@ -350,6 +351,7 @@
             });
             updateFileList(); // Update the file list display
             document.getElementById('statusMessage').innerText = 'Files attached successfully!';
+            addUploadedDocumentsToList(files); // Add uploaded documents to the list
         });
 
         // Event listener for the preview button
@@ -418,6 +420,7 @@
     </script>
 </body>
 </html>
+
 
 
 
