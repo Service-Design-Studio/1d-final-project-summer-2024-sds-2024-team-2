@@ -1,75 +1,76 @@
 .buttonhome-container {
-    display: flex;
-    gap: 10px; /* Adjust the spacing between buttons */
-    background-color: #fdc6cf;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .customhome-button {
-    background-color: #ffffff; /* Light background */
-    color: black; /* Text color */
-    border: none; /* No border */
-    padding: 10px 20px; /* Padding inside the button */
-    border-radius: 30px; /* Rounded corners */
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Subtle shadow for 3D effect */
-    font-size: 16px; /* Text size */
-    cursor: pointer; /* Pointer cursor on hover */
-    display: flex;
-    align-items: center; /* Center icon and text */
-    justify-content: center;
-    width: 180px; /* Fixed width, adjust as necessary */
-    margin: 5px; /* Margin around the button */
-    transition: background-color 0.3s; /* Smooth transition for hover effect */
-  }
-  
-  .customhome-button:hover {
-    background-color: #f0f0f0; /* Slightly darker on hover */
-  }
-  
-  .customhome-button i {
-    margin-right: 10px; /* Space between icon and text */
-  }
-  
-  .two-fa-container {
-    display: flex;
-    align-items: center;
-    justify-content: start;
-    gap: 20px; /* Space between button and input field */
-    margin: 20px; /* Adjust spacing around the elements */
-  }
-  
-  .generate-2fa-button {
-    background-color: #333; /* Dark gray background */
-    color: white; /* White text color */
-    border: none; /* No border */
-    outline: none;
-    padding: 10px 20px; /* Padding around text */
-    font-size: 16px; /* Font size */
-    border-radius: 5px; /* Slightly rounded corners */
-    cursor: pointer; /* Cursor indicates clickable */
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3); /* Subtle shadow for depth */
-    transition: background-color 0.3s; /* Smooth transition for hover effect */
-  }
-  
-  .generate-2fa-button:hover {
-    background-color: #555; /* Darken button on hover */
-  }
-  
-  .two-fa-passcode-input {
-    background-color: #f0f0f0; /* Light gray background */
-    border: 2px solid #ccc; /* Gray border */
-    border-radius: 5px; /* Rounded corners */
-    padding: 10px 20px; /* Padding inside the input */
-    width: 120px; /* Fixed width */
-    text-align: center; /* Center text alignment */
-    font-size: 16px; /* Font size */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Subtle shadow for depth */
-  }
+  display: flex;
+  gap: 10px; /* Adjust the spacing between buttons */
+  background-color: #fdc6cf;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
 
-  .digital-card {
-    width:500px; /* Adjust the width as needed */
-    height: auto; /* Adjust the height as needed */
-    outline: none; /* Remove outline */
-  }
+.customhome-button {
+  background-color: #ffffff; /* Light background */
+  color: black; /* Text color */
+  border: none; /* No border */
+  padding: 10px 20px; /* Padding inside the button */
+  border-radius: 30px; /* Rounded corners */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for 3D effect */
+  font-size: 16px; /* Text size */
+  cursor: pointer; /* Pointer cursor on hover */
+  display: flex;
+  align-items: center; /* Center icon and text */
+  justify-content: center;
+  width: 180px; /* Fixed width, adjust as necessary */
+  margin: 5px; /* Margin around the button */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.customhome-button:hover {
+  background-color: #f0f0f0; /* Slightly darker on hover */
+}
+
+.customhome-button i {
+  margin-right: 10px; /* Space between icon and text */
+}
+
+.two-fa-container {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 20px; /* Space between button and input field */
+  margin: 20px; /* Adjust spacing around the elements */
+}
+
+.generate-2fa-button {
+  background-color: #333; /* Dark gray background */
+  color: white; /* White text color */
+  border: none; /* No border */
+  outline: none;
+  padding: 10px 20px; /* Padding around text */
+  font-size: 16px; /* Font size */
+  border-radius: 5px; /* Slightly rounded corners */
+  cursor: pointer; /* Cursor indicates clickable */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.generate-2fa-button:hover {
+  background-color: #555; /* Darken button on hover */
+}
+
+.two-fa-passcode-input {
+  color: black;
+  background-color: #f0f0f0; /* Light gray background */
+  border: 2px solid #ccc; /* Gray border */
+  border-radius: 5px; /* Rounded corners */
+  padding: 10px 20px; /* Padding inside the input */
+  width: 120px; /* Fixed width */
+  text-align: center; /* Center text alignment */
+  font-size: 16px; /* Font size */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+}
+
+.digital-card {
+  width: 500px; /* Adjust the width as needed */
+  height: auto; /* Adjust the height as needed */
+  outline: none; /* Remove outline */
+}
