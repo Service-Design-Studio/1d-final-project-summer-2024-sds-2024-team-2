@@ -1,5 +1,24 @@
 <div class="container py-3">
   <h5 class="text-center" style="color: black">Edit your particulars</h5>
+  <div style='font-size: 0.9em;'>
+  <!--Display messages at the top of the page-->
+  <%- if flash[:notice] %>
+    <div class="alert alert-info text-center"><%= flash[:notice] %></div>
+  <%- elsif flash[:success] %>
+    <div class="alert alert-success text-center"><%= flash[:success] %></div>
+  <%- elsif flash[:error_message].present? %>
+    <div class="alert alert-danger">
+      <ul><%= flash[:error_message] %></ul>
+      <% if flash[:error].present? %>
+        <ul>
+          <% flash[:error].each do |error| %>
+            <li><%= error %></li>
+          <% end %>
+        </ul>
+      <% end %>
+    </div>
+  <% end %>
+</div>
   <!-- user_particulars_confirm_path leads to the confirm function!-->
   <%=form_with model: @user_particular, url: user_particular_path(@user_particular), method: :put, local: true do |form|%>
     <%= form.hidden_field :user_id, value: current_user.id %>
