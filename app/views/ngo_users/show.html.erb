@@ -43,12 +43,11 @@
     <div class="overlay"></div>
     <div class="container px-2 py-2">
       <div class="row">
-        <div class="col-md-4" style="max-width: 300px;">
+        <div class="col-12 col-md-4 mb-4 mb-md-0">
           <div class="text-center mb-3">
             <%= image_tag @ngo_user.image_url, alt: "#{@ngo_user.name} image", class: "img-fluid", style:"max-width: 100%; height: auto; object-fit: contain;" %>
           </div>
-          <div class="text-center" style="display: flex; flex-wrap: wrap; justify-content: space-between;">
-            <!-- Start of Check User Button -->
+          <div class="d-flex flex-wrap justify-content-between">
             <!-- Verify User button -->
             <%= link_to '#', class: "customhome-button btn btn-secondary mt-3", style: 'text-decoration: none; flex: 1 1 45%; margin: 5px;', data: { toggle: "modal", target: "#checkUserModal" } do %>
               <i class="fas fa-user"></i> Verify User
@@ -71,7 +70,7 @@
           </div>
         </div>
         <!-- Bulletin Board Column -->
-        <div class="col-12 col-md-8" style="margin-top: 20px; margin-left: 80px;"> 
+        <div class="col-12 col-md-8 mt-4 mt-md-0"> 
           <%= render 'user_particulars/bulletin' %>
         </div>
       </div>
