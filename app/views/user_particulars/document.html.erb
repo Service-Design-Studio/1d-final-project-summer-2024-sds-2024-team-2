@@ -372,20 +372,21 @@
         // Function to add uploaded documents to the list of uploaded documents
         function addUploadedDocumentsToList(files) {
             var uploadedDocumentsTable = document.getElementById('documentTableBody');
-            uploadedDocumentsTable.innerHTML = ''; // Clear the existing list
             files.forEach(file => {
-                var newRow = document.createElement('tr');
-                newRow.innerHTML = `
-                    <td>${file.name}</td>
-                    <td>${formatFileSize(file.size)}</td>
-                    <td>${formatDate(new Date())}</td>
-                    <td class="status-unverified">Unverified</td>
-                    <td class="action-buttons">
-                        <button class="btn btn-primary btn-sm" onclick="previewDocument('${URL.createObjectURL(file)}')">Preview</button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteDocument(this)">Delete</button>
-                    </td>
-                `;
-                uploadedDocumentsTable.appendChild(newRow);
+                if (['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg'].includes(file.type) && file.size <= 5242880) {
+                    var newRow = document.createElement('tr');
+                    newRow.innerHTML = `
+                        <td>${file.name}</td>
+                        <td>${formatFileSize(file.size)}</td>
+                        <td>${formatDate(new Date())}</td>
+                        <td class="status-unverified">Unverified</td>
+                        <td class="action-buttons">
+                            <button class="btn btn-primary btn-sm" onclick="previewDocument('${URL.createObjectURL(file)}')">Preview</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteDocument(this)">Delete</button>
+                        </td>
+                    `;
+                    uploadedDocumentsTable.appendChild(newRow);
+                }
             });
 
             // Show the uploaded documents section if there are files
