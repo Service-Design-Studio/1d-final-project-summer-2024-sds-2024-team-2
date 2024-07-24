@@ -142,6 +142,11 @@
         .document-list .status-unverified {
             color: red;
         }
+
+        .document-list .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
     </style>
 </head>
 
@@ -370,7 +375,7 @@
                     <td>${formatFileSize(file.size)}</td>
                     <td>${formatDate(new Date())}</td>
                     <td class="status-unverified">Unverified</td>
-                    <td>
+                    <td class="action-buttons">
                         <button class="btn btn-primary btn-sm" onclick="previewDocument(this, '${URL.createObjectURL(file)}')">Preview</button>
                         <button class="btn btn-danger btn-sm" onclick="deleteDocument(this)">Delete</button>
                     </td>
@@ -420,4 +425,3 @@
 </body>
 
 </html>
-
