@@ -8,6 +8,7 @@ class NgoUsersController < ApplicationController
     nil unless params[:unique_id].present?
     @ngo_users = NgoUser.all
     @bulletins = Bulletin.all # Ensures @bulletins is an array even if the query finds no records for NIL posts in bulletin board
+    @show_add_bulletin_button = true
   end
 
   def index

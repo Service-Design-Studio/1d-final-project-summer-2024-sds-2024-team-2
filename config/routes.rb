@@ -31,4 +31,13 @@ Rails.application.routes.draw do
       post 'confirm_verify', to: 'ngo_users#confirm_verify'
     end
   end
+
+  resources :bulletins do
+    member do
+      get 'index'
+      get 'update'
+    end
+  end
+
+
 end
