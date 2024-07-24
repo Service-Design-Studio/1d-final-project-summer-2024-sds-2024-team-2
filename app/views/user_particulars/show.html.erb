@@ -1,10 +1,27 @@
-  <div class="row mt-4 d-flex justify-content-center">
+  <div class="container-fluid mt-4 d-flex justify-content-center">
     <!-- Left Side (Digital ID, 2FA, Buttons) -->
-    <div class="py-2 col-4">
+    <div class="col-3">
       <!-- Digital ID Card Container -->
       <div class="d-flex justify-content-between align-items-center">
         <%= render 'digitalid' %>
       </div>
+      <!--Display messages beneath the card -->
+      <%- if flash[:notice]%>
+        <div class="alert alert-info text-center"><%=flash[:notice]%></div>
+      <%- elsif flash[:success]%>
+        <div class="alert alert-success text-center"><%=flash[:success]%></div>
+      <%- elsif flash[:error_message].present? %>
+        <div class="alert alert-danger">
+          <ul><%= flash[:error_message] %></ul>
+          <% if flash[:error].present? %>
+            <ul>
+              <% flash[:error].each do |error| %>
+                <li><%= error %></li>
+              <% end %>
+            </ul>
+          <% end %>
+        </div>
+      <% end %>
       <!-- 2FA Container -->
         <div class="d-flex gap-2 my-3 w-100 justify-content-center align-items-center">
           <button id="generate-2fa-btn" class="p-2 px-4 text-nowrap generate-2fa-button" style="font-size:1.2em;">Generate 2FA Passcode:</button>
@@ -12,7 +29,7 @@
         </div>
         <!-- Buttons Container, put under sub main container -->
         <div class="pri-container py-4 d-flex w-100 flex-column flex-wrap">
-          <div class="row mb-3 d-flex justify-content-evenly">
+          <div class="row mb-3 d-flex justify-content-center gap-2">
             <%= link_to user_document_path(@user), class: 'col-5 p-3 customhome-button', style: 'text-decoration: none;' do %>
               <i class="fas fa-file-alt fa-2x"></i> Documents
             <% end %>
@@ -20,7 +37,7 @@
               <i class="fas fa-history fa-2x"></i> Activity History
             <% end %>
           </div>
-          <div class="row mb-3 d-flex justify-content-evenly">
+          <div class="row mb-3 d-flex justify-content-center gap-2">
             <%= link_to user_particulars_family_path, class: 'col-5 p-3 customhome-button', style: 'text-decoration: none;' do %>
               <i class="fas fa-save fa-2x"></i> Saved Post
             <% end %>
@@ -31,7 +48,7 @@
         </div>
     </div>
     <!-- Right Side (Bulletin Board) -->
-    <div class="col-md-7">
+    <div class="col-8 mx-0 d-flex justify-content-center">
       <%= render 'bulletin' %>
     </div>
   </div>
