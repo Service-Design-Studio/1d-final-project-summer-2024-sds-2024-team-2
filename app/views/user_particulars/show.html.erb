@@ -5,23 +5,27 @@
       <div class="d-flex justify-content-between align-items-center">
         <%= render 'digitalid' %>
       </div>
-      <!--Display messages beneath the card -->
-      <%- if flash[:notice]%>
-        <div class="alert alert-info text-center"><%=flash[:notice]%></div>
-      <%- elsif flash[:success]%>
-        <div class="alert alert-success text-center"><%=flash[:success]%></div>
-      <%- elsif flash[:error_message].present? %>
-        <div class="alert alert-danger">
-          <ul><%= flash[:error_message] %></ul>
-          <% if flash[:error].present? %>
-            <ul>
-              <% flash[:error].each do |error| %>
-                <li><%= error %></li>
-              <% end %>
-            </ul>
+
+    
+<div style='font-size: 0.7em;'>
+  <!--Display messages at the top of the page-->
+  <%- if flash[:notice] %>
+    <div class="alert alert-info text-center"><%= flash[:notice] %></div>
+  <%- elsif flash[:success] %>
+    <div class="alert alert-success text-center"><%= flash[:success] %></div>
+  <%- elsif flash[:error_message].present? %>
+    <div class="alert alert-danger">
+      <ul><%= flash[:error_message] %></ul>
+      <% if flash[:error].present? %>
+        <ul>
+          <% flash[:error].each do |error| %>
+            <li><%= error %></li>
           <% end %>
-        </div>
+        </ul>
       <% end %>
+    </div>
+  <% end %>
+</div>
       <!-- 2FA Container -->
         <div class="d-flex gap-2 my-2 w-100 justify-content-center align-items-center">
           <button id="generate-2fa-btn" class="py-2 px-2 text-nowrap generate-2fa-button" style="font-size:0.8em;">Generate 2FA Passcode:</button>

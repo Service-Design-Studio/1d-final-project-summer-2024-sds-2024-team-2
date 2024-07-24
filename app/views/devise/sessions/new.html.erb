@@ -3,15 +3,14 @@
   <p>A fake email is circulating. Or any other alert message that should be shared</p>
 </div>
 <div class="bg-light align-content-center flex-fill flex-column">
-  <div class="row align-content-center justify-content-around p-5">
-    <div class="col-sm d-flex align-items-center justify-content-center my-3">
+  <div class="row align-content-center justify-content-between p-5">
+    <div class="col-sm d-flex align-items-center justify-content-start my-3">
       <%= image_tag 'fingerprint.svg', width: 100, height: 100, alt: 'EnableID Logo' %>
       <div class="text-center text-nowrap px-2">
         <strong style="color: #f1536a; font-size:4rem;">EnableID</strong>
         <div>Restore Dignity by Empowering Identity</div>
       </div>
     </div>
-    <div class="col-sm"></div>
     <div class="container-fluid bg-light d-flex align-items-center justify-content-center col-sm mr-5", style="max-width: 500px; min-width: 270px;">
         <div class="card shadow-sm card-body">
             <% if flash[:alert] %>

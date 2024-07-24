@@ -5,7 +5,7 @@ class UserParticularsController < ApplicationController
   before_action :set_ngo_users
 
   def show
-    @bulletins = Bulletin.all
+    @bulletins = Bulletin.all.order(updated_at: :desc)
 
     if @user_particular
       if @user_particular.profile_picture.attached?
@@ -14,7 +14,7 @@ class UserParticularsController < ApplicationController
         logger.debug "\n\n\n\nNo profile picture attached.\n\n\n\n\n"
       end
     end
-    
+
   end
   # No need for content when using @user_particular from before_action
 
@@ -174,7 +174,7 @@ class UserParticularsController < ApplicationController
       if user_particular[:secondary_phone_number_country_code].blank?
         error_messages_arr << 'Secondary country code must exist if secondary phone number exists.'
       end
-      
+
       if user_particular[:secondary_phone_number].blank?
         error_messages_arr << 'Secondary phone number must exist if secondary country code exists.'
       end

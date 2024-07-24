@@ -8,7 +8,7 @@ class NgoUsersController < ApplicationController
     @ngo_user = NgoUser.find_by_id(params[:id])
     nil unless params[:unique_id].present?
     @ngo_users = NgoUser.all
-    @bulletins = Bulletin.all # Ensures @bulletins is an array even if the query finds no records for NIL posts in bulletin board
+    @bulletins = Bulletin.all.order(updated_at: :desc) # Ensures @bulletins is an array even if the query finds no records for NIL posts in bulletin board
     @show_add_bulletin_button = true
   end
 
