@@ -252,8 +252,6 @@ ngo_users_data = [
   { name: 'World Relief', image_url: 'world relief.png' }
 ]
 
-
-
 # Create or update users and their particulars
 users_data.each do |user_data|
   user = User.find_or_initialize_by(username: user_data[:username])
@@ -288,13 +286,14 @@ bulletin_data.each do |each_bulletin_data|
   bulletin.update!(each_bulletin_data)
 end
 
-
 users_history = []
 15.times do
   users_history << {
+    activity_type: 'Event',
+    activity_title: Faker::Lorem.words(number: rand(1..5)).join(' '),
     description: Faker::Lorem.words(number: rand(1..20)).join(' '),
     date: DateTime.now - rand(1..30),
-    user_particular_id: User.first.id
+    user_id: User.first.id
   }
 end
 puts users_history

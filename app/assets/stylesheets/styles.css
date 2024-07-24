@@ -4,5 +4,17 @@
 }
 
 .add-small-shadow {
-  box-shadow: -1px 8px 8px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 2px 2px 2px rgba(94, 94, 94, 0.2);
+}
+
+.truncate-multiline p {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  max-height: 3em; /* Adjust based on your line-height and number of lines */
+  line-height: 1.5em;
+  margin-bottom: 0;
 }

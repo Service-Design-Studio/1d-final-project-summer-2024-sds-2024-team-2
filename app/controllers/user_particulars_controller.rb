@@ -13,6 +13,7 @@ class UserParticularsController < ApplicationController
     error_messages_arr = validate_user_particulars(UserParticular.create_user_particular(user_particular_params))
     flash[:error] = error_messages_arr
 
+    # Check if validation passes
     if error_messages_arr.empty?
       logger.debug "OVER HERE! #{user_particular_params}"
       @user_particular = UserParticular.create_user_particular(user_particular_params)
@@ -56,26 +57,42 @@ class UserParticularsController < ApplicationController
 
   def edit
     set_dropdown_options
-  end
-
-  def update
-    logger.debug "OVER HERE! UPDATE! #{user_particular_params}"
-    @user_particular = UserParticular.update_user_particular(params[:id], user_particular_params)
-
-    # Check if edit was successful
-    if @user_particular.persisted?
-      flash[:success] = 'Digital ID was successfully edited!'
-      UserParticular.reset_verification(params[:id]) # Set status to pending and reset verifier_ngo
-      @user_particular = UserParticular.find_by_id(params[:id]) # Retrieve user particular
-      redirect_to @user_particular # redirects to /user_particulars/:id
+  
+    if params[:user_particular]
+      @user_particular = UserParticular.new(user_particular_params)
+      @user_particular.id = params[:id]  # Required for error flow
     else
-      flash[:error_message] = 'Edit failed. Please try again.'
-      redirect_to user_particulars_confirm_path(user_particular: user_particular_params) # pass user_particular_params into params of confirm action
+      @user_particular = UserParticular.find(params[:id])
+    end
+  end
+  
+  def update
+    error_messages_arr = validate_user_particulars(UserParticular.new(user_particular_params))
+    flash[:error] = error_messages_arr
+
+    # Check if validation passes
+    if error_messages_arr.empty?
+      logger.debug "OVER HERE! UPDATE! #{user_particular_params}"
+      @user_particular = UserParticular.update_user_particular(params[:id], user_particular_params)
+
+      # Check if edit was successful
+      if @user_particular
+        flash[:success] = 'Digital ID was successfully edited!'
+        UserParticular.reset_verification(params[:id]) # Set status to pending and reset verifier_ngo
+        redirect_to @user_particular # redirects to /user_particulars/:id
+      else
+        flash[:error_message] = 'Edit failed. Please fix the error(s) below:'
+        redirect_to edit_user_particular_path(params[:id], user_particular: user_particular_params)
+      end
+    else
+      # Failed validation
+      flash[:error_message] = 'Edit failed. Please fix the error(s) below:'
+      redirect_to edit_user_particular_path(params[:id], user_particular: user_particular_params)
     end
   end
 
   def history
-    @user_history = UserHistory.find(params[:id])
+    @user_history = UserHistory.where(user_id: params[:id]).order(updated_at: :desc)
   end
 
   # Retrieves user particular object linked to user object
@@ -142,6 +159,14 @@ class UserParticularsController < ApplicationController
       error_messages_arr << 'Select country of origin from the dropdown list.'
     end
 
+    unless user_particular[:ethnicity].in? ethnicity_options
+      error_messages_arr << 'Select ethnicity from the dropdown list.'
+    end
+
+    unless user_particular[:religion].in? religion_options
+      error_messages_arr << 'Select religion from the dropdown list.'
+    end
+
     if Date.parse(user_particular[:date_of_birth].to_s) > Date.today
       error_messages_arr << 'Date of birth cannot be in the future.'
     end
@@ -156,5 +181,9 @@ class UserParticularsController < ApplicationController
     end
 
     error_messages_arr
+  end
+
+  def family
+    @user_particular = current_user.user_particular
   end
 end

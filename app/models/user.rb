@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   has_one :user_particular
+  has_one :user_history
 
   attr_accessor :login
 

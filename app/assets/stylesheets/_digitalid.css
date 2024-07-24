@@ -1,99 +1,117 @@
-.container-1 { /* Assuming you have a container class */
+.container-1 {
     display: flex;
-    justify-content: center;
+    justify-content: left;
     align-items: center;
-    width: 100%; /* Cover the full width */
+    width: 100%; /* Cover the full width */ 
+    padding: 20px; 
 }
+
 .card-1 {
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 500px;
-    background: linear-gradient(to right, #fe8497, #fdc6cf); /* Left to right gradient */
+    background: linear-gradient(to right, #ff8989, #ffb9b9); /* Left to right gradient */
 }
+
 .card-1-header {
-    background-color: #f05454;
-    color: white;
+    background-color: #FB7C7C;
+    color: black;
     text-align: center;
     padding: 10px;
     font-weight: bold;
 }
-.card-1-body {
-    padding: 20px 20px 5px 20px;
+
+.verification-icon {
+    width: 24px;
+    height: 24px;
 }
 
-.card-1-body-hide{
-    padding-left: 130px;
+.fingerprint-icon {
+    right:400px;
+    width: 80px;
+    height: 80px;
+    background-color: white;
+    border-radius: 20%;
+    z-index: 1; /* Ensure it floats above other content */
 }
 
 .photo-1 {
+    text-align: center;
+
+}
+
+.profile-image {
     width: 100px;
-    height: 120px;
-    border-radius: 10px;
-    overflow: hidden;
-    float: left;
-    margin-right: 10px;
+    height: 100px;
+    border-radius: 50%;
 }
-.photo-1 img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+
+.details-1 {
+    padding: 4px;
 }
+
 .details-1 p {
-    margin: 5px 0;
-    font-size: 17px;
-}
-.toggle-button-1 {
-    width: 30%; 
-    padding: 10px 20px; /* Add horizontal padding */
-    background-color: transparent; /* Transparent background */
-    color: #000000; /* Subtle text color */
-    border: none; /* Remove border to make it flush */
-    cursor: pointer;
-    font-size: 15px;
-    text-align: left;
-    transition: background-color 0.3s, color 0.3s;
-    outline: none; /* Remove outline */
-    box-sizing: border-box; /* Include padding and border in width calculation */
+    margin: 2px 0;
 }
 
-.toggle-button-1:hover {
-    background-color: #fdc6cf; /* Slightly darker on hover */
-    color: #000000; /* Slightly darker text on hover */
+.details-1 .section {
+    margin-top: 2px; /* Adjust the margin to create separation */
 }
 
-.toggle-button-1:after {
-    content: '\25BC';
-    float: right;
+.card-footer {
+    background-color: #FB7C7C;
+    color: black;
+    text-align: center;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.toggle-button-1.show:after {
-    content: '\25B2';
+.details-1 p {
+    margin: 1px 0;
+    line-height: 1.4;
 }
 
-.collapse-1 {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease-in-out;
+.generate-2fa-button {
+    background-color: #333; /* Dark gray background */
+    color: white; /* White text color */
+    border: none; /* No border */
+    padding: 10px 20px; /* Padding around text */
+    font-size: 16px; /* Font size */
+    border-radius: 5px; /* Slightly rounded corners */
+    cursor: pointer; /* Cursor indicates clickable */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3); /* Subtle shadow for depth */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
 }
 
-.collapse-1.show {
-    max-height: 500px; /* Adjust as needed */
+.two-fa-passcode-input {
+background-color: #f0f0f0; /* Light gray background */
+border: 2px solid #ccc; /* Gray border */
+border-radius: 5px; /* Rounded corners */
+padding: 10px 20px; /* Padding inside the input */
+width: 120px; /* Fixed width */
+text-align: center; /* Center text alignment */
+font-size: 16px; /* Font size */
+box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Subtle shadow for depth */
 }
 
-.custom-pending-verification-1 {
-    background-color: #dc3545; /* Equivalent to bg-danger */
-    padding: 0.25rem; /* Equivalent to p-1 */
-    color: #ffffff; /* Equivalent to text-white */
-    border-radius: 0.25rem; /* Optional: add some border radius */
+.bordered-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.bordered-table td, .bordered-table th {
+    padding: 1px;
+    vertical-align: top;
 }
 
-.custom-verified-1 {
-    background-color: #28a745; /* Equivalent to bg-success */
-    padding: 0.25rem; /* Equivalent to p-1 */
-    color: #ffffff; /* Equivalent to text-white */
-    border-radius: 0.25rem; /* Optional: add some border radius */
+.qr-code {
+    text-align: right;
+    padding: 10px;
 }
-.custom-pending-verification-text-1 {
-    color: black; /* Change text color to black */
+
+.qr-code img {
+    width: 40px;
+    height: 40px;
 }

@@ -83,7 +83,8 @@
 body {
   background-color: #FEFEFE;
 }
-.card {
+
+.card_2 {
   height: 140px;
   background-color: white;
   padding: 5px;
@@ -92,15 +93,12 @@ body {
   box-shadow: 0px 3px 8px 0px rgba(0,0,0,0.5);
 }
 
-.card__content {
+.card__content_2 {
   display: inline-block;
   position: relative;
   vertical-align: top;
   width: calc(100% - 120px);
   height: 140px;
-}
-
-.card__content h3 {
   margin: 0;
 }
 

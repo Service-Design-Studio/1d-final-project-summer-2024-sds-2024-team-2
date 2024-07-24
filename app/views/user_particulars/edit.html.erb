@@ -1,7 +1,7 @@
 <div class="container py-3">
   <h4 class="text-center" style="color: black">Edit your particulars</h4>
   <!-- user_particulars_confirm_path leads to the confirm function!-->
-  <%= form_with model:@user_particular, method: :put, id: "form" do |form| %>
+  <%=form_with model: @user_particular, url: user_particular_path(@user_particular), method: :put, local: true do |form|%>
     <%= form.hidden_field :user_id, value: current_user.id %>
     <div class="form-group">
       <%= form.label :full_name, "Full Name" %><span class="text-danger">*</span>

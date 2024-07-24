@@ -49,6 +49,16 @@
             margin-top: 10px;
         }
 
+        /* Style for the select element with an arrow */
+        .form-control.dropdown {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            position: relative;
+            background: url('data:image/svg+xml;utf8,<svg fill="%23333" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
+            background-size: 16px 16px;
+        }
+
         /* Make the container scrollable */
         body {
             overflow-y: scroll;
@@ -78,19 +88,18 @@
             <!-- Dropdown menu -->
             <div class="form-group">
                 <label for="documentTypeDropdown">Select Document Type</label>
-                <select class="form-control" id="documentTypeDropdown">
-                    <option>Dropdown</option>
-                    <option>Item 1</option>
-                    <option>Item 2</option>
-                    <option>Item 3</option>
+                <select class="form-control dropdown" id="documentTypeDropdown">
+                    <option>PDF</option>
+                    <option>DOCX</option>
+                    <option>JPG</option>
                 </select>
             </div>
 
-            <!-- File description -->
-            <input type="text" class="form-control mt-3" id="fileDescription" placeholder="Description of the file...">
+            <!-- File description (hidden initially) -->
+            <textarea class="form-control mt-3" id="fileDescription" placeholder="Description of the file..." style="display: none;"></textarea>
             
-            <!-- Preview button -->
-            <button type="button" class="btn btn-primary preview-button mt-3">Preview</button>
+            <!-- Preview button (hidden initially) -->
+            <button type="button" class="btn btn-primary preview-button mt-3" style="display: none;">Preview</button>
         </form>
         
         <!-- Status message -->
@@ -116,10 +125,19 @@
             selectedFiles.forEach(file => {
                 var fileItem = document.createElement('div');
                 fileItem.classList.add('file-details');
-                // Display file name, formatted size, and date of upload
-                fileItem.innerText = `${file.name} (${formatFileSize(file.size)}) - ${new Date().toLocaleDateString()}`;
+                // Display file name, formatted size, and date of upload in dd/mm/yy format
+                fileItem.innerText = `${file.name} (${formatFileSize(file.size)}) - ${formatDate(new Date())}`;
                 fileListContainer.appendChild(fileItem);
             });
+
+            // Show the description field and preview button if files are selected
+            if (selectedFiles.length > 0) {
+                document.getElementById('fileDescription').style.display = 'block';
+                document.querySelector('.preview-button').style.display = 'block';
+            } else {
+                document.getElementById('fileDescription').style.display = 'none';
+                document.querySelector('.preview-button').style.display = 'none';
+            }
         }
 
         // Function to format file size
@@ -136,6 +154,14 @@
 
             // Return size with two decimal places and unit
             return size.toFixed(2) + ' ' + units[unitIndex];
+        }
+
+        // Function to format date to dd/mm/yy
+        function formatDate(date) {
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+            const year = String(date.getFullYear()).substr(-2);
+            return `${day}/${month}/${year}`;
         }
 
         // Event listeners for drag and drop functionality
