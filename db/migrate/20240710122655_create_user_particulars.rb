@@ -24,8 +24,5 @@ class CreateUserParticulars < ActiveRecord::Migration[7.1]
       t.references :user, null: false, foreign_key: true
       t.timestamps
     end
-
-    # Add a unique index to unique_id column to enforce uniqueness
-    add_index :user_particulars, :unique_id, unique: true
   end
 end

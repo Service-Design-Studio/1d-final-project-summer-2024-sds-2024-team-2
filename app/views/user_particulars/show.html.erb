@@ -1,51 +1,63 @@
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profile Page</title>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <% if @user_particular.present? %>
-    <script>
-      $(document).ready(function() {
-        // When the modal is opened
-        $('#verificationWarningModal').on('shown.bs.modal', function () {
-        $('body').css('overflow', 'hidden'); // Prevent scrolling when modal is open
-        });
-        // When the modal is closed
-        $('#verificationWarningModal').on('hidden.bs.modal', function () {
-        $('body').css('overflow', 'hidden'); // Re-enable scrolling when modal is closed
-        });
-        $('#generate-2fa-btn').click(function(e) {
-          e.preventDefault();
-          console.log('HELLO');
-          $.ajax({
-            url: '<%= generate_2fa_path(@user_particular) %>',
-            type: 'POST',
-            dataType: 'json',
-            headers: {
-              'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(data) {
-              $('#two-fa-passcode').text(data.two_fa_passcode);
-            },
-            error: function(xhr, status, error) {
-              console.error('AJAX Error:', status, error);
-            }
-          });
-        });
-      });
-    </script>
+  <div class="container-fluid mt-4 d-flex justify-content-center">
+    <!-- Left Side (Digital ID, 2FA, Buttons) -->
+    <div class="col-3">
+      <!-- Digital ID Card Container -->
+      <div class="d-flex justify-content-between align-items-center">
+        <%= render 'digitalid' %>
+      </div>
+
+    
+<div style='font-size: 0.7em;'>
+  <!--Display messages at the top of the page-->
+  <%- if flash[:notice] %>
+    <div class="alert alert-info text-center"><%= flash[:notice] %></div>
+  <%- elsif flash[:success] %>
+    <div class="alert alert-success text-center"><%= flash[:success] %></div>
+  <%- elsif flash[:error_message].present? %>
+    <div class="alert alert-danger">
+      <ul><%= flash[:error_message] %></ul>
+      <% if flash[:error].present? %>
+        <ul>
+          <% flash[:error].each do |error| %>
+            <li><%= error %></li>
+          <% end %>
+        </ul>
+      <% end %>
+    </div>
   <% end %>
-</head>
-<%# Start of EnableID card partial and filling in/edit button%>
-<h1 class="text-center rounded mt-3">Your <strong style="color: #f1536a;">EnableID</strong></h1>
-<%= render 'digitalid' %>
-<div class="row justify-content-center align-items-center mt-2">
-  <button id="generate-2fa-btn" class="btn btn-info">Generate 2FA Passcode:</button>
-  <span id='two-fa-passcode' class='border lead px-3 py-1 h-100'><%= @user_particular&.two_fa_passcode || "2FA Passcode is not set up." %></span>
 </div>
-<div class="alert alert-info text-center my-1">
-  Make sure to fill in your particulars correctly before being verified by a NGO admin!
-</div>
+      <!-- 2FA Container -->
+        <div class="d-flex gap-2 my-2 w-100 justify-content-center align-items-center">
+          <button id="generate-2fa-btn" class="py-2 px-2 text-nowrap generate-2fa-button" style="font-size:0.8em;">Generate 2FA Passcode:</button>
+          <span id='two-fa-passcode' class='py-2 text-nowrap two-fa-passcode-input text-center' style="font-size:0.8em;"><%= @user_particular&.two_fa_passcode || "2FA unavailable" %></span>
+        </div>
+        <!-- Buttons Container, put under sub main container -->
+        <div class="pri-container py-3 px-2 d-flex w-100 flex-column flex-wrap">
+          <div class="row mb-2 d-flex justify-content-center gap-2">
+            <%= link_to user_document_path(@user), class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
+              <i class="fas fa-file-alt"></i> Documents
+            <% end %>
+            <%= link_to user_history_path(@user), class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
+              <i class="fas fa-history"></i> Activity History
+            <% end %>
+          </div>
+          <div class="row d-flex justify-content-center gap-2">
+            <%= link_to user_particulars_family_path, class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
+              <i class="fas fa-save"></i> Saved Post
+            <% end %>
+            <%= link_to user_particulars_family_path, class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
+              <i class="fas fa-search"></i> Search NGOs
+            <% end %>
+          </div>
+        </div>
+
+    </div>
+    <!-- Right Side (Bulletin Board) -->
+    <div class="col-8 mx-0 d-flex justify-content-center">
+      <%= render 'bulletin' %>
+    </div>
+  </div>
+  <!--
 <div class='row justify-content-center'>
   <% if @user_particular.nil? %>
     <%= link_to "Fill in your particulars to get your Digital ID!", new_user_particular_path, class: "btn btn-danger", id: "fill-in-particulars-btn" %>
@@ -60,25 +72,52 @@
   <% end %>
 </div>
 <%# End of EnableID card partial and filling in/edit button%>
-<!-- Modal -->
-<div class="modal fade" id="verificationWarningModal" tabindex="-1" role="dialog" aria-labelledby="verificationWarningModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="verificationWarningModalLabel">Caution!</h5>
-        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        If you continue, you will lose your verification status and will need to be verified again by an NGO admin. Do you want to proceed?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <% if @user_particular.present? %>
-          <%= link_to "Proceed", edit_user_particular_path(@user_particular), class: "btn btn-danger" %>
-        <% end %>
+-->
+  <!-- Modal -->
+  <div class="modal fade" id="verificationWarningModal" tabindex="-1" role="dialog" aria-labelledby="verificationWarningModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="verificationWarningModalLabel">Caution!</h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          If you continue, you will lose your verification status and will need to be verified again by an NGO admin. Do you want to proceed?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <% if @user_particular.present? %>
+            <%= link_to "Proceed", edit_user_particular_path(@user_particular), class: "btn btn-danger" %>
+          <% end %>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
+<% if @user_particular.present? %>
+  <script>
+    $(document).ready(function() {
+      $('#generate-2fa-btn').click(function(e) {
+        e.preventDefault();
+        console.log('HELLO');
+        $.ajax({
+          url: '<%= generate_2fa_path(@user_particular) %>',
+          type: 'POST',
+          dataType: 'json',
+          headers: {
+            'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+          },
+          success: function(data) {
+            $('#two-fa-passcode').text(data.two_fa_passcode);
+          },
+          error: function(xhr, status, error) {
+            console.error('AJAX Error:', status, error);
+          }
+        });
+      });
+    });
+  </script>
+<% end %>

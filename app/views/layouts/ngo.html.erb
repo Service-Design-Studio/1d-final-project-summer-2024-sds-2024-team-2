@@ -13,47 +13,29 @@
         crossorigin="anonymous"
     />
 </head> 
-<body class="d-flex flex-column min-vh-100" style="overflow-x: hidden;"> 
-    <div class="container-fluid" style="background-color: #f1536a; color: white;">
+<body class="ngo-page d-flex flex-column min-vh-100" style="overflow-x: hidden;"> 
+    <div class="container-fluid justify-content-center p-0" style="background-color: #0eac95; color: white;">
       <div class="row align-items-center py-2">
         <div class="col-auto">
           <%= button_to "Back", @back_path, class: "btn btn-light text-nowrap", method: :get %>
         </div>
         <div class="col d-flex justify-content-center">
-          <!--<h4 class="m-0 text-nowrap" style="background-color: #f1536a; color: white; margin-bottom:0;"><%= @ngo_user&.name || "NGO" %></h4>-->
+          <!--<h4 class="m-0 text-nowrap" style="background-color: #0eac95; color: white; margin-bottom:0;"><%= @ngo_user&.name || "NGO" %></h4>-->
           <% if controller_name == 'ngo_users' && action_name == 'verify' %>
-              <h4 class="m-0 text-nowrap" style="background-color: #f1536a; color: white; margin-bottom:0;"><%= @ngo_user&.name %> - EnableID Verification</h4>
+              <h4 class="m-0 text-nowrap" style="background-color: #0eac95; color: white; margin-bottom:0;"><%= @ngo_user&.name %> - EnableID Verification</h4>
           <% else %>
-              <h4 class="m-0 text-nowrap" style="background-color: #f1536a; color: white; margin-bottom:0;"><%= @ngo_user&.name || "NGO" %></h4>
+              <h4 class="m-0 text-nowrap" style="background-color: #0eac95; color: white; margin-bottom:0;"><%= @ngo_user&.name || "NGO" %></h4>
           <% end %>
         </div>
         <div class="col-auto"></div> <!-- Empty column to balance the layout -->
       </div>
     </div>
-  
-      <!--Display messages at the top of the page-->
-      <%- if flash[:notice]%>
-      <div class="alert alert-info text-center"><%=flash[:notice]%></div>
-      <%- elsif flash[:success]%>
-      <div class="alert alert-success text-center"><%=flash[:success]%></div>
-      <%- elsif flash[:error_message].present? %>
-        <div class="alert alert-danger">
-          <ul><%= flash[:error_message] %></ul>
-          <% if flash[:error].present? %>
-            <ul>
-              <% flash[:error].each do |error| %>
-                <li><%= error %></li>
-              <% end %>
-            </ul>
-          <% end %>
-        </div>
-      <% end %>
 
       <%= yield %>
 
-    <footer class="footer mt-auto bg-dark text-white-50 pt-2 pb-3", style="max-height:70px;">
-        <div class="container text-center">
-        <small>&copy;  EnableID 2024</small>
+    <footer class="footer mt-auto bg-dark text-white-50 p-2", style="max-height:70px; font-size: 0.7em;">
+        <div class="container p-0 text-center">
+        <small>&copy; EnableID 2024</small>
         <br>
         <a href="#" class="text-white">Contact us</a> | 
         <a href="#" class="text-white">Share feedback</a> | 

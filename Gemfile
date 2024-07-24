@@ -13,8 +13,8 @@ gem 'rails', '~> 7.1.3', '>= 7.1.3.4'
 gem 'erb_lint', require: false
 gem 'sqlite3', '~> 1.4'
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
+gem 'faker'
 gem 'sprockets-rails'
-
 # Use the Puma web server [https://github.com/puma/puma]
 gem 'puma', '>= 5.0'
 
@@ -71,6 +71,7 @@ group :test do
   gem 'cucumber-rails', require: false
   gem 'database_cleaner'
   gem 'factory_bot_rails'
+  gem 'rails-controller-testing'
   gem 'selenium-webdriver'
   gem 'simplecov'
 end
@@ -78,4 +79,5 @@ end
 group :production do
   gem 'appengine', '~> 0.6'
   gem 'pg', '~> 1.5.6' # for gcloud deployment
+  gem 'google-cloud-storage', '~> 1.44' # for gcloud storage
 end

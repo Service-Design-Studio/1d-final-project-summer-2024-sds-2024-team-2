@@ -19,8 +19,8 @@ After { Warden.test_reset! } # devise inherits from warden, putting this here en
 
 require 'cucumber/rails'
 Capybara.default_driver = :selenium_chrome
-Capybara.server_port = 3000
-Capybara.app_host = 'http://127.0.0.1:3000'
+Capybara.server_port = 3001
+Capybara.app_host = 'http://127.0.0.1:3001'
 # By default, any exception happening in your Rails application will bubble up
 # to Cucumber so that your scenario will fail. This is a different from how
 # your application behaves in the production environment, where an error page will
@@ -46,21 +46,6 @@ rescue NameError
   raise 'You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it.'
 end
 
-Before('@requires_login_new') do
-  step 'I am on the "Login" page'
-  $user = User.create(username: 'example1234', email: 'example123@example.com', password: 'password',
-                      password_confirmation: 'password', phone_number: '123456789')
-  # Debugging: Check if user was successfully created
-  raise "User creation failed: #{$user.errors.full_messages.join(', ')}" unless $user.persisted?
-  fill_in 'Log in EnableID', with: $user.username
-  fill_in 'Password', with: $user.password
-  # Set this before running your tests
-  login_as($user, scope: :user)
-  visit root_path
-  expected_path = '/'
-  raise "Expected to be on #{expected_path}, but was on #{current_path}" unless current_path == expected_path
-  step 'I should see "Welcome, "'
-end
 # You may also want to configure DatabaseCleaner to use different strategies for certain features and scenarios.
 # See the DatabaseCleaner documentation for details. Example:
 #

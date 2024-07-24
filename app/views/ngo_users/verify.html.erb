@@ -1,15 +1,59 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<div class="container px-5">
-  <!--<h2 class="mb-4 mt-4">EnableID Verification</h2> --> <!--previous header -->
- <!-- Added margin-bottom and margin-top for spacing -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.10/dist/vue.js"></script>
+
+<style>
+  #app {
+    height: 500px; /* Adjust this value based on your needs */
+    overflow-y: scroll;
+  }
+</style>
+
+<div class="container">
   <h1 class="text-center rounded mt-3">Your <strong style="color: #f1536a;">EnableID</strong></h1>
   <% if @user_particular.present? %>
-    <div class="mt-4"> <!-- Add a margin top to create space -->
-      <%= render partial: "user_particulars/digitalid", locals: { user_particular: @user_particular } %>
+    <div class="row mt-4">
+      <div class="col-md-8">
+        <%= render partial: "user_particulars/digitalid", locals: { user_particular: @user_particular } %>
+        <div id="app" v-scroll="onScroll">
+           <div class="card_2" v-for="(card, index) in styledCards" :style="card.style" :key="index">
+            <div class="card_content_2">
+              <h3>{{card.title}}</h3>
+              <p>{{card.description}}</p>
+            </div>
+           </div>
+        </div>
+      </div>
+      
+    <div class="col-md-4"> <!-- Add a margin top to create space -->
+      
       <%= form_with url: confirm_verify_ngo_user_path(@ngo_user), method: :post, local: true, id: "verify" do %>
         <input type="hidden" name="unique_id" value="<%= @user_particular.unique_id %>">
-        <%= submit_tag "Verify", class: "btn btn-success mt-3", id: "#ngo-verify-btn" %>
+        <h4>Please ensure that all these information is present before verifying:</h4>
+        <div class="inputGroup">
+          <input id="option1" name="option1" type="checkbox"/>
+          <label for="option1">Full name</label>
+        </div> 
+        <div class="inputGroup">
+          <input id="option2" name="option2" type="checkbox"/>
+          <label for="option2">Country of Origin</label>
+        </div>
+        <div class="inputGroup">
+          <input id="option3" name="option3" type="checkbox"/>
+          <label for="option3">Date of Birth</label>
+        </div>
+        <div class="inputGroup">
+          <input id="option4" name="option4" type="checkbox"/>
+          <label for="option4">Date of Arrival</label>
+        </div>
+        <div class="inputGroup">
+          <input id="option5" name="option5" type="checkbox"/>
+          <label for="option5">Phone Number</label>
+        </div>
+
+
+        <%= submit_tag "Verify", class: "btn btn-success mt-3", id: "verify-btn", disabled: true%>
+        <%= button_tag "Keep in View", type: 'button', class: "btn btn-primary mt-3", id: "keep-in-view-btn" %>
       <% end %>
     </div>
   <% end %>
@@ -19,4 +63,123 @@
   document.addEventListener('DOMContentLoaded', function() {
     document.title = 'Gebirah - EnableID Verification';
   });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const checkboxes = document.querySelectorAll('.inputGroup input[type="checkbox"]');
+    const verifyButton = document.getElementById('verify-btn');
+    let allCheckboxesChecked = false; // Flag to track the state of checkboxes
+
+    function updateVerifyButtonState() {
+      allCheckboxesChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+      verifyButton.disabled = !allCheckboxesChecked;
+    }
+
+    checkboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', updateVerifyButtonState);
+    });
+
+    verifyButton.addEventListener('click', function(event) {
+      if (!allCheckboxesChecked) { // Use the flag to determine if the alert should be shown
+        event.preventDefault();
+        alert('Please complete the checklist before verifying.');
+      }
+    });
+
+    updateVerifyButtonState(); // Initial check to ensure correct button state on page load
+  });
+</script>
+
+
+<script>
+const cardsData = [
+   {
+    title: 'Title 1',
+    description: 'Tempora quam ducimus dolor animi magni culpa neque sit distinctio ipsa quos voluptates accusantium possimus earum rerum iure',
+  },
+  {
+    title: 'Title 2',
+    description: 'Tempora quam ducimus dolor animi magni culpa neque sit distinctio ipsa quos voluptates accusantium possimus earum rerum iure',
+  },
+  {
+    title: 'Title 3',
+    description: 'Tempora quam ducimus dolor animi magni culpa neque sit distinctio ipsa quos voluptates accusantium possimus earum rerum iure',
+  },
+  // Add more titles below
+  {
+    title: 'Title 4',
+    description: 'Description for Title 4',
+  },
+  {
+    title: 'Title 5',
+    description: 'Description for Title 5',
+  }
+  // You can continue adding more titles and descriptions in the same format
+  
+];
+
+Vue.directive('scroll', {
+  inserted: function (el, binding) {
+    let f = function (evt) {
+      if (binding.value(evt, el)) {
+        window.removeEventListener('scroll', f)
+      }
+    }
+    window.addEventListener('scroll', f)
+  }
+})
+
+new Vue({
+  el: '#app',
+  data: {
+    cards: cardsData,
+    scrollPosition: 0
+  },
+ 
+  computed: {
+    styledCards () {
+      return this.cards.map(this.calculateCardStyle)
+    }
+  },
+  methods: {
+    onScroll () {
+      this.scrollPosition = window.scrollY
+    },
+    calculateCardStyle (card, index) {
+      const cardHeight = 160 // height + padding + margin
+      
+      const positionY = index * cardHeight
+      const deltaY = positionY - this.scrollPosition
+
+      // constrain deltaY between -160 and 0
+      const dY = this.clamp(deltaY, -cardHeight, 0)
+
+      const dissapearingValue = (dY / cardHeight) + 1
+      const zValue = dY / cardHeight * 50
+      const yValue = dY / cardHeight * -20
+
+      card.style = {
+        opacity: dissapearingValue,
+        transform: `perspective(200px) translate3d(0,${yValue}px, ${zValue}px)`
+      }
+      return card
+    },
+
+     
+    created() {
+      window.addEventListener('scroll', this.onScroll);
+    },
+    destroyed() {
+      window.removeEventListener('scroll', this.onScroll);
+    },
+
+
+
+
+    clamp (value, min, max) {
+      return Math.min(Math.max(min, value), max)
+    }
+  }
+})
 </script>

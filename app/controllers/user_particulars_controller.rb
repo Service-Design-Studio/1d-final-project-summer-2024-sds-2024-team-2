@@ -2,21 +2,40 @@ class UserParticularsController < ApplicationController
   include UserParticularsHelper
   before_action :authenticate_user!
   before_action :set_user_particular, only: %i[show edit]
+  before_action :set_ngo_users
 
-  def show; end
+  def show
+    @bulletins = Bulletin.all.order(updated_at: :desc)
+
+    if @user_particular
+      if @user_particular.profile_picture.attached?
+        logger.debug "\n\n\n\n\Profile picture is attached.\n\n\n\n\n"
+      else
+        logger.debug "\n\n\n\nNo profile picture attached.\n\n\n\n\n"
+      end
+    end
+
+  end
   # No need for content when using @user_particular from before_action
 
-  def page2; end
+  def document; end
   # No need for content when using @user_particular from before_action
 
   def create
     error_messages_arr = validate_user_particulars(UserParticular.new(user_particular_params))
     flash[:error] = error_messages_arr
 
+    # Check if validation passes
     if error_messages_arr.empty?
+      logger.debug "\n\n\n\nprofile_picture #{params[:user_particular][:profile_picture].inspect}\n\n\n\n\n\n"
       @user_particular = UserParticular.create_user_particular(user_particular_params)
+
       # Check if user particular creation was successful
       if @user_particular.persisted?
+        @user_particular.assign_unique_id
+        @user_particular.reload
+        @user_particular.profile_picture.attach(params[:user_particular][:profile_picture])
+
         flash[:success] = 'Digital ID was successfully created!'
         redirect_to @user_particular # redirects to /user_particulars/:id
       else
@@ -33,13 +52,13 @@ class UserParticularsController < ApplicationController
 
   def new
     # Fills up form with previously entered data
-    @user_particular = UserParticular.new(session.fetch(:user_particular_params, {}))
+    @user_particular = UserParticular.new(session.fetch(session[:user_particular_params], {}))
     set_dropdown_options
   end
 
   def confirm
     session[:user_particular_params] = user_particular_params # Use the session to store the model
-    @user_particular = UserParticular.new(session[:user_particular_params]) # The Model object to store the hidden keyed params
+    @user_particular = UserParticular.new(user_particular_params) # The Model object to store the hidden keyed params
     error_messages_arr = validate_user_particulars(@user_particular)
     flash[:error] = error_messages_arr
 
@@ -55,21 +74,42 @@ class UserParticularsController < ApplicationController
 
   def edit
     set_dropdown_options
+
+    if params[:user_particular]
+      @user_particular = UserParticular.new(user_particular_params)
+      @user_particular.id = params[:id] # Required for error flow
+    else
+      @user_particular = UserParticular.find(params[:id])
+    end
   end
 
   def update
-    @user_particular = UserParticular.update_user_particular(params[:id], user_particular_params)
+    error_messages_arr = validate_user_particulars(UserParticular.new(user_particular_params))
+    flash[:error] = error_messages_arr
 
-    # Check if edit was successful
-    if @user_particular.persisted?
-      flash[:success] = 'Digital ID was successfully edited!'
-      UserParticular.reset_verification(params[:id]) # Set status to pending and reset verifier_ngo
-      @user_particular = UserParticular.find_by_id(params[:id]) # Retrieve user particular
-      redirect_to @user_particular # redirects to /user_particulars/:id
+    # Check if validation passes
+    if error_messages_arr.empty?
+      logger.debug "OVER HERE! UPDATE! #{user_particular_params}"
+      @user_particular = UserParticular.update_user_particular(params[:id], user_particular_params)
+
+      # Check if edit was successful
+      if @user_particular
+        flash[:success] = 'Digital ID was successfully edited!'
+        UserParticular.reset_verification(params[:id]) # Set status to pending and reset verifier_ngo
+        redirect_to @user_particular # redirects to /user_particulars/:id
+      else
+        flash[:error_message] = 'Edit failed. Please fix the error(s) below:'
+        redirect_to edit_user_particular_path(params[:id], user_particular: user_particular_params)
+      end
     else
-      flash[:error_message] = 'Edit failed. Please try again.'
-      redirect_to user_particulars_confirm_path(user_particular: user_particular_params) # pass user_particular_params into params of confirm action
+      # Failed validation
+      flash[:error_message] = 'Edit failed. Please fix the error(s) below:'
+      redirect_to edit_user_particular_path(params[:id], user_particular: user_particular_params)
     end
+  end
+
+  def history
+    @user_history = UserHistory.where(user_id: params[:id]).order(updated_at: :desc)
   end
 
   # Retrieves user particular object linked to user object
@@ -80,8 +120,20 @@ class UserParticularsController < ApplicationController
   def user_particular_params
     params.require(:user_particular).permit(:full_name, :phone_number, :secondary_phone_number, :country_of_origin,
                                             :ethnicity, :religion, :gender, :date_of_birth, :date_of_arrival,
-                                            :photo_url, :birth_certificate_url, :passport_url, :user_id, :phone_number_country_code,
-                                            :secondary_phone_number_country_code, :full_phone_number, :full_secondary_phone_number)
+                                            :photo_url, :birth_certificate_url, :passport_url, :user_id,
+                                            :phone_number_country_code, :secondary_phone_number_country_code,
+                                            :full_phone_number, :full_secondary_phone_number, :profile_picture).tap do |whitelisted|
+      # Check if ethnicity, religion, or gender is "Others" and replace with values from others hash if present
+      if whitelisted[:ethnicity] == 'Others' && params[:others].present?
+        whitelisted[:ethnicity] =
+          params[:others][:ethnicity]
+      end
+      if whitelisted[:religion] == 'Others' && params[:others].present?
+        whitelisted[:religion] =
+          params[:others][:religion]
+      end
+      whitelisted[:gender] = params[:others][:gender] if whitelisted[:gender] == 'Others' && params[:others].present?
+    end
   end
 
   def set_dropdown_options
@@ -116,7 +168,16 @@ class UserParticularsController < ApplicationController
 
     if user_particular[:secondary_phone_number] =~ /[^0-9-]/
       error_messages_arr << 'Secondary phone number can only contain numbers and hyphens.'
+    end
 
+    if user_particular[:secondary_phone_number_country_code].present? || user_particular[:secondary_phone_number].present?
+      if user_particular[:secondary_phone_number_country_code].blank?
+        error_messages_arr << 'Secondary country code must exist if secondary phone number exists.'
+      end
+
+      if user_particular[:secondary_phone_number].blank?
+        error_messages_arr << 'Secondary phone number must exist if secondary country code exists.'
+      end
     end
 
     # Check if selected option is in dropdown options
@@ -148,12 +209,14 @@ class UserParticularsController < ApplicationController
     error_messages_arr
   end
 
+  def family
+    @user_particular = current_user.user_particular
+  end
+
   private
 
-  def skip_authentication?
-    # You can set an environment variable in your test setup
-    # and check it here to decide whether to skip authentication.
-    # Make sure this is only used in a test or development environment.
-    Rails.env.test? && ENV['SKIP_AUTHENTICATE_USER'].present?
+  def set_ngo_users
+    @ngo_users = NgoUser.all
+    @user = current_user
   end
 end

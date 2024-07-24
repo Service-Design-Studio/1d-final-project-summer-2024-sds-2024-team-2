@@ -6,6 +6,7 @@
   <title>EnableID Verification</title>
   <!-- Bootstrap CSS -->
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <%= stylesheet_link_tag 'homebuttons', media: 'all', 'data-turbolinks-track': 'reload' %>
   <!-- Font Awesome CSS -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
   <style>
@@ -16,14 +17,14 @@
     body {
       display: flex;
       flex-direction: column;
-      background: url('<%= asset_path('fingerprint.svg') %>') no-repeat center center;
+      background: url('<%= asset_path('NGOfingerprint.svg') %>') no-repeat center center;
       background-size: cover;
     }
     .content {
       flex: 1;
       display: flex;
-      justify-content: center;
-      align-items: center;
+      justify-content: flex-start;
+      align-items: flex-start;
       position: relative;
     }
     .overlay {
@@ -34,87 +35,148 @@
       height: 100%;
       background: rgba(255, 255, 255, 0.9);
     }
-    .content-inner {
-      position: relative;
-      z-index: 1;
-    }
-    .info-box {
-      background: rgba(255, 255, 255, 0.8);
-      padding: 20px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .info-box h5 {
-      color: #f1536a;
-      margin-bottom: 15px;
-    }
   </style>
 </head>
-<body>
+<body class="ngo-page"> 
   <!-- Main Content -->
   <div class="content">
     <div class="overlay"></div>
-    <div class="content-inner container px-5 py-3">
-      <div class="row align-items-center">
-        <div class="col-md-4 text-center mb-3 mb-md-0">
-          <%= image_tag @ngo_user.image_url, alt: "#{@ngo_user.name} image", class: "img-fluid", style:"max-width: 250px; height: auto; object-fit: contain;" %>
-        </div>
-        <div class="col-md-8">
-          <div class="rounded" style="border: 1px solid #ccc; padding: 20px; border-radius: 20px; background-color: white;">
-            <h4 class="text-center" style="color: #f1536a;">EnableID Verification</h4>
-            <p class="text-center" style="color: #808080;">Please enter details of individual you would like to verify</p>
-            <%= form_with url: check_user_ngo_user_path(@ngo_user), method: :post, local: true do %>
-              <div class="mb-3">
-                <%= label_tag :unique_id, "Unique ID" %>
-                <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="right" title="Enter Unique ID of user found on their EnableID card"></i>
-                <%= text_field_tag :unique_id, params[:unique_id], class: "form-control" %>
+        <div class="row mt-2 justify-content-center">
+          <div class="col-3">
+              <div class="text-center mb-3" style="max-height: 200px;">
+                <%= image_tag @ngo_user.image_url, alt: "#{@ngo_user.name} image", class: "img-fluid", style: "max-width: 100%; max-height: 180px; height: auto; object-fit: contain;" %>              
               </div>
-              <div class="mb-3">
-                <%= label_tag :two_fa_passcode, "2FA Code" %>
-                <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="right" title="Enter 2FA code generated on EnableID user's account"></i>
-                <%= text_field_tag :two_fa_passcode, params[:two_fa_passcode], class: "form-control" %>
+              <div style='font-size: 0.7em;'>
+  <!--Display messages at the top of the page-->
+  <%- if flash[:notice] %>
+    <div class="alert alert-info text-center"><%= flash[:notice] %></div>
+  <%- elsif flash[:success] %>
+    <div class="alert alert-success text-center"><%= flash[:success] %></div>
+  <%- elsif flash[:error_message].present? %>
+    <div class="alert alert-danger">
+      <ul><%= flash[:error_message] %></ul>
+      <% if flash[:error].present? %>
+        <ul>
+          <% flash[:error].each do |error| %>
+            <li><%= error %></li>
+          <% end %>
+        </ul>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+              <div class="pri-container py-3 px-2 d-flex w-100 flex-column flex-wrap">
+                <div class="row mb-2 d-flex justify-content-center gap-2">
+                  <%= link_to '#', class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;', data: { toggle: "modal", target: "#checkUserModal" } do %>
+                    <i class="fas fa-user ml-2"></i> Verify User
+                  <% end %>
+                  <%= link_to ngo_user_path, class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
+                    <i class="fas fa-inbox ml-2"></i> Inbox
+                  <% end %>
+                </div>
+                <div class="row d-flex justify-content-center gap-2">
+                  <%= link_to ngo_user_path, class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
+                    <i class="fas fa-history ml-2"></i> Interaction History
+                  <% end %>
+                  <%= link_to ngo_user_path, class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
+                    <i class="fas fa-calendar ml-2"></i> Events
+                  <% end %>
+                </div>
               </div>
-              <div class="text-right">
-                <%= submit_tag "Check", class: "btn btn-success" %>
-                <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="right" title="Brings you to EnableID card page for verification"></i>
-              </div>
-            <% end %>
-            <%- if flash[:notice]%>
-              <div class="alert alert-info text-center"><%=flash[:notice]%></div>
-            <%- elsif flash[:alert]%>
-              <div class="alert alert-warning text-center"><%=flash[:alert]%></div>
-            <% end %>
+          </div>
+          
+          <!-- Right Side (Bulletin Board) -->
+          <div class="col-8 mx-0 d-flex justify-content-center">
+            <%= render 'user_particulars/bulletin' %>
           </div>
         </div>
-      </div>
-
-      <!-- Section with Three Boxes -->
-      <div class="row mt-5">
-        <div class="col-md-4">
-          <div class="info-box">
-            <h5>Today's Appointments</h5>
-            <!-- Content for Today's Appointments -->
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="info-box">
-            <h5>Upcoming Appointments</h5>
-            <!-- Content for Upcoming Appointments -->
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="info-box">
-            <h5>List of Verified Users</h5>
-            <!-- Content for List of Users Verified -->
-          </div>
-        </div>
-      </div>
-      
     </div>
   </div>
 
+  <!-- Check User Modal -->
+  <div class="modal fade" id="checkUserModal" tabindex="-1" role="dialog" aria-labelledby="checkUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="checkUserModalLabel" style="color: #f1536a;">EnableID Verification</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="text-center" style="color: #808080;">Please enter details of individual you would like to verify</p>
+          <%= form_with url: check_user_ngo_user_path(@ngo_user), method: :post, local: true do %>
+            <div class="mb-3">
+              <%= label_tag :unique_id, "Unique ID" %>
+              <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="right" title="Enter Unique ID of user found on their EnableID card"></i>
+              <%= text_field_tag :unique_id, params[:unique_id], class: "form-control" %>
+            </div>
+            <div class="mb-3">
+              <%= label_tag :two_fa_passcode, "2FA Code" %>
+              <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="right" title="Enter 2FA code generated on EnableID user's account"></i>
+              <%= text_field_tag :two_fa_passcode, params[:two_fa_passcode], class: "form-control" %>
+            </div>
+            <div class="text-right">
+              <%= submit_tag "Check", class: "btn btn-success" %>
+              <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="right" title="Brings you to EnableID card page for verification"></i>
+            </div>
+          <% end %>
+          <%- if flash[:notice]%>
+            <div class="alert alert-info text-center"><%=flash[:notice]%></div>
+          <%- elsif flash[:alert]%>
+            <div class="alert alert-warning text-center"><%=flash[:alert]%></div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add bulletin Modal -->
+<div class="modal fade" id="addBulletinModal" tabindex="-1" role="dialog" aria-labelledby="addBulletinModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addBulletinModalLabel">New Bulletin Post</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <%= form_for :bulletin, url: bulletins_path, method: :post do |f| %>
+          <%= f.hidden_field :user_id, value: @ngo_user.id %>
+          <div class="form-group">
+            <%= f.label :title %>
+            <%= f.text_field :title, class: 'form-control' %>
+          </div>
+          <div class="form-group">
+            <%= f.label :description %>
+            <%= f.text_area :description, class: 'form-control' %>
+          </div>
+          <div class="form-group">
+            <%= f.label :date %>
+            <%= f.date_field :date, class: 'form-control' %>
+          </div>
+          <div class="form-group">
+            <%= f.label :location %>
+            <%= f.text_field :location, class: 'form-control' %>
+          </div>
+          <div class="form-group">
+            <%= f.hidden_field :ngo_name, value: @ngo_user.name %>
+          </div>
+          <div class="d-flex justify-content-center gap-2">
+            <%= link_to '#', class: 'btn btn-secondary', data: { dismiss: 'modal' } do %>
+              Cancel
+            <% end %>
+            <%= f.submit "Add Post", class: 'btn btn-primary' %>
+          </div>
+          
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- End of check user modal -->
 
   <!-- jQuery and Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
