@@ -1,3 +1,4 @@
+gcs.keyfile
 *.rbc
 capybara-*.html
 .rspec
