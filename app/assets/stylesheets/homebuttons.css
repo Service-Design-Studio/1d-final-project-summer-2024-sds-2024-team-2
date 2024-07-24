@@ -1,8 +1,10 @@
 .buttonhome-container {
     display: flex;
-    flex-wrap: wrap;
     gap: 10px; /* Adjust the spacing between buttons */
-    background-color: #fdc6cf
+    background-color: #fdc6cf;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
   }
   
   .customhome-button {
@@ -36,7 +38,6 @@
     justify-content: start;
     gap: 20px; /* Space between button and input field */
     margin: 20px; /* Adjust spacing around the elements */
-
   }
   
   .generate-2fa-button {
@@ -70,6 +71,5 @@
   .digital-card {
     width:500px; /* Adjust the width as needed */
     height: auto; /* Adjust the height as needed */
-    background-color: transparent;
     outline: none; /* Remove outline */
   }
