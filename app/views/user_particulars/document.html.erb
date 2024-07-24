@@ -376,7 +376,7 @@
                     <td>${formatDate(new Date())}</td>
                     <td class="status-unverified">Unverified</td>
                     <td class="action-buttons">
-                        <button class="btn btn-primary btn-sm" onclick="previewDocument(this, '${URL.createObjectURL(file)}')">Preview</button>
+                        <button class="btn btn-primary btn-sm" onclick="previewDocument('${URL.createObjectURL(file)}')">Preview</button>
                         <button class="btn btn-danger btn-sm" onclick="deleteDocument(this)">Delete</button>
                     </td>
                 `;
@@ -397,29 +397,9 @@
             row.remove();
         }
 
-        // Function to preview a document
-        function previewDocument(button, fileUrl) {
-            var filePreviewContainer = document.getElementById('filePreview');
-            filePreviewContainer.innerHTML = ''; // Clear previous previews
-
-            var fileType = fileUrl.split('.').pop().toLowerCase();
-            if (fileType === 'pdf') {
-                var embed = document.createElement('embed');
-                embed.src = fileUrl;
-                embed.width = '100%';
-                embed.height = '500px';
-                filePreviewContainer.appendChild(embed);
-            } else if (fileType === 'jpg' || fileType === 'jpeg' || fileType === 'png') {
-                var img = document.createElement('img');
-                img.src = fileUrl;
-                filePreviewContainer.appendChild(img);
-            } else if (fileType === 'docx') {
-                var iframe = document.createElement('iframe');
-                iframe.src = `https://view.officeapps.live.com/op/embed.aspx?src=${fileUrl}`;
-                iframe.width = '100%';
-                iframe.height = '500px';
-                filePreviewContainer.appendChild(iframe);
-            }
+        // Function to preview a document in a new tab
+        function previewDocument(fileUrl) {
+            window.open(fileUrl, '_blank');
         }
     </script>
 </body>
