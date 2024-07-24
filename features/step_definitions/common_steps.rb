@@ -2,6 +2,10 @@ Then(/^I should see "([^"]*)"$/) do |name|
   expect(page).to have_content("#{name}", wait: 2) # Wait for up to 2 seconds
 end
 
+Then(/^I should stay on the "([^"]*)" page$/) do |page_name|
+  expect(current_path).to eq( path_to(page_name))
+end
+
 Then(/^I should be redirected to the "([^"]*)" page$/) do |page_name|
   expect(current_path).to eq(path_to(page_name))
 end
@@ -74,6 +78,8 @@ def path_to(page_name)
     user_verification_path
   when 'fill in particulars'
     new_user_particular_path
+  when 'registration'
+    new_user_registration_path
   else
     raise "Undefined page: #{page_name}"
   end
