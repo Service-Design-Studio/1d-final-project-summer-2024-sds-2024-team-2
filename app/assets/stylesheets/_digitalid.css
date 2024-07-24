@@ -2,7 +2,8 @@
   border-radius: 15px;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 500px;
+  width: 100%;
+  min-width: 500px;
   background: linear-gradient(
     to right,
     #ff8989,
@@ -111,7 +112,6 @@
 }
 
 .qr-code img {
-<<<<<<< Updated upstream
     width: 10px;
     height: 10px;
   
@@ -144,8 +144,3 @@
     align-items: center;
     background-color: rgba(0, 0, 0, 0.507); /* Optional: Adds a see-through effect */
   }
-=======
-  width: 10px;
-  height: 10px;
-}
->>>>>>> Stashed changes

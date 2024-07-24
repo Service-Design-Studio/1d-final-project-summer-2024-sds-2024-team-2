@@ -1,6 +1,5 @@
 <head>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <%= stylesheet_link_tag '_digitalid', media: 'all', 'data-turbolinks-track': 'reload' %>
   <% if @user_particular.present? %>
     <script>
       $(document).ready(function() {
@@ -35,27 +34,18 @@
   <% end %>
 </head>
 <body>
-  <div class="container d-flex justify-content-center">
+  <div class="container d-flex justify-content-center p-0">
     <div class="card-1">
       <div class="card-1-header">
         EnableID Digital Card
         <% if @user_particular.nil? %>
           <%= link_to new_user_particular_path(@user_particular), class: "edit-link-right-align edit-icon-link" do %>
           <% end %>
-<<<<<<< Updated upstream
               <% else %>
                   <%= link_to edit_user_particular_path(@user_particular), class: "edit-link-right-align edit-icon-link" do %>
                     <i class="fas fa-edit"></i>
                   <% end %>
                   <% end %>
-=======
-        <% else %>
-          <%= link_to edit_user_particular_path(@user_particular), class: "edit-link-right-align edit-icon-link" do %>
-            <i class="fas fa-edit"></i>
-          <% end %>
-        <% end %>
-        
->>>>>>> Stashed changes
       </div>
 
 

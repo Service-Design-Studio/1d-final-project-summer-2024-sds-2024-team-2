@@ -1,69 +1,17 @@
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profile Page</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <%= stylesheet_link_tag 'homebuttons', media: 'all', 'data-turbolinks-track': 'reload' %>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <% if @user_particular.present? %>
-    <script>
-      $(document).ready(function() {
-        // When the modal is opened
-        $('#verificationWarningModal').on('shown.bs.modal', function () {
-        $('body').css('overflow', 'hidden'); // Prevent scrolling when modal is open
-        });
-        // When the modal is closed
-        $('#verificationWarningModal').on('hidden.bs.modal', function () {
-        $('body').css('overflow', 'hidden'); // Re-enable scrolling when modal is closed
-        });
-        $('#generate-2fa-btn').click(function(e) {
-          e.preventDefault();
-          console.log('HELLO');
-          $.ajax({
-            url: '<%= generate_2fa_path(@user_particular) %>',
-            type: 'POST',
-            dataType: 'json',
-            headers: {
-              'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(data) {
-              $('#two-fa-passcode').text(data.two_fa_passcode);
-            },
-            error: function(xhr, status, error) {
-              console.error('AJAX Error:', status, error);
-            }
-          });
-        });
-      });
-    </script>
-  <% end %>
-</head>
-<body class="container">
-  <div class="row">
+  <div class="row d-flex justify-content-center">
     <!-- Left Side (Digital ID, 2FA, Buttons) -->
-<<<<<<< Updated upstream
-<div class="col-md-4 mb-4 mb-md-0">
+  <div class="py-2 col-md-4 mb-4 mb-md-0">
 
-  <!-- Digital ID Card Container -->
-  <div class="mb-3 d-flex justify-content-between align-items-center" style="padding:0px 10px 0px 0px;">
-    <%= render 'digitalid' %>
-  </div>
+    <!-- Digital ID Card Container -->
+    <div class="mb-3 d-flex justify-content-between align-items-center" style="padding:0px 10px 0px 0px;">
+      <%= render 'digitalid' %>
+    </div>
   
       <!-- 2FA Container -->
       <div class="text-center mb-3">
         <div class="card-body d-flex justify-content-center align-items-center h-100">
-          <button id="generate-2fa-btn" class="generate-2fa-button">Generate 2FA Passcode:</button>
-          <span id='two-fa-passcode' class='two-fa-passcode-input'><%= @user_particular&.two_fa_passcode || "2FA Passcode is not set up." %></span>
-=======
-    <div class="col-4 d-flex flex-column justify-content-center align-items-center">
-      <!-- Digital ID Card Container -->
-      <%= render 'digitalid' %>
-      <!-- 2FA Container, put under sub main container -->
-      <div class="container d-flex flex-column justify-content-center">
-        <div class="my-2 gap-2 d-flex align-items-center justify-content-center w-100">
-          <button id="generate-2fa-btn" class="px-4 py-2 generate-2fa-button" style='font-size: 1.1em;'>Generate 2FA Passcode:</button>
-          <span id='two-fa-passcode' class='px-4 py-2 two-fa-passcode-input' style='font-size: 1.1em;'><%= @user_particular&.two_fa_passcode || "2FA Passcode is not set up." %></span>
->>>>>>> Stashed changes
+          <button id="generate-2fa-btn" class="text-nowrap generate-2fa-button">Generate 2FA Passcode:</button>
+          <span id='two-fa-passcode' class='text-nowrap two-fa-passcode-input'><%= @user_particular&.two_fa_passcode || "2FA Passcode is not set up." %></span>
         </div>
         <!-- Buttons Container, put under sub main container -->
         <div class="pri-container d-flex flex-wrap w-100">
