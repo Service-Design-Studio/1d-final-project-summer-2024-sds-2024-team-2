@@ -6,6 +6,7 @@
   <title>EnableID Verification</title>
   <!-- Bootstrap CSS -->
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <%= stylesheet_link_tag 'homebuttons', media: 'all', 'data-turbolinks-track': 'reload' %>
   <!-- Font Awesome CSS -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
   <style>
@@ -42,32 +43,52 @@
     <div class="overlay"></div>
     <div class="container px-2 py-2">
       <div class="row">
-        <div class="col-md-4" style="max-width: 300px;">
+        <div class="col-12 col-md-4 mb-4 mb-md-0">
           <div class="text-center mb-3">
             <%= image_tag @ngo_user.image_url, alt: "#{@ngo_user.name} image", class: "img-fluid", style:"max-width: 100%; height: auto; object-fit: contain;" %>
           </div>
-          <div class="text-center" style="display: flex; flex-wrap: wrap; justify-content: space-between;">
-            <!-- Start of Check User Button -->
-            <button type="button" class="btn btn-secondary mt-3" data-toggle="modal" data-target="#checkUserModal" style="flex: 1 1 45%; margin: 5px;">
-              Check User
-            </button>
+          <div class="row">
+            <!-- Verify User button -->
+            <div class="col-6 d-flex justify-content-center p-2">
+              <%= link_to '#', class: "customhome-button btn btn-secondary", style: 'text-decoration: none; width: 100%; height: 100px;', data: { toggle: "modal", target: "#checkUserModal" } do %>
+                <i class="fas fa-user"></i> Verify User
+              <% end %>
+            </div>
+
             <!-- Inbox button -->
-            <button type="button" class="btn btn-secondary mt-3" style="flex: 1 1 45%; margin: 5px;">
-              Inbox
-            </button>
-            <!-- Interaction history button -->
-            <button type="button" class="btn btn-secondary mt-3" style="flex: 1 1 45%; margin: 5px;">
-              Interaction History
-            </button>
+            <div class="col-6 d-flex justify-content-center p-2">
+              <%= link_to ngo_user_path, class: "customhome-button btn btn-secondary", style: 'text-decoration: none; width: 100%; height: 100px;' do %>
+                <i class="fas fa-inbox"></i> Inbox
+              <% end %>
+            </div>
+
+            <!-- Interaction History button -->
+            <div class="col-6 d-flex justify-content-center p-2">
+              <%= link_to ngo_user_path, class: "customhome-button btn btn-secondary", style: 'text-decoration: none; width: 100%; height: 100px;' do %>
+                <i class="fas fa-history"></i> Interaction History
+              <% end %>
+            </div>
+
             <!-- Events button -->
-            <button type="button" class="btn btn-secondary mt-3" style="flex: 1 1 45%; margin: 5px;">
-              Events
-            </button>
+            <div class="col-6 d-flex justify-content-center p-2">
+              <%= link_to ngo_user_path, class: "customhome-button btn btn-secondary", style: 'text-decoration: none; width: 100%; height: 100px;' do %>
+                <i class="fas fa-calendar"></i> Events
+              <% end %>
+            </div>
+
+            <%# Check if the flag is set to true %>
+            <% if @show_add_bulletin_button %>
+              <!-- "+" Button -->
+              <div class="col-6 d-flex justify-content-center p-2">
+                <button type="button" class="customhome-button btn btn-secondary" style="width: 100%; height: 100px;" data-toggle="modal" data-target="#addBulletinModal">
+                  <i class="fas fa-plus"></i> Add Bulletin Post
+                </button>
+              </div>
+            <% end %>
           </div>
         </div>
         <!-- Bulletin Board Column -->
-        <div class="col-12 col-md-8" style="border: 1px solid #000; padding: 20px; margin-top: 20px; margin-left: 80px;"> 
-        <!-- add "background-color: #fff;"" to make background white -->
+        <div class="col-12 col-md-8 mt-4 mt-md-0" id="bulletins-container"> 
           <%= render 'user_particulars/bulletin' %>
         </div>
       </div>
@@ -111,6 +132,46 @@
       </div>
     </div>
   </div>
+
+  <!-- Add bulletin Modal -->
+<div class="modal fade" id="addBulletinModal" tabindex="-1" role="dialog" aria-labelledby="addBulletinModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addBulletinModalLabel">New Bulletin Post</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <%= form_for :bulletin, url: bulletins_path, method: :post do |f| %>
+          <div class="form-group">
+            <%= f.label :title %>
+            <%= f.text_field :title, class: 'form-control' %>
+          </div>
+          <div class="form-group">
+            <%= f.label :description %>
+            <%= f.text_area :description, class: 'form-control' %>
+          </div>
+          <div class="form-group">
+            <%= f.label :date %>
+            <%= f.date_field :date, class: 'form-control' %>
+          </div>
+          <div class="form-group">
+            <%= f.label :location %>
+            <%= f.text_field :location, class: 'form-control' %>
+          </div>
+          <div class="form-group">
+            <%= f.label :ngo_name %>
+            <%= f.text_field :ngo_name, class: 'form-control' %>
+          </div>
+          <%= f.submit "Post", class: 'btn btn-primary' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
   <!-- End of check user modal -->
 
   <!-- jQuery and Bootstrap JS -->

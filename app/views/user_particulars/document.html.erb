@@ -69,6 +69,60 @@
             overflow-y: auto;
             padding-bottom: 20px;
         }
+
+        /* Style for the file list */
+        .file-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+            padding: 0;
+            list-style-type: none;
+        }
+
+        .file-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .file-list-item span {
+            display: flex;
+            align-items: center;
+        }
+
+        .file-list-item img {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+
+        .file-list-item button {
+            background: none;
+            border: none;
+            color: red;
+            cursor: pointer;
+        }
+
+        .file-list-item button:focus {
+            outline: none;
+        }
+
+        .file-preview {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .file-preview img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .upload-status {
+            text-align: center;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -105,7 +159,11 @@
         <!-- Status message -->
         <div id="statusMessage" class="text-center mt-3"></div>
         <!-- List of selected files -->
-        <div id="fileList" class="text-center mt-3"></div>
+        <ul id="fileList" class="file-list"></ul>
+        <!-- File preview -->
+        <div id="filePreview" class="file-preview"></div>
+        <!-- Upload status -->
+        <div id="uploadStatus" class="upload-status"></div>
     </div>
 
     <!-- jQuery, Popper.js, and Bootstrap JS for Bootstrap functionality -->
@@ -123,10 +181,11 @@
             var fileListContainer = document.getElementById('fileList');
             fileListContainer.innerHTML = ''; // Clear previous file list
             selectedFiles.forEach(file => {
-                var fileItem = document.createElement('div');
-                fileItem.classList.add('file-details');
-                // Display file name, formatted size, and date of upload in dd/mm/yy format
-                fileItem.innerText = `${file.name} (${formatFileSize(file.size)}) - ${formatDate(new Date())}`;
+                var fileItem = document.createElement('li');
+                fileItem.classList.add('file-list-item');
+                var fileTypeIcon = getFileTypeIcon(file.type);
+                fileItem.innerHTML = `<span><img src="${fileTypeIcon}" alt="icon">${file.name} (${formatFileSize(file.size)}) - ${formatDate(new Date())}</span>
+                                      <button onclick="removeFile('${file.name}')"><img src="https://image.flaticon.com/icons/png/512/1828/1828843.png" alt="delete" width="20"></button>`;
                 fileListContainer.appendChild(fileItem);
             });
 
@@ -137,6 +196,20 @@
             } else {
                 document.getElementById('fileDescription').style.display = 'none';
                 document.querySelector('.preview-button').style.display = 'none';
+            }
+        }
+
+        // Function to get file type icon
+        function getFileTypeIcon(fileType) {
+            switch(fileType) {
+                case 'application/pdf':
+                    return 'https://image.flaticon.com/icons/svg/337/337946.svg';
+                case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+                    return 'https://image.flaticon.com/icons/svg/337/337932.svg';
+                case 'image/jpeg':
+                    return 'https://image.flaticon.com/icons/svg/337/337940.svg';
+                default:
+                    return 'https://image.flaticon.com/icons/svg/137/137932.svg';
             }
         }
 
@@ -162,6 +235,12 @@
             const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
             const year = String(date.getFullYear()).substr(-2);
             return `${day}/${month}/${year}`;
+        }
+
+        // Function to remove a file from the list
+        function removeFile(fileName) {
+            selectedFiles = selectedFiles.filter(file => file.name !== fileName);
+            updateFileList();
         }
 
         // Event listeners for drag and drop functionality
@@ -220,9 +299,13 @@
                 return;
             }
 
+            var filePreviewContainer = document.getElementById('filePreview');
+            filePreviewContainer.innerHTML = ''; // Clear previous previews
             selectedFiles.forEach(file => {
                 const fileURL = URL.createObjectURL(file);
-                window.open(fileURL);
+                const img = document.createElement('img');
+                img.src = fileURL;
+                filePreviewContainer.appendChild(img);
             });
         });
 
@@ -244,16 +327,18 @@
             xhr.open('POST', '/your_existing_upload_route', true); // Replace with your actual upload route
             xhr.onload = function () {
                 if (xhr.status === 200) {
-                    document.getElementById('statusMessage').innerText = 'Files uploaded successfully!';
+                    document.getElementById('uploadStatus').innerText = 'Files uploaded successfully!';
                 } else {
-                    document.getElementById('statusMessage').innerText = 'File upload failed! Status: ' + xhr.status + ' Response: ' + xhr.responseText;
+                    document.getElementById('uploadStatus').innerText = 'File upload failed! Status: ' + xhr.status + ' Response: ' + xhr.responseText;
                 }
             };
             xhr.onerror = function () {
-                document.getElementById('statusMessage').innerText = 'File upload failed due to a network error.';
+                document.getElementById('uploadStatus').innerText = 'File upload failed due to a network error.';
             };
             xhr.send(formData);
         });
     </script>
 </body>
 </html>
+
+

@@ -26,7 +26,7 @@
           <div class="card-body p-2" style="font-size: 1em;">
             <ul class="list-unstyled">
               <h6 class="card-title" style="font-size: 1.2em;"><%= bulletin.title %></h6>
-              <li>Date: <%= bulletin.date.strftime("%d %B %Y") %></li>
+              <li>Date: <%= bulletin.date ? bulletin.date.strftime("%d %B %Y") : "Date not available" %></li>
               <li>Location: <%= bulletin.location %></li>
               <li>Information: <%= bulletin.description %></li>
             </ul>

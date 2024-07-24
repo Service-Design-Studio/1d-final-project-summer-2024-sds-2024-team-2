@@ -6,7 +6,9 @@ class NgoUsersController < ApplicationController
     @back_path = ngo_users_path
     @ngo_user = NgoUser.find_by_id(params[:id])
     nil unless params[:unique_id].present?
-    @bulletins ||= [] # Ensures @bulletins is an array even if the query finds no records for NIL posts in bulletin board
+    @ngo_users = NgoUser.all
+    @bulletins = Bulletin.all # Ensures @bulletins is an array even if the query finds no records for NIL posts in bulletin board
+    @show_add_bulletin_button = true
   end
 
   def index
