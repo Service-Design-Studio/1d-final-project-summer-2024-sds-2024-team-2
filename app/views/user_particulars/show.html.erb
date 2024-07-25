@@ -35,18 +35,18 @@
         <div class="pri-container py-3 px-2 d-flex w-100 flex-column flex-wrap">
           <div class="row mb-2 d-flex justify-content-center gap-2">
             <%= link_to user_document_path(@user), class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
-              <i class="fas fa-file-alt"></i> Documents
+              <i class="fas fa-file-alt fs-5"></i> Documents
             <% end %>
             <%= link_to user_history_path(@user), class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
-              <i class="fas fa-history"></i> Activity History
+              <i class="fas fa-history fs-5"></i> Activity History
             <% end %>
           </div>
           <div class="row d-flex justify-content-center gap-2">
             <%= link_to user_particulars_family_path, class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
-              <i class="fas fa-save"></i> Saved Post
+              <i style='color: orange;' class="bi bi-bookmark-fill fs-5"></i> Saved Post
             <% end %>
             <%= link_to user_particulars_family_path, class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
-              <i class="fas fa-search"></i> Search NGOs
+              <i class="fas fa-search fs-5"></i> Search NGOs
             <% end %>
           </div>
         </div>

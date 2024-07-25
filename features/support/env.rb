@@ -3,7 +3,7 @@
 # newer version of cucumber-rails. Consider adding your own code to a new file
 # instead of editing this one. Cucumber will automatically load all features/**/*.rb
 # files.
-
+require 'database_cleaner/active_record'
 require 'capybara/cucumber'
 require 'selenium/webdriver'
 require 'warden'
@@ -40,10 +40,17 @@ ActionController::Base.allow_rescue = false
 
 # Remove/comment out the lines below if your app doesn't have a database.
 # For some databases (like MongoDB and CouchDB) you may need to use :truncation instead.
-begin
-  DatabaseCleaner.strategy = :transaction
-rescue NameError
-  raise 'You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it.'
+# Configure DatabaseCleaner to use transactions
+DatabaseCleaner.strategy = :transaction
+
+# Start the transaction before each scenario
+Before do
+  DatabaseCleaner.start
+end
+
+# Rollback the transaction after each scenario
+After do
+  DatabaseCleaner.clean
 end
 
 # You may also want to configure DatabaseCleaner to use different strategies for certain features and scenarios.

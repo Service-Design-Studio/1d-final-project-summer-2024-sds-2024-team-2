@@ -21,10 +21,10 @@
   <div class="d-flex flex-column flex-grow-1 overflow-auto" style="overflow-x: hidden;">
     <div class="d-flex flex-wrap gap-2 overflow-auto" style='max-height: 100%;' id="event-cards-container">
       <% @bulletins.each do |bulletin| %>
-        <span class="event-card justify-content-center align-items-center" style="width:170px;" data-title="<%= bulletin.title.downcase %>" data-description="<%= bulletin.description.downcase %>" data-ngo-name="<%= bulletin.ngo_name.downcase %>">
+        <% ngo_user = @ngo_users.find { |user| user.name == bulletin.ngo_name } %>
+        <span class="event-card justify-content-center align-items-center" style="width:170px;" data-bs-toggle="modal" data-bs-target="#eventCards" data-ngoname="<%= bulletin.ngo_name %>" data-title="<%= bulletin.title %>" data-description="<%= bulletin.description %>" data-date="<%= bulletin.date ? bulletin.date.strftime("%d %B %Y") : "Date not available" %>" data-location="<%= bulletin.location %>" data-image-url="<%= ngo_user&.image_url.present? ? ngo_user.image_url : 'default.png' %>">
           <div class="card d-flex add-small-shadow justify-content-center" style="font-size: 0.7em; height:100%;">
             <div class='d-flex w-100 align-items-center justify-content-center' style='min-width: 100px; height: 90px'>
-              <% ngo_user = @ngo_users.find { |user| user.name == bulletin.ngo_name } %>
               <% if ngo_user&.image_url.present? %>
                 <%= image_tag ngo_user.image_url, alt: "#{ngo_user.name} image", style: 'max-width: 100%; max-height: 100%; object-fit: contain;' %>
               <% else %>
@@ -39,7 +39,7 @@
                     <li>Date: <%= bulletin.date ? bulletin.date.strftime("%d %B %Y") : "Date not available" %></li>
                   </div>
                   <%= link_to '#', onclick: 'toggleSavePost(this)', style: 'text-decoration: none;' do %>
-                    <i style='text-decoration: none; color: black;' class="bi bi-bookmark fs-2"></i>
+                    <i style='text-decoration: none; color: orange;' class="bi bi-bookmark fs-5"></i>
                   <% end %>
                 </div>
                 <li>Location: <%= bulletin.location %></li>
@@ -56,6 +56,28 @@
     </div>
   </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="eventCards" tabindex="-1" aria-labelledby="eventCardsLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-title">Modal title</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- <img id="modal-photo" src="" alt="Event Photo" style="width: 100%; height: auto;"> -->
+        <p id="modal-ngoname"></p>
+        <p id="modal-description"></p>
+        <p id="modal-date"></p>
+        <p id="modal-location"></p>
+      </div>
+      <div class="modal-footer d-flex justify-content-evenly">
+        <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn-dark px-3 customhome-button">Add to Saved <i style='color: orange;' class="ml-2 m-0 bi bi-bookmark fs-5"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
   $(document).ready(function() {
@@ -64,7 +86,7 @@
       $('.event-card').each(function() {
         var title = $(this).data('title');
         var description = $(this).data('description');
-        var ngoName = $(this).data('ngo-name');
+        var ngoName = $(this).data('ngoname');
         if (title.includes(searchQuery) || description.includes(searchQuery) || ngoName.includes(searchQuery)) {
           $(this).show();
         } else {
@@ -72,18 +94,26 @@
         }
       });
     });
-  });
-</script>
-<script>
-  function toggleSavePost(element) {
-    // Toggle the 'saved' class or perform an action
-    element.querySelector('i').classList.toggle('bi-bookmark-fill');
-    element.querySelector('i').classList.toggle('bi-bookmark');
 
-    // Optionally, you can make an AJAX call to save the post on the server
-    // Example:
-    // fetch('/save_post', { method: 'POST', body: JSON.stringify({ post_id: 123 }) })
-    //   .then(response => response.json())
-    //   .then(data => console.log(data));
-  }
+    $('.event-card').on('click', function() {
+      var title = $(this).data('title');
+      var description = $(this).data('description');
+      var date = $(this).data('date');
+      var location = $(this).data('location');
+      var ngoname = $(this).data('ngoname');
+      //var imageUrl = $(this).data('image-url');   
+      $('#modal-ngoname').text(ngoname);
+      $('#modal-title').text(title);
+      $('#modal-description').text("Description: " + description);
+      $('#modal-date').text("Date: " + date);
+      $('#modal-location').text("Location: " + location);
+      //$('#modal-photo').attr('src', "app/assets/images/" + imageUrl);
+    });
+
+    function toggleSavePost(element) {
+      // Toggle the 'saved' class or perform an action
+      element.querySelector('i').classList.toggle('bi-bookmark-fill');
+      element.querySelector('i').classList.toggle('bi-bookmark');
+    };
+  });
 </script>

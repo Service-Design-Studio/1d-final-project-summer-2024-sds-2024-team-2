@@ -2,8 +2,15 @@ Then(/^I should see "([^"]*)"$/) do |name|
   expect(page).to have_content("#{name}", wait: 2) # Wait for up to 2 seconds
 end
 
+Then(/^I should see the following filled-in details$/) do |table|
+  table.hashes.each do |row|
+    step "I should see \"#{row['Field']}\""
+    step "I should see \"#{row['Value']}\""
+  end
+end
+
 Then(/^I should stay on the "([^"]*)" page$/) do |page_name|
-  expect(current_path).to eq( path_to(page_name))
+  expect(current_path).to eq(path_to(page_name))
 end
 
 Then(/^I should be redirected to the "([^"]*)" page$/) do |page_name|
@@ -51,7 +58,7 @@ def fill_in_form(table)
       select row['Value'], from: "#{row['Field'].downcase}_select"
     when 'date of birth', 'date of arrival in malaysia'
       # For HTML5 date fields, ensure the date is in 'YYYY-MM-DD' format
-      fill_in row['Field'], with: row['Value'].to_date.strftime('%d-%m-%Y')
+      fill_in row['Field'], with: row['Value'].to_date.strftime('%d-%m-%Y') unless row['Value'].to_s.strip.empty?
       # For regular input fields
     when 'phone number'
       select('+65', from: 'country_code_select') # Selects the country code from the dropdown
@@ -69,7 +76,7 @@ end
 def path_to(page_name)
   case page_name.downcase
   when 'home'
-    root_path
+    [root_path, user_particular_path]
   when 'login'
     new_user_session_path
   when 'ngogebirah'
