@@ -117,7 +117,6 @@
         .document-list {
             width: 100%;
             max-width: 600px;
-            margin: 0 auto;
             display: none; /* Initially hidden */
         }
 
@@ -148,77 +147,92 @@
             display: flex;
             gap: 10px;
         }
+
+        .upload-section {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .upload-section .form-section,
+        .upload-section .document-list {
+            flex: 1;
+            margin: 10px;
+        }
+
+        .upload-section .document-list {
+            max-width: 45%; /* Ensure the uploaded documents section doesn't take too much space */
+        }
     </style>
 </head>
 
 <body>
-        
-<div class="alert alert-info" style="font-size: 0.9em;" role="alert">
-  <h5 class="alert-heading">Guide</h5>
-  <p>To upload your documents, please follow these steps:</p>
-  <ol>
-    <li>Drag and drop your documents into the designated area or click to select files.</li>
-    <li>Choose the document type from the dropdown menu.</li>
-    <li>Once all documents are uploaded, they will appear in the 'Uploaded Documents' section below.</li>
-    <li>You can preview or delete the uploaded documents from the list.</li>
-  </ol>
-</div>
-    <div class="container mt-5">
-        <!-- Guide on what to do on this page -->
-
-
-        <!-- Title and instruction -->
-        <h1 class="text-center">Select documents to upload</h1>
-        <p class="text-center">Drag and drop your documents below. Supported formats: PDF, DOCX, JPG. Max size: 5MB.</p>
-
-        <!-- Form for file upload -->
-        <form id="uploadForm">
-            <!-- File upload wrapper -->
-            <div class="file-upload-wrapper" data-mdb-file-upload-init id="dropArea">
-                <span>Drag and drop a file here</span>
-                <input type="file" id="fileInput" multiple>
-            </div>
-
-            <!-- Dropdown menu -->
-            <div class="form-group">
-                <label for="documentTypeDropdown">Select Document Type</label>
-                <select class="form-control dropdown" id="documentTypeDropdown">
-                    <option>PDF</option>
-                    <option>DOCX</option>
-                    <option>JPG</option>
-                </select>
-            </div>
-
-            <!-- File description (hidden initially) -->
-            <textarea class="form-control mt-3" id="fileDescription" placeholder="Description of the file..." style="display: none;"></textarea>
-        </form>
-
-        <!-- Status message -->
-        <div id="statusMessage" class="text-center mt-3"></div>
-        <!-- List of selected files -->
-        <ul id="fileList" class="file-list" style="display: none;"></ul>
-        <!-- File preview -->
-        <div id="filePreview" class="file-preview"></div>
-        <!-- Upload status -->
-        <div id="uploadStatus" class="upload-status"></div>
+    <div class="alert alert-info" style="font-size: 0.9em;" role="alert">
+        <h5 class="alert-heading">Guide</h5>
+        <p>To upload your documents, please follow these steps:</p>
+        <ol>
+            <li>Drag and drop your documents into the designated area or click to select files.</li>
+            <li>Choose the document type from the dropdown menu.</li>
+            <li>Once all documents are uploaded, they will appear in the 'Uploaded Documents' section.</li>
+            <li>You can preview or delete the uploaded documents from the list.</li>
+        </ol>
     </div>
+    <div class="container mt-5">
+        <div class="upload-section">
+            <!-- Form for file upload -->
+            <div class="form-section">
+                <h1 class="text-center">Select documents to upload</h1>
+                <p class="text-center">Drag and drop your documents below. Supported formats: PDF, DOCX, JPG. Max size: 5MB.</p>
 
-    <!-- Existing Documents -->
-    <div class="container document-list" id="uploadedDocumentsContainer">
-        <h2 class="text-center">Uploaded Documents</h2>
-        <table class="table" id="uploadedDocumentsTable">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Size</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="documentTableBody">
-            </tbody>
-        </table>
+                <form id="uploadForm">
+                    <!-- File upload wrapper -->
+                    <div class="file-upload-wrapper" data-mdb-file-upload-init id="dropArea">
+                        <span>Drag and drop a file here</span>
+                        <input type="file" id="fileInput" multiple>
+                    </div>
+
+                    <!-- Dropdown menu -->
+                    <div class="form-group">
+                        <label for="documentTypeDropdown">Select Document Type</label>
+                        <select class="form-control dropdown" id="documentTypeDropdown">
+                            <option>PDF</option>
+                            <option>DOCX</option>
+                            <option>JPG</option>
+                        </select>
+                    </div>
+
+                    <!-- File description (hidden initially) -->
+                    <textarea class="form-control mt-3" id="fileDescription" placeholder="Description of the file..." style="display: none;"></textarea>
+                </form>
+
+                <!-- Status message -->
+                <div id="statusMessage" class="text-center mt-3"></div>
+                <!-- List of selected files -->
+                <ul id="fileList" class="file-list" style="display: none;"></ul>
+                <!-- File preview -->
+                <div id="filePreview" class="file-preview"></div>
+                <!-- Upload status -->
+                <div id="uploadStatus" class="upload-status"></div>
+            </div>
+
+            <!-- Existing Documents -->
+            <div class="document-list" id="uploadedDocumentsContainer">
+                <h2 class="text-center">Uploaded Documents</h2>
+                <table class="table" id="uploadedDocumentsTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Size</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="documentTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
     <!-- jQuery, Popper.js, and Bootstrap JS for Bootstrap functionality -->
