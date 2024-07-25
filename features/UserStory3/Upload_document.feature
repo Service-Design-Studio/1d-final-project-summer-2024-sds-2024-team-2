@@ -11,7 +11,7 @@ Background:
 
 Scenario: Going to "Upload Documents" page
     Given I am on the "registration" page
-    When I press the "proceed to next page" button
+    When I press the "Documents" button
     Then I should be directed to the "Upload Document" page
 
 Scenario: Uploading a Document
