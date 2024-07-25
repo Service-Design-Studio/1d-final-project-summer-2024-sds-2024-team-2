@@ -165,24 +165,27 @@
         select {
             min-width: 150px; /* Adjust this value as needed */
         }
+
+        .alert-heading {
+            margin-top: 20px;
+        }
     </style>
 </head>
 
 <body>
-    <div class="alert alert-info" style="font-size: 0.9em;" role="alert">
-        <h5 class="alert-heading">Guide</h5>
-        <p>To upload your documents, please follow these steps:</p>
-        <ol>
-            <li>Drag and drop your documents into the designated area or click to select files.</li>
-            <li>Once all documents are uploaded, they will appear in the 'Uploaded Documents' section.</li>
-            <li>You can preview or delete the uploaded documents from the list.</li>
-        </ol>
-    </div>
     <div class="container mt-5">
+        <div class="alert alert-info" style="font-size: 0.9em;" role="alert">
+            <h5 class="alert-heading">Guide</h5>
+            <p>To upload your documents, please follow these steps:</p>
+            <ol>
+                <li>Drag and drop your documents into the designated area or click to select files.</li>
+                <li>Once all documents are uploaded, they will appear in the 'Uploaded Documents' section.</li>
+                <li>You can preview or delete the uploaded documents from the list.</li>
+            </ol>
+        </div>
         <div class="upload-section">
             <!-- Form for file upload -->
             <div class="form-section">
-                <h1 class="text-center">Select documents to upload</h1>
                 <form id="uploadForm">
                     <!-- File upload wrapper -->
                     <div class="file-upload-wrapper" data-mdb-file-upload-init id="dropArea">
