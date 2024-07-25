@@ -116,7 +116,6 @@
 
         .document-list {
             width: 100%;
-            max-width: 600px;
             display: none; /* Initially hidden */
         }
 
@@ -151,17 +150,13 @@
         .upload-section {
             display: flex;
             justify-content: space-between;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
         }
 
         .upload-section .form-section,
         .upload-section .document-list {
             flex: 1;
             margin: 10px;
-        }
-
-        .upload-section .document-list {
-            max-width: 45%; /* Ensure the uploaded documents section doesn't take too much space */
         }
     </style>
 </head>
