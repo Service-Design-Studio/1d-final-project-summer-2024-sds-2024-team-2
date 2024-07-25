@@ -2,20 +2,6 @@
   <div class="card-1">
     <div class="card-1-header">
       EnableID Digital Card
-<<<<<<< Updated upstream
-<% if @user_particular&.present? %>
-  <% case @user_particular&.status %>
-  <% when "pending" %>
-    <%= link_to edit_user_particular_path(@user_particular), class: "edit-link-right-align edit-icon-link" do %>
-      <i class="fas fa-edit"></i>
-    <% end %>
-  <% when "verified" %>
-    <%= link_to "#", class: "edit-link-right-align edit-icon-link", data: { bs_toggle: "modal", bs_target: "#verificationWarningModal" }, aria: { label: "Edit" } do %>
-      <i class="fas fa-edit"></i>
-    <% end %>
-  <% end %>
-<% end %>
-=======
       <% if @user_particular&.present? %>
         <% case @user_particular&.status %>
         <% when "pending" %>
@@ -28,7 +14,6 @@
           <% end %>
         <% end %>
       <% end %>
->>>>>>> Stashed changes
     </div>
     <div class="card-1-body">
       <% if @user_particular.nil? %>
