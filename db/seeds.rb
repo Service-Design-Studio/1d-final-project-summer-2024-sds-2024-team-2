@@ -300,4 +300,3 @@ end
   user_history.update!(history_data)
 end
 
-UserParticular.first.update!(unique_id: '1055290', two_fa_passcode: '606833')
