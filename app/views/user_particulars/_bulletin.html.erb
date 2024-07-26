@@ -18,17 +18,17 @@
       </button>
     <% end %>
   </div>
-  <div class="d-flex flex-column flex-grow-1 overflow-auto" style="font-size: 0.7em;">
-    <div class="d-flex flex-wrap gap-2 overflow-auto" style='width: 100%; max-height: 100%;' id="event-cards-container">
+  <div class="container-fluid mx-0 overflow-auto flex" style="font-size: 0.7em;">
+    <div class="row" style='max-height: 100%;' id="event-cards-container">
       <% @bulletins.each do |bulletin| %>
         <% ngo_user = @ngo_users.find { |user| user.name == bulletin.ngo_name } %>
-        <div class="flex-grow-1 event-card card  align-items-stretch" style="max-width:220px; min-width:170px;">
-          <div class="p-0 d-flex flex-column w-100 h-100" data-bs-toggle="modal" data-bs-target="#eventCards" data-ngoname="<%= bulletin.ngo_name %>" data-title="<%= bulletin.title %>" data-description="<%= bulletin.description %>" data-date="<%= bulletin.date ? bulletin.date.strftime("%d %B %Y") : "Date not available" %>" data-location="<%= bulletin.location %>" data-image-url="<%= ngo_user&.image_url.present? ? ngo_user.image_url : 'default.png' %>">
-            <div class="d-flex w-100 align-items-center justify-content-center">
+        <div class="col-auto event-card card p-0" style="min-width:170px;" data-ngoname="<%= bulletin.ngo_name %>" data-title="<%= bulletin.title %>" data-description="<%= bulletin.description %>" data-date="<%= bulletin.date ? bulletin.date.strftime("%d %B %Y") : "Date not available" %>" data-location="<%= bulletin.location %>" data-image-url="<%= ngo_user&.image_url.present? ? ngo_user.image_url : 'default.png' %>" >
+          <div class="p-0 d-flex flex-column w-100 h-100" data-bs-toggle="modal" data-bs-target="#eventCards">
+            <div class="d-flex flex-grow-1 w-100 align-items-center justify-content-center">
               <% if ngo_user&.image_url.present? %>
-                <%= image_tag ngo_user.image_url, alt: "#{ngo_user.name} image", style: 'width: 100%; height: 100%; object-fit: contain;' %>
+                <%= image_tag ngo_user.image_url, alt: "#{ngo_user.name} image", style: 'max-width: 100px; max-height: 100px; object-fit: contain;' %>
               <% else %>
-                <%= image_tag 'default.png', alt: "Event image", style:  'width: 100%; height: 100%; object-fit: contain;' %>
+                <%= image_tag 'default.png', alt: "Event image", style:  'max-width: 100px; max-height: 100px; object-fit: contain;' %>
               <% end %>
             </div>
             <ul class="list-unstyled pl-1">
@@ -47,13 +47,15 @@
               <i style='text-center text-decoration: none; color: black;' class="bi bi-send"></i>
             <% end %>
             <%= link_to '#', onclick: 'toggleSavePost(this)', style: 'text-decoration: none;' do %>
-              <i style='text-center text-decoration: none; color: black;' class="bi bi-bookmark"></i>
+              <i style='text-center text-decoration: none; color: orange;' class="bi bi-bookmark"></i>
             <% end %>
           </div>
         </div>
       <% end %>
     </div>
   </div>
+
+
   <!-- Modal -->
   <div class="modal fade" id="eventCards" tabindex="-1" aria-labelledby="eventCardsLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -75,6 +77,10 @@
       </div>
     </div>
   </div>
+
+  
+
+</div>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script>
     $(document).ready(function() {
@@ -107,13 +113,13 @@
         //$('#modal-photo').attr('src', "app/assets/images/" + imageUrl);
       });
 
-    /*
+
       window.toggleSavePost = function(element) {
         // Toggle the 'saved' class or perform an action
         var icon = element.querySelector('i');
         icon.classList.toggle('bi-bookmark-fill');
         icon.classList.toggle('bi-bookmark');
       };
-      */
+      
     });
   </script>
