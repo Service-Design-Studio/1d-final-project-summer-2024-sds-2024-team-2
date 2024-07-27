@@ -118,7 +118,6 @@
 
         .document-list {
             width: 100%;
-            display: none; /* Initially hidden */
         }
 
         .document-list table {
@@ -151,7 +150,7 @@
 
         .upload-section {
             display: flex;
-            justify-content: space-between;
+            flex-direction: row;
             flex-wrap: nowrap;
         }
 
@@ -168,6 +167,10 @@
 
         .alert-heading {
             margin-top: 20px;
+        }
+
+        .description-container {
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -192,9 +195,6 @@
                         <span>Drag and drop your documents below. Supported formats: PDF, DOCX, JPG. Max size: 5MB.</span>
                         <input type="file" id="fileInput" multiple>
                     </div>
-
-                    <!-- File description (hidden initially) -->
-                    <textarea class="form-control mt-3" id="fileDescription" placeholder="Description of the file..." style="display: none;"></textarea>
                 </form>
 
                 <!-- Status message -->
@@ -219,6 +219,7 @@
                             <th>Status</th>
                             <th>Select Type</th>
                             <th>Action</th>
+                            <th>Description</th>
                         </tr>
                     </thead>
                     <tbody id="documentTableBody">
@@ -240,9 +241,11 @@
 
         // Function to update the file list display
         function updateFileList() {
+            console.log("Updating file list...");
             var fileListContainer = document.getElementById('fileList');
             fileListContainer.innerHTML = ''; // Clear previous file list
             selectedFiles.forEach(file => {
+                console.log("Adding file to list: ", file);
                 var fileItem = document.createElement('li');
                 fileItem.classList.add('file-list-item');
                 var fileTypeIcon = getFileTypeIcon(file.type);
@@ -250,11 +253,11 @@
                 fileListContainer.appendChild(fileItem);
             });
 
-            // Show the description field if files are selected
+            // Show the file list if files are selected
             if (selectedFiles.length > 0) {
-                document.getElementById('fileDescription').style.display = 'block';
+                document.getElementById('fileList').style.display = 'block';
             } else {
-                document.getElementById('fileDescription').style.display = 'none';
+                document.getElementById('fileList').style.display = 'none';
             }
         }
 
@@ -319,43 +322,38 @@
             event.preventDefault();
             dropArea.classList.remove('hover'); // Remove hover effect on drop
             const files = Array.from(event.dataTransfer.files); // Get files from drop event
-            let validFiles = [];
-            files.forEach(file => {
-                if (!['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg'].includes(file.type)) {
-                    document.getElementById('statusMessage').innerText = 'Unsupported file type. Please upload a PDF, DOCX, or JPG file.';
-                } else if (file.size > 5242880) { // 5MB limit
-                    document.getElementById('statusMessage').innerText = 'File size exceeds the maximum limit of 5MB. Please upload a smaller file.';
-                } else {
-                    selectedFiles.push(file);
-                    validFiles.push(file);
-                }
-            });
-            updateFileList(); // Update the file list display
-            if (validFiles.length > 0) {
-                document.getElementById('statusMessage').innerText = 'Files attached successfully!';
-            }
-            addUploadedDocumentsToList(validFiles); // Add uploaded documents to the list
+            console.log("Dropped files: ", files);
+            handleFiles(files);
         });
 
         fileInput.addEventListener('change', (event) => {
             const files = Array.from(event.target.files); // Get files from file input
+            console.log("Selected files: ", files);
+            handleFiles(files);
+        });
+
+        // Function to handle files
+        function handleFiles(files) {
             let validFiles = [];
             files.forEach(file => {
                 if (!['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg'].includes(file.type)) {
                     document.getElementById('statusMessage').innerText = 'Unsupported file type. Please upload a PDF, DOCX, or JPG file.';
+                    console.log("Unsupported file type: ", file.type);
                 } else if (file.size > 5242880) { // 5MB limit
                     document.getElementById('statusMessage').innerText = 'File size exceeds the maximum limit of 5MB. Please upload a smaller file.';
+                    console.log("File size exceeds limit: ", file.size);
                 } else {
                     selectedFiles.push(file);
                     validFiles.push(file);
+                    console.log("Valid file added: ", file);
                 }
             });
             updateFileList(); // Update the file list display
             if (validFiles.length > 0) {
                 document.getElementById('statusMessage').innerText = 'Files attached successfully!';
+                addUploadedDocumentsToList(validFiles); // Add uploaded documents to the list
             }
-            addUploadedDocumentsToList(validFiles); // Add uploaded documents to the list
-        });
+        }
 
         // Event listener for form submission to handle the file upload process
         document.getElementById('uploadForm').addEventListener('submit', function (event) {
@@ -413,6 +411,7 @@
                             <button class="btn btn-primary btn-sm" onclick="previewDocument('${URL.createObjectURL(file)}')">Preview</button>
                             <button class="btn btn-danger btn-sm" onclick="deleteDocument(this)">Delete</button>
                         </td>
+                        <td><textarea class="form-control description-container" placeholder="Enter description..."></textarea></td>
                     `;
                     uploadedDocumentsTable.appendChild(newRow);
                 }
