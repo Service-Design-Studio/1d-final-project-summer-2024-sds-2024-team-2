@@ -13,15 +13,15 @@ Given(/^I need to upload my documents to complete my digital identity$/) do
   @user.update(needs_document_upload: true)
 end
 
-# Given(/^I am on the "(.*)" page$/) do |page|
-#   visit path_to(page)
-# end
+Given(/^I am on the "([^"]*)" page$/) do |page|
+  visit path_to(page)
+end
 
-# When(/^I press the "(.*)" button$/) do |button|
-#   click_button(button)
-# end
+When(/^I press the "([^"]*)" button$/) do |button|
+  click_button(button)
+end
 
-Then(/^I should be directed to the "(.*)" page$/) do |page|
+Then(/^I should be directed to the "([^"]*)" page$/) do |page|
   expect(page).to have_current_path(path_to(page))
 end
 
@@ -53,15 +53,11 @@ When(/^I select a file with an unsupported format$/) do
   attach_file('document_upload', Rails.root.join('spec/fixtures/unsupported_file.xyz'))
 end
 
-Then(/^I should see an error message stating "(.*)"$/) do |message|
-  expect(page).to have_content(message)
-end
-
 When(/^I select a file that exceeds the size limit$/) do
   attach_file('document_upload', Rails.root.join('spec/fixtures/large_file.zip'))
 end
 
-Then(/^I should see an error message stating "(.*)"$/) do |message|
+Then(/^I should see an error message stating "([^"]*)"$/) do |message|
   expect(page).to have_content(message)
 end
 
@@ -70,7 +66,7 @@ Given(/^I have uploaded a document$/) do
   click_button('Upload')
 end
 
-When(/^I click on the "(.*)" button next to the uploaded document$/) do |button|
+When(/^I click on the "([^"]*)" button next to the uploaded document$/) do |button|
   within('.uploaded-document') do
     click_button(button)
   end
