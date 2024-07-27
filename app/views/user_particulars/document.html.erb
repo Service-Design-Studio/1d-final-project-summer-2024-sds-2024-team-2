@@ -195,6 +195,7 @@
                     <div class="file-upload-wrapper" data-mdb-file-upload-init id="dropArea">
                         <span>Drag and drop your documents below. Supported formats: PDF, DOCX, JPG. Max size: 5MB.</span>
                         <input type="file" id="fileInput" multiple>
+                        <button type="button" class="btn btn-primary" id="selectDocumentButton">Select Document</button>
                     </div>
                 </form>
 
@@ -412,7 +413,7 @@
                             <button class="btn btn-primary btn-sm" onclick="previewDocument('${URL.createObjectURL(file)}')">Preview</button>
                             <button class="btn btn-danger btn-sm" onclick="deleteDocument(this)">Delete</button>
                         </td>
-                        <td><textarea class="form-control description-container" placeholder="Enter description..."></textarea></td>
+                        <td><textarea class="form-control description-container" placeholder="Enter Description..."></textarea></td>
                     `;
                     uploadedDocumentsTable.appendChild(newRow);
                 }
@@ -441,6 +442,11 @@
         function previewDocument(fileUrl) {
             window.open(fileUrl, '_blank');
         }
+
+        // Event listener for "Select Document" button
+        document.getElementById('selectDocumentButton').addEventListener('click', function () {
+            fileInput.click();
+        });
     </script>
 </body>
 
