@@ -238,18 +238,18 @@ bulletin_data = [
 ]
 # Seed NgoUser data
 ngo_users_data = [
-  { name: 'CARE International', image_url: 'care.png' },
-  { name: 'Amnesty International', image_url: 'AmnestyInternational.png' },
-  { name: 'Oxfam', image_url: 'oxfam.png' },
-  { name: 'World Vision', image_url: 'worldvision.png' },
-  { name: 'Human Rights Watch', image_url: 'humanrightswatch.png' },
-  { name: 'Gebirah', image_url: 'Gebirah.png' },
-  { name: 'International Rescue Committee (IRC)', image_url: 'IRC.png' },
-  { name: 'Doctors Without Borders/Médecins Sans Frontières', image_url: 'MSF.png' },
-  { name: 'Norwegian Refugee Council (NRC)', image_url: 'NRC.png' },
-  { name: 'Save the Children', image_url: 'Savethechildren.png' },
-  { name: 'UNHCR', image_url: 'unhcr.png' },
-  { name: 'World Relief', image_url: 'world relief.png' }
+  { name: 'CARE International', image_url: 'care.png', created_at: DateTime.now, updated_at: DateTime.now, email: 'cisecretariat@careinternational.org', contact_number: '1-800-422-7385', website: 'https://www.care-international.org/' },
+  { name: 'Amnesty International', image_url: 'AmnestyInternational.png', created_at: DateTime.now, updated_at: DateTime.now, email: 'contactus@amnesty.org', contact_number: '+44 20 74135500', website: 'https://www.amnesty.org/' },
+  { name: 'Oxfam', image_url: 'oxfam.png', created_at: DateTime.now, updated_at: DateTime.now, email: 'oxfamsol@oxfamsol.be', contact_number: '+254 722 200417', website: 'https://www.oxfam.org/'  },
+  { name: 'World Vision', image_url: 'worldvision.png', created_at: DateTime.now, updated_at: DateTime.now, email: 'enquiries@worldvision.org.sg', contact_number: '+65 6922 0147', website: 'https://www.worldvision.org.sg/'  },
+  { name: 'Human Rights Watch', image_url: 'humanrightswatch.png', created_at: DateTime.now, updated_at: DateTime.now, email: '', contact_number: '+1-212-290-4700', website: 'https://www.hrw.org/'  },
+  { name: 'Gebirah', image_url: 'Gebirah.png', created_at: DateTime.now, updated_at: DateTime.now, email: 'gebirahad@gmail.com', contact_number: '', website: 'https://www.gebirah.org/'  },
+  { name: 'International Rescue Committee (IRC)', image_url: 'IRC.png', created_at: DateTime.now, updated_at: DateTime.now, email: 'DonorServices@Rescue.org', contact_number: '+ 1 212 551 3000', website: 'https://www.rescue.org/'  },
+  { name: 'Doctors Without Borders/Médecins Sans Frontières', image_url: 'MSF.png', created_at: DateTime.now, updated_at: DateTime.now, email: 'media@seeap.msf.org', contact_number: ' (852) 2959 4255 ', website: 'https://doctorswithoutborders-apac.org/'  },
+  { name: 'Norwegian Refugee Council (NRC)', image_url: 'NRC.png', created_at: DateTime.now, updated_at: DateTime.now, email: 'fundraising@nrc.no', contact_number: '+47 800 33 503', website: 'https://www.nrc.no/'  },
+  { name: 'Save the Children', image_url: 'Savethechildren.png', created_at: DateTime.now, updated_at: DateTime.now, email: 'info@savethechildren.org', contact_number: '+65 6511 3160', website: 'https://www.savethechildren.net/'  },
+  { name: 'UNHCR', image_url: 'unhcr.png', created_at: DateTime.now, updated_at: DateTime.now, email: 'mlslu@unhcr.org', contact_number: '+60 3 2118 4800', website: 'https://www.unhcr.org/'  },
+  { name: 'World Relief', image_url: 'world relief.png' , created_at: DateTime.now, updated_at: DateTime.now, email: '', contact_number: '443-451-1900', website: 'https://worldrelief.org/' }
 ]
 
 # Create or update users and their particulars
@@ -278,6 +278,9 @@ end
 ngo_users_data.each do |ngo_data|
   ngo_user = NgoUser.find_or_initialize_by(name: ngo_data[:name])
   ngo_user.update!(image_url: ngo_data[:image_url])
+  ngo_user.update!(email: ngo_data[:email])
+  ngo_user.update!(contact_number: ngo_data[:contact_number])
+  ngo_user.update!(website: ngo_data[:website])
 end
 
 # Create or update Bulletins

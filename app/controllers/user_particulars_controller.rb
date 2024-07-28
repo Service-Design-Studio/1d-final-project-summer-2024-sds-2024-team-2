@@ -213,6 +213,15 @@ class UserParticularsController < ApplicationController
     @user_particular = current_user.user_particular
   end
 
+  def ngocontact
+    @back_path = user_particular_path
+    @ngo_users = if params[:search].present?
+      NgoUser.search_by_name(params[:search])
+    else
+      NgoUser.all_ngo_users
+    end
+  end
+
   private
 
   def set_ngo_users

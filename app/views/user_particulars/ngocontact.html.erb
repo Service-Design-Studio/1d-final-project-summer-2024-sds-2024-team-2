@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGO Search</title>
+    <style>
+      /* Responsive text adjustments */
+      @media (max-width: 768px) {
+        .card-title {
+          font-size: 0.9rem; /* Smaller text on smaller devices */
+        }
+      }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <div class="container" style="padding: 15px; position: relative;">
+      <div class="row mb-4">
+        <div class="col-12">
+          <form id="search-form" method="get" action="<%= ngocontact_path %>" style="display: flex; align-items: center; justify-content: space-between;">
+            <input type="text" id="search-input" name="search" class="form-control" placeholder="Search for NGOs..." value="<%= params[:search] %>" style="flex-grow: 1; margin-right: 10px;">
+            <button type="submit" class="btn btn-primary" style="flex-shrink: 0;">Search</button>
+          </form>
+        </div>
+      </div>
+      <div class="ngo_table row" id="ngo-results" style="margin-top: 20px;">
+        <% @ngo_users.each do |ngo_user| %>
+          <div class="col-sm-6 col-md-6 col-lg-3" style="padding: 10px;"> <!-- Adjusted grid settings for better responsiveness -->
+            <div class="card" style="height: 500px; width: 100%; display: flex; flex-direction: column; overflow: hidden;">
+            <div style="height: 70%; width: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                <% if ngo_user.image_url.present? %>
+                <%= image_tag ngo_user.image_url, alt: "#{ngo_user.name} image", style: 'max-height: 90%; max-width: 100%; object-fit: cover;' %>
+                <% else %>
+                <%= image_tag 'default.png', alt: "Default image", style: 'max-height: 100%; max-width: 100%; object-fit: cover;' %>
+                <% end %>
+            </div>
+            <div class="card-body" style="height: 30%; width: 100%; display: flex; align-items: center; justify-content: center; text-align: center;">
+                <h5 class="card-title" style="font-size: 1rem;"> <%= ngo_user.name %> </h5>
+            </div>
+            <div>
+                <p> Email: <%= ngo_user.email %> </p>
+                <p> Contact Name: <%= ngo_user.contact_number %> </p>
+                <p> Website: <%= ngo_user.website %> </p>
+                <button type="button" class="message-btn" data-id="<%= ngo_user.id %>">Send a message</button>
+            </div>
+            </div>
+        </div>
+        <% end %>
+        <!-- Popup Modal for Editing -->
+        <div id="editModal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit NGO Information</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-form">
+                <!-- Example field -->
+                <div class="form-group">
+                    <label for="ngo-name">Name</label>
+                    <input type="text" class="form-control" id="ngo-name" name="name">
+                </div>
+                <!-- Add more fields as needed -->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary save-btn">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+        </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      $(document).ready(function() {
+        $('#search-input').on('input', function() {
+          $.ajax({
+            url: $('#search-form').attr('action'),
+            method: 'GET',
+            data: $('#search-form').serialize(),
+            success: function(data) {
+              var newContent = $(data).find('#ngo-results').html();
+              $('#ngo-results').html(newContent);
+              $('#search-input').focus();
+              var val = $('#search-input').val();
+              $('#search-input').val('');
+              $('#search-input').val(val);
+            }
+          });
+          });
+      });
+
+    // $(document).ready(function() {
+    //     // Handling the search input with real-time AJAX updates
+    //     $('#search-input').on('input', function() {
+    //         $.ajax({
+    //         url: $('#search-form').attr('action'),
+    //         method: 'GET',
+    //         data: $('#search-form').serialize(),
+    //         success: function(data) {
+    //             var newContent = $(data).find('#ngo-results').html();
+    //             $('#ngo-results').html(newContent);
+                
+    //             // Re-bind the click event to the new edit buttons
+    //             bindEditButtons();
+
+    //             // Maintain the input focus and value after refresh
+    //             $('#search-input').focus();
+    //             var val = $('#search-input').val();
+    //             $('#search-input').val('');
+    //             $('#search-input').val(val);
+    //         }
+    //         });
+    //     });
+
+    //     // Function to bind edit button events
+    //     function bindEditButtons() {
+    //         $('.edit-btn').off('click').on('click', function() {
+    //         var ngoId = $(this).data('id');
+    //         // Fetch existing NGO data and fill in the form fields (can use AJAX here)
+    //         // Placeholder for actual data fetch, here we would use ngoId to get specific data
+    //         $('#ngo-name').val(''); // Reset or set to fetched data
+            
+    //         $('#editModal').modal('show'); // Using Bootstrap's modal component
+    //     });
+    // }
+
+    // // Initially bind the edit button events
+    // bindEditButtons();
+
+    // // Handling the Save button click in the modal
+    //     $('.save-btn').click(function() {
+    //     // Implement save logic, possibly using AJAX
+    //     // Example of form submission, can replace with AJAX if needed
+    //         $('#edit-form').submit();
+    //     });
+    // });
+    </script>
+  </body>
+</html>
