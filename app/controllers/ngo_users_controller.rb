@@ -57,4 +57,10 @@ class NgoUsersController < ApplicationController
     @ngo_page = true
   end
 
+  def inbox
+    @back_path = ngo_user_path
+    @ngo_user = NgoUser.find_by_id(params[:id])
+    @messages = Message.all_received_messages(@ngo_user.id)
+  end
+
 end

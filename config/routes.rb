@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   get 'user_particulars/:id/history', to: 'user_particulars#history', as: 'user_history'
   get 'user_particulars/:id/document', to: 'user_particulars#document', as: 'user_document'
   get 'user_particulars/:id/ngocontact', to: 'user_particulars#ngocontact', as: 'ngocontact'
+  post 'user_particulars/:id/:ngoid/message', to: 'user_particulars#message', as: 'user_message'
   get 'user_particulars/family'
   # Resources: UserParticulars
   resources :user_particulars do
@@ -29,6 +30,7 @@ Rails.application.routes.draw do
       get 'verify', to: 'ngo_users#verify', as: 'verify' # Add this line for the verify action
       post 'verify', to: 'ngo_users#verify'
       post 'confirm_verify', to: 'ngo_users#confirm_verify'
+      get 'inbox', to: 'ngo_users#inbox', as: 'inbox'
     end
   end
 

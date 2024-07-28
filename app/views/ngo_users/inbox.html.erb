@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact History Layout</title>
+    <style>
+        .container {
+            display: flex;
+            flex-direction: row; /* Align children horizontally */
+        }
+
+        .list-panel {
+            flex: 1; /* Each panel takes up half the space of the container */
+            padding: 20px;
+            overflow-y: auto; /* Enables vertical scrolling */
+            max-height: 90vh; /* Adjust the height according to your design needs */
+            background-color: #fdc6cf; /* Green background */
+            border-radius: 5px; /* Rounded corners */
+            border: 1px solid #3e8e41; /* Darker green border */
+        }
+
+        .details-panel {
+            flex: 1; /* Each panel takes up half the space of the container */
+            overflow-y: auto; /* Enables vertical scrolling */
+            padding: 20px;
+        }
+
+        .contact-history ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .contact-history li {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .contact-history li:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="list-panel">
+            <div class="contact-history">
+                <ul>
+                    <% @messages.each do |message| %>
+                        <li onclick="showDetails(this)" 
+                            data-full-name="<%= message.full_name %>"
+                            data-id-number ="<%= message.unique_id %>"
+                            data-contact_number ="<%= message.phone_number_country_code %> <%= message.phone_number %>"
+                            data-email ="<%= message.email %>"
+                            data-message ="<%= message.message %>">
+                            <div class="text-content">
+                                <h3><%= message.full_name %></h3>
+                                <p class="date"><%= DateTime.parse(message.createdAt).strftime("%B %d, %Y %H:%M") %></p>
+                                <p><%= message.message.split(' ').take(10).join(' ') %> <%= '...' if message.message.split(' ').size > 10 %></p>
+                            </div>
+                        </li>
+                    <% end %>
+                </ul>
+            </div>
+        </div>
+        <div class="details-panel">
+            <h1>Details</h1>
+            <p id="name"></p>
+            <p id="idNumber"></p>
+            <p id="contactNo"></p>
+            <p id="email"></p>
+            <p id="message"></p>
+        </div>
+    </div>
+
+    <script>
+        function showDetails(element) {
+            var fullName = element.getAttribute('data-full-name');
+            var idNumber = element.getAttribute('data-id-number');
+            var contactNumber = element.getAttribute('data-contact_number');
+            var email = element.getAttribute('data-email');
+            var message = element.getAttribute('data-message');
+            document.getElementById('name').innerHTML = '<strong>Name:</strong> ' + fullName;
+            document.getElementById('idNumber').textContent = 'Unique Id: ' + idNumber;
+            document.getElementById('contactNo').textContent = 'Contact Number: ' + contactNumber;
+            document.getElementById('email').textContent = 'Email: ' + email;
+            document.getElementById('message').textContent = 'Message: ' + message;
+        }
+    </script>
+</body>
+</html>
