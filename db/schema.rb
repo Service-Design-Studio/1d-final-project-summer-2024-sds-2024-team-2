@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_28_114518) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_29_180119) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -70,6 +70,19 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_28_114518) do
     t.string "website"
   end
 
+  create_table "saved_posts", force: :cascade do |t|
+    t.string "title"
+    t.datetime "date"
+    t.string "location"
+    t.text "description"
+    t.string "ngo_name"
+    t.boolean "saved"
+    t.integer "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_saved_posts_on_user_id"
+  end
+
   create_table "user_histories", force: :cascade do |t|
     t.text "description"
     t.date "date"
@@ -127,6 +140,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_28_114518) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "messages", "ngo_users", column: "ngo_users_id"
   add_foreign_key "messages", "users"
+  add_foreign_key "saved_posts", "users"
   add_foreign_key "user_histories", "users"
   add_foreign_key "user_particulars", "users"
 end

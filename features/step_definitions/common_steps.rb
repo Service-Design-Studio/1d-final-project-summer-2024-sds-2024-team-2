@@ -91,6 +91,8 @@ def path_to(page_name)
     new_user_particular_path
   when 'registration'
     new_user_registration_path
+  when 'saved post'
+    saved_post_user_path
   else
     raise "Undefined page: #{page_name}"
   end

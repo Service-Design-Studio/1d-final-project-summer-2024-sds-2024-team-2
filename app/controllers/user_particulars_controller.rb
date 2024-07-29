@@ -208,9 +208,10 @@ class UserParticularsController < ApplicationController
     error_messages_arr
   end
 
-  def family
+  def saved_post
     @back_path = root_path
     @user_particular = current_user.user_particular
+    @bulletins = Bulletin.all.order(updated_at: :desc)
   end
 
   def ngocontact
@@ -221,7 +222,7 @@ class UserParticularsController < ApplicationController
     else
       NgoUser.all_ngo_users
     end
-    
+
   end
 
   def message

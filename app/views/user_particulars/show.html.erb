@@ -43,7 +43,7 @@
             <% end %>
           </div>
           <div class="row d-flex justify-content-center gap-2">
-            <%= link_to user_particulars_family_path, class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
+            <%= link_to saved_post_user_particular_path(@user), class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
               <i style='color: orange;' class="bi bi-bookmark-fill fs-5"></i> Saved Post
             <% end %>
             <%= link_to ngocontact_path(@user), class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
