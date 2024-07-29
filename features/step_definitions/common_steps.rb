@@ -27,7 +27,6 @@ Given(/^that a User account by the Username of "([^"]*)", Email of "([^"]*)", Ph
 end
 
 When(/^I press the "([^"]*)" button$/) do |btn_name|
-  byebug
   if has_button?(btn_name)
     click_button(btn_name)
   elsif has_link?(btn_name)
