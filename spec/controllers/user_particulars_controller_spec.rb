@@ -107,10 +107,28 @@ RSpec.describe UserParticularsController, type: :controller do
   end
 
   describe 'GET #edit' do
-    it 'renders edit template' do
-      @user_particular = UserParticular.create_user_particular(@valid_attributes)
-      get :edit, params: { id: @user_particular.id }
-      expect(response).to render_template(:edit)
+    context 'after user edits particulars with failed parameters' do
+      it 'renders edit template with data from parameters' do
+        @user_particular_db = UserParticular.create_user_particular(@valid_attributes) #create to provide the id for edit action
+        @param_attributes = @valid_attributes.merge(full_name: 'Not John', id: @user_particular_db.id)
+        @user_particular = UserParticular.new(@param_attributes)
+        get :edit, params: { id: @user_particular_db.id, user_particular: @param_attributes }
+        
+        # Check that :user_particular is correctly assigned to database record
+        expect(assigns(:user_particular)).to eq(@user_particular)
+        expect(response).to render_template(:edit)
+      end
+    end
+
+    context 'user opens edit particulars page initially' do
+      it 'renders edit template with data from database' do
+        @user_particular = UserParticular.create_user_particular(@valid_attributes)
+        get :edit, params: { id: @user_particular.id }
+        
+        # Check that :user_particular is correctly assigned to database record
+        expect(assigns(:user_particular)).to eq(@user_particular)
+        expect(response).to render_template(:edit)
+      end
     end
   end
 
