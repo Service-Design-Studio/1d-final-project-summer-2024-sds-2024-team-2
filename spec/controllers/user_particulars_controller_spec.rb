@@ -85,9 +85,24 @@ RSpec.describe UserParticularsController, type: :controller do
   end
 
   describe 'GET #new' do
-    it 'renders new template' do
-      get :new
-      expect(response).to render_template(:new)
+    context 'when session has user_particular_params' do
+      it 'fills up the form with previously filled data' do
+        session[:user_particular_params] = @valid_attributes.except(:user_id)
+        get :new
+
+        expect(assigns(:user_particular)).to have_attributes(@valid_attributes.except(:user_id))
+        expect(response).to render_template(:new)
+      end
+    end
+
+    context 'when session does not have user_particular_params' do
+      it 'creates a new empty UserParticular object' do
+        session[:user_particular_params] = nil
+        get :new
+
+        expect(assigns(:user_particular)).to be_a_new(UserParticular)
+        expect(response).to render_template(:new)
+      end
     end
   end
 
