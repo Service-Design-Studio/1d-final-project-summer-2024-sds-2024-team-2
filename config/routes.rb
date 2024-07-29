@@ -34,4 +34,5 @@ Rails.application.routes.draw do
   end
 
   resources :bulletins
+  resources :saved_posts
 end

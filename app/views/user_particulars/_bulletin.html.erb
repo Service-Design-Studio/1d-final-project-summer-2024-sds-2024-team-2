@@ -21,6 +21,7 @@
   <div class="container-fluid mx-0 overflow-auto flex" style="font-size: 0.7rem;">
     <div class="row justify-content-evenly" style='max-height: 100%;' id="event-cards-container">
       <% @bulletins.each do |bulletin| %>
+        <% saved = @saved_posts.include?(bulletin.id) %>
         <% ngo_user = @ngo_users.find { |user| user.name == bulletin.ngo_name } %>
         <div class="col-sm-6 col-md-4 col-lg-3 mb-4 event-card card p-0" style="min-width:140px; max-width: 220px;" data-ngoname="<%= bulletin.ngo_name %>" data-title="<%= bulletin.title %>" data-description="<%= bulletin.description %>" data-date="<%= bulletin.date ? bulletin.date.strftime("%d %B %Y") : "Date not available" %>" data-location="<%= bulletin.location %>" data-image-url="<%= ngo_user&.image_url.present? ? ngo_user.image_url : 'default.png' %>" >
           <div class="px-1 d-flex flex-column w-100 h-100" data-bs-toggle="modal" data-bs-target="#eventCards">
@@ -46,16 +47,20 @@
             <%= link_to '#', onclick: 'toggleSavePost(this)', style: 'text-decoration: none;' do %>
               <i style='text-center text-decoration: none; color: black;' class="bi bi-send"></i>
             <% end %>
-            <%= link_to '#', onclick: 'toggleSavePost(this)', style: 'text-decoration: none;' do %>
-              <i style='text-center text-decoration: none; color: orange;' class="bi bi-bookmark"></i>
+            <% if @on_saved_page %>
+              <%= link_to '#', onclick: 'deleteSavePost(this)', data: { bulletin_id: bulletin.id, user_id: @user.id }, style: 'text-decoration: none;' do %>
+                <i style='text-center text-decoration: none; color: orange;' class="bi bi-bookmark-fill"></i>
+              <% end %>
+            <% else %>
+              <%= link_to '#', onclick: 'toggleSavePost(this)', data: { bulletin_id: bulletin.id, user_id: @user.id }, style: 'text-decoration: none;' do %>
+                <i style='text-center text-decoration: none; color: orange;' class="bi <%= saved ? 'bi-bookmark-fill' : 'bi-bookmark' %>"></i>
+              <% end %>
             <% end %>
           </div>
         </div>
       <% end %>
     </div>
   </div>
-
-
   <!-- Modal -->
   <div class="modal fade" id="eventCards" tabindex="-1" aria-labelledby="eventCardsLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -77,49 +82,95 @@
       </div>
     </div>
   </div>
-
-  
-
 </div>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script>
-    $(document).ready(function() {
-      $('#search-input').on('input', function() {
-        var searchQuery = $(this).val().toLowerCase();
-        $('.event-card').each(function() {
-          var title = $(this).data('title');
-          var description = $(this).data('description');
-          var ngoName = $(this).data('ngoname');
-          if (title.includes(searchQuery) || description.includes(searchQuery) || ngoName.includes(searchQuery)) {
-            $(this).show();
-          } else {
-            $(this).hide();
-          }
-        });
-      });
-
-      $('.event-card').on('click', function() {
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('#search-input').on('input', function() {
+      var searchQuery = $(this).val().toLowerCase();
+      $('.event-card').each(function() {
         var title = $(this).data('title');
         var description = $(this).data('description');
-        var date = $(this).data('date');
-        var location = $(this).data('location');
-        var ngoname = $(this).data('ngoname');
-        //var imageUrl = $(this).data('image-url');
-        $('#modal-ngoname').text(ngoname);
-        $('#modal-title').text(title);
-        $('#modal-description').text("Description: " + description);
-        $('#modal-date').text("Date: " + date);
-        $('#modal-location').text("Location: " + location);
-        //$('#modal-photo').attr('src', "app/assets/images/" + imageUrl);
+        var ngoName = $(this).data('ngoname');
+        if (title.includes(searchQuery) || description.includes(searchQuery) || ngoName.includes(searchQuery)) {
+          $(this).show();
+        } else {
+          $(this).hide();
+        }
       });
+    });
 
+    $('.event-card').on('click', function() {
+      var title = $(this).data('title');
+      var description = $(this).data('description');
+      var date = $(this).data('date');
+      var location = $(this).data('location');
+      var ngoname = $(this).data('ngoname');
+      //var imageUrl = $(this).data('image-url');
+      $('#modal-ngoname').text(ngoname);
+      $('#modal-title').text(title);
+      $('#modal-description').text("Description: " + description);
+      $('#modal-date').text("Date: " + date);
+      $('#modal-location').text("Location: " + location);
+      //$('#modal-photo').attr('src', "app/assets/images/" + imageUrl);
+    });
 
-      window.toggleSavePost = function(element) {
-        // Toggle the 'saved' class or perform an action
-        var icon = element.querySelector('i');
+    deleteSavePost = function(element) {
+      const bulletinId = element.dataset.bulletinId;
+      const userId = element.dataset.userId;
+
+      fetch(`/saved_posts/${userId}?bulletinId=${bulletinId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ user_id: userId })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          element.querySelector('i').classList.remove('bi-bookmark-fill');
+          element.querySelector('i').classList.add('bi-bookmark');
+        } else {
+          console.error('Error:', data.error);
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    }
+
+    toggleSavePost = function(element) {
+      var icon = element.querySelector('i');
+      var bulletinId = element.dataset.bulletinId;
+      var userId = element.dataset.userId;
+
+      // Toggle the 'saved' class or perform an action
+      icon.classList.toggle('bi-bookmark-fill');
+      icon.classList.toggle('bi-bookmark');
+
+      // Make an AJAX request to toggle the saved state
+      fetch(`/saved_posts?bulletin_id=${bulletinId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (!data.success) {
+          // Revert the icon toggle if the request failed
+          icon.classList.toggle('bi-bookmark-fill');
+          icon.classList.toggle('bi-bookmark');
+          alert('Failed to toggle save state');
+        }
+      })
+      .catch(error => {
+        // Revert the icon toggle if there was an error
         icon.classList.toggle('bi-bookmark-fill');
         icon.classList.toggle('bi-bookmark');
-      };
-      
-    });
-  </script>
+        alert('An error occurred');
+      });
+    };
+  });
+</script>
