@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="<%= form_authenticity_token %>" />
+    <meta name="csrf-token" content="<%#= form_authenticity_token %>" />
     <title>NGO Search</title>
     <style>
       /* Responsive text adjustments */
@@ -15,8 +15,8 @@
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   </head>
-  <body>
-    <div class="container" style="padding: 15px; position: relative;">
+  <body>-->
+    <div class="container-fluid">
       <div class="row mb-4">
         <div class="col-12">
           <form id="search-form" method="get" action="<%= ngocontact_path %>" style="display: flex; align-items: center; justify-content: space-between;">
@@ -25,9 +25,9 @@
           </form>
         </div>
       </div>
-      <div class="ngo_table row" id="ngo-results" style="margin-top: 20px;">
+      <div class="ngo_table row d-flex justify-content-center" id="ngo-results" style="margin-top: 20px;">
         <% @ngo_users.each do |ngo_user| %>
-          <div class="col-sm-6 col-md-6 col-lg-3" style="padding: 10px;"> <!-- Adjusted grid settings for better responsiveness -->
+          <div class="col-auto"> <!-- Adjusted grid settings for better responsiveness -->
             <div class="card" style="height: 500px; width: 100%; display: flex; flex-direction: column; overflow: hidden;">
             <div style="height: 70%; width: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden;">
                 <% if ngo_user.image_url.present? %>
@@ -48,113 +48,114 @@
             </div>
         </div>
         <% end %>
-        <!-- Popup Modal for Editing -->
-        <div id="editModal" class="modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Send a Message</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
+<!-- Popup Modal for Editing -->
+<div id="editModal" class="modal" tabindex="-1" role="dialog">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title">Send a Message</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form id="message-form">
+            <div class="form-group">
+                <label for="message-text">Message:</label>
+                <textarea class="form-control" id="message-text" name="message" rows="4" placeholder="Type your message here..." required></textarea>
             </div>
-            <div class="modal-body">
-                <form id="message-form">
-                    <div class="form-group">
-                        <label for="message-text">Message:</label>
-                        <textarea class="form-control" id="message-text" name="message" rows="4" placeholder="Type your message here..." required></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary save-btn">Send</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-            </div>
-        </div>
-        </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary save-btn">Send</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    </div>
+    </div>
+</div>
+</div>
       </div>
     </div>
-    <script>
 
-    $(document).ready(function() {
-        // Handling the search input with real-time AJAX updates
-        $('#search-input').on('input', function() {
-            $.ajax({
-            url: $('#search-form').attr('action'),
-            method: 'GET',
-            data: $('#search-form').serialize(),
-            success: function(data) {
-                var newContent = $(data).find('#ngo-results').html();
-                $('#ngo-results').html(newContent);
-                
-                // Re-bind the click event to the new edit buttons
-                bindEditButtons();
+<script>
 
-                // Maintain the input focus and value after refresh
-                $('#search-input').focus();
-                var val = $('#search-input').val();
-                $('#search-input').val('');
-                $('#search-input').val(val);
-            }
-            });
-        });
-
-        // Function to bind edit button events
-        function bindEditButtons() {
-            $('.edit-btn').off('click').on('click', function() {
-            var userid = $(this).data('id');
-            var ngoId = $(this).data('ngoid');
-
-            // Fetch existing NGO data and fill in the form fields (can use AJAX here)
-            // Placeholder for actual data fetch, here we would use ngoId to get specific data
-            //$('#ngo-name').val(''); // Reset or set to fetched data
-            $('#editModal').data('ngoid', ngoId);
-            $('#editModal').data('userid', userid);
-            $('#editModal').modal('show'); // Using Bootstrap's modal component
-            });
-        }
-
-    // Initially bind the edit button events
-        bindEditButtons();
-
-    // Handling the Save button click in the modal
-        $('.save-btn').click(function() {
-            var ngoId = $('#editModal').data('ngoid');
-            var userId = $('#editModal').data('userid');
-            var messageContent = $('#message-text').val();
+$(document).ready(function() {
+    // Handling the search input with real-time AJAX updates
+    $('#search-input').on('input', function() {
+        $.ajax({
+        url: $('#search-form').attr('action'),
+        method: 'GET',
+        data: $('#search-form').serialize(),
+        success: function(data) {
+            var newContent = $(data).find('#ngo-results').html();
+            $('#ngo-results').html(newContent);
             
-            if (!messageContent.trim()) {
-                alert('Please enter a message before sending.');
-                $('#message-text').focus();
-                return;  // Stop the function if no message is entered
-            }
+            // Re-bind the click event to the new edit buttons
+            bindEditButtons();
 
-            $.ajax({
-                url: '/user_particulars/' + userId + '/' + ngoId + '/message',  // Adjust the URL as necessary
-                type: 'POST',
-                data: {
-                    message: { content: messageContent }
-                },
-                headers: {
-                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') // Ensure CSRF token is sent
-                },
-                success: function(response) {
-                    alert('Message sent successfully!');
-                    $('#message-text').val('');
-                    $('#editModal').modal('hide');
-                },
-                error: function(xhr) {
-                    alert('Error sending message: ' + xhr.responseText);
-                }
-            });
-        });
-
-        $('.btn-secondary, .close').click(function() {
-            $('#message-text').val('');
-            $('#editModal').modal('hide');
+            // Maintain the input focus and value after refresh
+            $('#search-input').focus();
+            var val = $('#search-input').val();
+            $('#search-input').val('');
+            $('#search-input').val(val);
+        }
         });
     });
-    </script>
-  </body>
-</html>
+
+    // Function to bind edit button events
+    function bindEditButtons() {
+        $('.edit-btn').off('click').on('click', function() {
+        var userid = $(this).data('id');
+        var ngoId = $(this).data('ngoid');
+
+        // Fetch existing NGO data and fill in the form fields (can use AJAX here)
+        // Placeholder for actual data fetch, here we would use ngoId to get specific data
+        //$('#ngo-name').val(''); // Reset or set to fetched data
+        $('#editModal').data('ngoid', ngoId);
+        $('#editModal').data('userid', userid);
+        $('#editModal').modal('show'); // Using Bootstrap's modal component
+        });
+    }
+
+// Initially bind the edit button events
+    bindEditButtons();
+
+// Handling the Save button click in the modal
+    $('.save-btn').click(function() {
+        var ngoId = $('#editModal').data('ngoid');
+        var userId = $('#editModal').data('userid');
+        var messageContent = $('#message-text').val();
+        
+        if (!messageContent.trim()) {
+            alert('Please enter a message before sending.');
+            $('#message-text').focus();
+            return;  // Stop the function if no message is entered
+        }
+
+        $.ajax({
+            url: '/user_particulars/' + userId + '/' + ngoId + '/message',  // Adjust the URL as necessary
+            type: 'POST',
+            data: {
+                message: { content: messageContent }
+            },
+            headers: {
+                'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') // Ensure CSRF token is sent
+            },
+            success: function(response) {
+                alert('Message sent successfully!');
+                $('#message-text').val('');
+                $('#editModal').modal('hide');
+            },
+            error: function(xhr) {
+                alert('Error sending message: ' + xhr.responseText);
+            }
+        });
+    });
+
+    $('.btn-secondary, .close').click(function() {
+        $('#message-text').val('');
+        $('#editModal').modal('hide');
+    });
+});
+</script>
+<!--  </body>
+</html>-->
