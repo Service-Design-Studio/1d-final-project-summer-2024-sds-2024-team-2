@@ -9,6 +9,10 @@ Then(/^I should see the following filled-in details$/) do |table|
   end
 end
 
+Then(/^I should enter the "Home" page$/) do
+  expect(current_path).to eq('/')
+end
+
 Then(/^I should stay on the "([^"]*)" page$/) do |page_name|
   expect(current_path).to eq(path_to(page_name))
 end
@@ -23,6 +27,7 @@ Given(/^that a User account by the Username of "([^"]*)", Email of "([^"]*)", Ph
 end
 
 When(/^I press the "([^"]*)" button$/) do |btn_name|
+  byebug
   if has_button?(btn_name)
     click_button(btn_name)
   elsif has_link?(btn_name)

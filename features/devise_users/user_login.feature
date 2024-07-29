@@ -13,7 +13,7 @@ Scenario: Successful Login with Phone Number
     | Log in EnableID      | 90000001    |
     | Password          | password1   |
   And I press the "Log in" button
-  Then I should be redirected to the "Home" page
+  Then I should enter the "Home" page
 
 Scenario: Successful Login with Email
   Given I fill in the following fields
@@ -21,7 +21,7 @@ Scenario: Successful Login with Email
     | Log in EnableID             | user1@mail.com   |
     | Password          | password1   |
   And I press the "Log in" button
-  Then I should be redirected to the "Home" page
+  Then I should enter the "Home" page
 
 Scenario: Successful Login with Username
   Given I fill in the following fields
@@ -29,7 +29,7 @@ Scenario: Successful Login with Username
     | Log in EnableID          | user1   |
     | Password          | password1   |
   And I press the "Log in" button
-  Then I should be redirected to the "Home" page
+  Then I should enter the "Home" page
 
 Scenario: Wrong Password
   Given I fill in the following fields

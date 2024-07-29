@@ -36,7 +36,6 @@ When(/^I key in the Unique ID: '([^"]*)" and 6 digit code 2FA: "([^"]*)", then I
   fill_in 'unique_id', with: unique_id # Replace 'unique_id_field' with the actual field identifier
   fill_in 'two_fa_passcode', with: two_fa_code # Replace 'two_fa_code_field' with the actual field identifier
   step 'I press the "Check" button'
-  byebug
 end
 
 Then('I should see his\/her EnableID card') do
