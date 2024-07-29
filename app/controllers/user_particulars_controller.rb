@@ -213,6 +213,34 @@ class UserParticularsController < ApplicationController
     @user_particular = current_user.user_particular
   end
 
+  def ngocontact
+    @back_path = user_particular_path
+    @user = current_user.user_particular
+    @ngo_users = if params[:search].present?
+      NgoUser.search_by_name(params[:search])
+    else
+      NgoUser.all_ngo_users
+    end
+    
+  end
+
+  def message
+    # Access URL parameters
+    user_id = params[:id]
+    ngo_id = params[:ngoid]
+    message_content = params[:message][:content]
+
+
+    # Here, you can create a new message or perform other actions, e.g.,
+    @message = Message.new(user_id: user_id, ngo_users_id: ngo_id, message: message_content)
+
+    if @message.save
+      render json: { status: 'success', message: 'Message sent successfully!' }, status: :created
+    else
+      render json: { status: 'error', errors: @message.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def set_ngo_users

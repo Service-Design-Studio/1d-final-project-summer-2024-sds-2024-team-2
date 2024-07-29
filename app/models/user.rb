@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   has_one :user_particular
   has_one :user_history
+  has_many :messages, class_name: 'Message'
 
   attr_accessor :login
 

@@ -21,6 +21,7 @@ Scenario: Uploading a Document
     And a new field should appear to describe the document added
     And a dropdown menu to select the type of document I am uploading should be displayed above the designated drop area
     And I should have an option to view and remove the document
+    And the document should appear in the "Uploaded Documents" section to the right of the drop area
 
 Scenario: Uploading an Unsupported File Type
     Given I am on the "Upload Document" page
@@ -31,20 +32,20 @@ Scenario: Uploading an Unsupported File Type
 Scenario: Uploading a File That Is Too Large
     Given I am on the "Upload Document" page
     When I select a file that exceeds the size limit
-    And I press the "Upload" button
+    And I drop the file
     Then I should see an error message stating "File size exceeds the maximum limit of 5MB. Please upload a smaller file."
 
 Scenario: Previewing Uploaded Documents
     Given I am on the "Upload Document" page
     And I have uploaded a document
     When I click on the "Preview" button next to the uploaded document
-    Then I should be able to preview the document
+    Then I should be able to preview the document in a new tab
 
 Scenario: Categorizing Uploaded Documents
     Given I am on the "Upload Document" page
     And I have uploaded a document
     When I select an option from the dropdown menu to categorize the document
-    Then the document should be categorized correctly
+    Then the document should be categorized correctly with options "Education", "Medical", "Personal Documents", and "Property"
 
 Scenario: Viewing Guide on Uploading Documents
     Given I am on the "Upload Document" page

@@ -1,0 +1,16 @@
+Feature: Interaction History
+
+Background: 
+Given I am already on the NGO "Gebirah" page 
+
+Scenario: Navigating to the Interaction History page 
+    When I press on the "Interaction History" button 
+    Then I should be redirected to the "Intercation History" page 
+    And I should see the title "Interaction History" 
+    And I should see a list of my recent interactions
+
+Scenario: Interaction History with no interactions 
+    When I press on the "Interaction History" button 
+    Then I should be redirected to the "Interaction History" page 
+    And I should see the title "Interaction History" 
+    And I should see a message "No interactions found"

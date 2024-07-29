@@ -9,3 +9,10 @@ Given(/^I am already on the NGO "(.*?)" page$/) do |ngo_name|
   visit ngo_user_path(ngo_user_id)
 end
 
+Given(/^I am on the user home page$/) do |page|
+  visit path_to(home)
+end
+
+Then(/^I should see the added post by NGO on the bulletin board$/) do
+  expect(page).to have_css('#individual-cards')
+end

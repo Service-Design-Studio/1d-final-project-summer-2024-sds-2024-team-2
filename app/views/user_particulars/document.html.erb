@@ -21,6 +21,7 @@
             cursor: pointer;
             text-align: center;
             margin-bottom: 20px;
+            flex-direction: column;
         }
 
         /* Hover effect for the file upload wrapper */
@@ -58,6 +59,8 @@
             position: relative;
             background: url('data:image/svg+xml;utf8,<svg fill="%23333" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
             background-size: 16px 16px;
+            width: 100%;
+            padding-right: 25px; /* Add space for the arrow */
         }
 
         /* Make the container scrollable */
@@ -116,8 +119,6 @@
 
         .document-list {
             width: 100%;
-            max-width: 600px;
-            display: none; /* Initially hidden */
         }
 
         .document-list table {
@@ -150,8 +151,8 @@
 
         .upload-section {
             display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
+            flex-direction: row;
+            flex-wrap: nowrap;
         }
 
         .upload-section .form-section,
@@ -160,49 +161,43 @@
             margin: 10px;
         }
 
-        .upload-section .document-list {
-            max-width: 45%; /* Ensure the uploaded documents section doesn't take too much space */
+        /* Ensure the select element is wide enough to display the text */
+        select {
+            min-width: 150px; /* Adjust this value as needed */
+        }
+
+        .alert-heading {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .description-container {
+            margin-top: 10px;
         }
     </style>
 </head>
 
 <body>
-    <div class="alert alert-info" style="font-size: 0.9em;" role="alert">
-        <h5 class="alert-heading">Guide</h5>
-        <p>To upload your documents, please follow these steps:</p>
-        <ol>
-            <li>Drag and drop your documents into the designated area or click to select files.</li>
-            <li>Choose the document type from the dropdown menu.</li>
-            <li>Once all documents are uploaded, they will appear in the 'Uploaded Documents' section.</li>
-            <li>You can preview or delete the uploaded documents from the list.</li>
-        </ol>
-    </div>
     <div class="container mt-5">
+        <div class="alert alert-info text-center" style="font-size: 0.9em;" role="alert">
+            <h5 class="alert-heading">Guide</h5>
+            <p>To upload your documents, please follow these steps:</p>
+            <ol>
+                <li>Drag and drop your documents into the designated area or click to select files.</li>
+                <li>Once all documents are uploaded, they will appear in the 'Uploaded Documents' section.</li>
+                <li>You can preview or delete the uploaded documents from the list.</li>
+            </ol>
+        </div>
         <div class="upload-section">
             <!-- Form for file upload -->
             <div class="form-section">
-                <h1 class="text-center">Select documents to upload</h1>
-                <p class="text-center">Drag and drop your documents below. Supported formats: PDF, DOCX, JPG. Max size: 5MB.</p>
-
                 <form id="uploadForm">
                     <!-- File upload wrapper -->
                     <div class="file-upload-wrapper" data-mdb-file-upload-init id="dropArea">
-                        <span>Drag and drop a file here</span>
+                        <span>Drag and drop your documents below. Supported formats: PDF, DOCX, JPG. Max size: 5MB.</span>
+                        <button type="button" class="btn btn-primary mt-2" id="selectDocumentButton">Select Document</button>
                         <input type="file" id="fileInput" multiple>
                     </div>
-
-                    <!-- Dropdown menu -->
-                    <div class="form-group">
-                        <label for="documentTypeDropdown">Select Document Type</label>
-                        <select class="form-control dropdown" id="documentTypeDropdown">
-                            <option>PDF</option>
-                            <option>DOCX</option>
-                            <option>JPG</option>
-                        </select>
-                    </div>
-
-                    <!-- File description (hidden initially) -->
-                    <textarea class="form-control mt-3" id="fileDescription" placeholder="Description of the file..." style="display: none;"></textarea>
                 </form>
 
                 <!-- Status message -->
@@ -216,7 +211,7 @@
             </div>
 
             <!-- Existing Documents -->
-            <div class="document-list" id="uploadedDocumentsContainer">
+            <div class="document-list" id="uploadedDocumentsContainer" style="display: none;">
                 <h2 class="text-center">Uploaded Documents</h2>
                 <table class="table" id="uploadedDocumentsTable">
                     <thead>
@@ -225,7 +220,9 @@
                             <th>Size</th>
                             <th>Date</th>
                             <th>Status</th>
+                            <th>Select Type</th>
                             <th>Action</th>
+                            <th>Description</th>
                         </tr>
                     </thead>
                     <tbody id="documentTableBody">
@@ -247,9 +244,11 @@
 
         // Function to update the file list display
         function updateFileList() {
+            console.log("Updating file list...");
             var fileListContainer = document.getElementById('fileList');
             fileListContainer.innerHTML = ''; // Clear previous file list
             selectedFiles.forEach(file => {
+                console.log("Adding file to list: ", file);
                 var fileItem = document.createElement('li');
                 fileItem.classList.add('file-list-item');
                 var fileTypeIcon = getFileTypeIcon(file.type);
@@ -257,11 +256,11 @@
                 fileListContainer.appendChild(fileItem);
             });
 
-            // Show the description field if files are selected
+            // Show the file list if files are selected
             if (selectedFiles.length > 0) {
-                document.getElementById('fileDescription').style.display = 'block';
+                document.getElementById('fileList').style.display = 'block';
             } else {
-                document.getElementById('fileDescription').style.display = 'none';
+                document.getElementById('fileList').style.display = 'none';
             }
         }
 
@@ -326,43 +325,38 @@
             event.preventDefault();
             dropArea.classList.remove('hover'); // Remove hover effect on drop
             const files = Array.from(event.dataTransfer.files); // Get files from drop event
-            let validFiles = [];
-            files.forEach(file => {
-                if (!['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg'].includes(file.type)) {
-                    document.getElementById('statusMessage').innerText = 'Unsupported file type. Please upload a PDF, DOCX, or JPG file.';
-                } else if (file.size > 5242880) { // 5MB limit
-                    document.getElementById('statusMessage').innerText = 'File size exceeds the maximum limit of 5MB. Please upload a smaller file.';
-                } else {
-                    selectedFiles.push(file);
-                    validFiles.push(file);
-                }
-            });
-            updateFileList(); // Update the file list display
-            if (validFiles.length > 0) {
-                document.getElementById('statusMessage').innerText = 'Files attached successfully!';
-            }
-            addUploadedDocumentsToList(validFiles); // Add uploaded documents to the list
+            console.log("Dropped files: ", files);
+            handleFiles(files);
         });
 
         fileInput.addEventListener('change', (event) => {
             const files = Array.from(event.target.files); // Get files from file input
+            console.log("Selected files: ", files);
+            handleFiles(files);
+        });
+
+        // Function to handle files
+        function handleFiles(files) {
             let validFiles = [];
             files.forEach(file => {
                 if (!['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg'].includes(file.type)) {
                     document.getElementById('statusMessage').innerText = 'Unsupported file type. Please upload a PDF, DOCX, or JPG file.';
+                    console.log("Unsupported file type: ", file.type);
                 } else if (file.size > 5242880) { // 5MB limit
                     document.getElementById('statusMessage').innerText = 'File size exceeds the maximum limit of 5MB. Please upload a smaller file.';
+                    console.log("File size exceeds limit: ", file.size);
                 } else {
                     selectedFiles.push(file);
                     validFiles.push(file);
+                    console.log("Valid file added: ", file);
                 }
             });
             updateFileList(); // Update the file list display
             if (validFiles.length > 0) {
                 document.getElementById('statusMessage').innerText = 'Files attached successfully!';
+                addUploadedDocumentsToList(validFiles); // Add uploaded documents to the list
             }
-            addUploadedDocumentsToList(validFiles); // Add uploaded documents to the list
-        });
+        }
 
         // Event listener for form submission to handle the file upload process
         document.getElementById('uploadForm').addEventListener('submit', function (event) {
@@ -409,10 +403,19 @@
                         <td>${formatFileSize(file.size)}</td>
                         <td>${formatDate(new Date())}</td>
                         <td class="status-unverified">Unverified</td>
+                        <td>
+                            <select class="form-control dropdown">
+                                <option value="education">Education</option>
+                                <option value="medical">Medical</option>
+                                <option value="personal documents">Personal Documents</option>
+                                <option value="property">Property</option>
+                            </select>
+                        </td>
                         <td class="action-buttons">
                             <button class="btn btn-primary btn-sm" onclick="previewDocument('${URL.createObjectURL(file)}')">Preview</button>
                             <button class="btn btn-danger btn-sm" onclick="deleteDocument(this)">Delete</button>
                         </td>
+                        <td><textarea class="form-control description-container" placeholder="Enter Description..."></textarea></td>
                     `;
                     uploadedDocumentsTable.appendChild(newRow);
                 }
@@ -441,6 +444,11 @@
         function previewDocument(fileUrl) {
             window.open(fileUrl, '_blank');
         }
+
+        // Event listener for "Select Document" button
+        document.getElementById('selectDocumentButton').addEventListener('click', function () {
+            fileInput.click();
+        });
     </script>
 </body>
 

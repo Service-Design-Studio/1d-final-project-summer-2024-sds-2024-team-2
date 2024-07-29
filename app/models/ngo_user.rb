@@ -1,4 +1,6 @@
 class NgoUser < ApplicationRecord
+  has_many :messages, class_name: 'Message'
+
   def self.find_by_id(id)
     NgoUser.find_by(id: id)
   end

@@ -37,3 +37,14 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   cursor: pointer;
 }
+
+.message-btn{
+  background-color: #ffb9b9;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  padding: 10px 20px;
+  width: 120px;
+  text-align: center;
+  font-size: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}

@@ -3,13 +3,14 @@
 # newer version of cucumber-rails. Consider adding your own code to a new file
 # instead of editing this one. Cucumber will automatically load all features/**/*.rb
 # files.
+SimpleCov.start
+
 require 'database_cleaner/active_record'
 require 'capybara/cucumber'
 require 'selenium/webdriver'
 require 'warden'
 require 'devise'
 require 'simplecov'
-SimpleCov.start
 
 World(Warden::Test::Helpers)
 Warden.test_mode!
@@ -44,14 +45,9 @@ ActionController::Base.allow_rescue = false
 DatabaseCleaner.strategy = :transaction
 
 # Start the transaction before each scenario
-Before do
-  DatabaseCleaner.start
-end
+
 
 # Rollback the transaction after each scenario
-After do
-  DatabaseCleaner.clean
-end
 
 # You may also want to configure DatabaseCleaner to use different strategies for certain features and scenarios.
 # See the DatabaseCleaner documentation for details. Example:
