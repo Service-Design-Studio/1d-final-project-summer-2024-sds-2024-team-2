@@ -54,7 +54,7 @@ RSpec.describe UserParticularsController, type: :controller do
     sign_in @user
   end
 
-  # Rollback transaction after each test case
+  # Rollback transaction after each test suite
   around(:each) do |example|
       ActiveRecord::Base.transaction do
       example.run
@@ -329,4 +329,42 @@ RSpec.describe UserParticularsController, type: :controller do
     end
   end
 
+  describe 'GET #contact_ngo' do
+    before do
+      ngo_users_data = [
+        { name: 'Test NGO 1', image_url: 'test_ngo_1.png' },
+        { name: 'Test NGO 2', image_url: 'test_ngo_2.png' },
+        { name: 'Oxfam', image_url: 'oxfam.png' },
+        { name: 'World Vision', image_url: 'worldvision.png' },
+        { name: 'Human Rights Watch', image_url: 'humanrightswatch.png' }
+      ]
+
+      @ngo_users = ngo_users_data.map do |ngo_data|
+        NgoUser.find_or_create_by(name: ngo_data[:name]) do |ngo_user|
+          ngo_user.image_url = ngo_data[:image_url]
+        end
+      end
+    end
+
+    context 'no search param' do
+      it 'renders contact ngo template with all ngo users' do
+        @user_particular = UserParticular.create_user_particular(@valid_attributes)
+        get :contact_ngo, params: { id: @user_particular.id }
+
+        expect(assigns(:ngo_users)).to eq(NgoUser.all)
+        expect(response).to render_template(:contact_ngo)
+      end
+    end
+
+    context 'with search param' do
+      it 'renders contact ngo template with filtered ngo users' do
+        @user_particular = UserParticular.create_user_particular(@valid_attributes)
+        get :contact_ngo, params: { id: @user_particular.id, search: 'Test' }
+
+        filtered_ngos = NgoUser.where('name LIKE ?', '%Test%')
+        expect(assigns(:ngo_users)).to match_array(filtered_ngos)
+        expect(response).to render_template(:contact_ngo)
+      end
+    end
+  end
 end

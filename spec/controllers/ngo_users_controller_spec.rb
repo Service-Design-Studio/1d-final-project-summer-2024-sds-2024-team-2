@@ -80,7 +80,7 @@ RSpec.describe NgoUsersController, type: :controller do
 
     describe 'GET #index' do
       context 'without search parameter' do
-        it 'renders the index template and assigns all ngo_users' do
+        it 'renders the index template and gets all ngo_users' do
           # Assuming you have some ngo_users in your test database or you can create them using FactoryBot
           get :index
           expect(response).to render_template(:index)
@@ -89,13 +89,12 @@ RSpec.describe NgoUsersController, type: :controller do
       end
   
       context 'with search parameter' do
-        it 'calls NgoUser.search_by_name with the search parameter' do
-          search_term = "example search"
-          expect(NgoUser).to receive(:search_by_name).with(search_term).and_return([])
-  
-          get :index, params: { search: search_term }
+        it 'renders the index template and gets filtered ngo_users' do
+          get :index, params: { search: 'Test' }
+
+          filtered_ngos = NgoUser.where('name LIKE ?', '%Test%')
+          expect(assigns(:ngo_users)).to match_array(filtered_ngos)
           expect(response).to render_template(:index)
-          # You can also check assigns(:ngo_users) if needed
         end
       end
     end
