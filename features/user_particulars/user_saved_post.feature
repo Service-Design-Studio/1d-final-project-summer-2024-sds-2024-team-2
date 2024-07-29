@@ -34,3 +34,4 @@ Scenario: Removing a saved post from the bulletin
     When I press the "Saved Post" button
     Then I should be redirected to the "Saved Post" page
     And I should see "There are no saved posts!"
+
