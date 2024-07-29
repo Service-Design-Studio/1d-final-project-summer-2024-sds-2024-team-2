@@ -1,12 +1,12 @@
-Feature: Interaction with common bulletin board
+Feature: Add and manage events in the common bulletin board
   As a non-governmental organization(NGO) personnel
-  I want to access the common bulletin board and have a button to add posts
-  So that I can view from other NGOs and post my own NGO's posts
+  I want to add events to the common bulletin board and have a button view my events
+  So that I can post and view my events
 
 Background:
   Given I am already on the NGO "Gebirah" page
 
-Scenario: Adding a message to the common bulletin board
+Scenario: Add event to bulletin board
   When I press the "Add Bulletin Post" button
   Given I fill in the following fields
   | Field                     | Value             |
@@ -18,7 +18,14 @@ Scenario: Adding a message to the common bulletin board
   Then I should see "Post added successfully."
   And I should see the added post by NGO on the bulletin board
 
-Scenario: Viewing added post on bulletin board on user home page
+Scenario: View my events
+  When I press the "My Events" button
+  Then I should be redirected to the "My Events" page
+  And I should see a list of events posted by my NGO
+
+Scenario: Viewing added event on bulletin board on user home page
   Given I am on the user home page
   Then I should see the added post by NGO on the bulletin board
-  
+
+
+
