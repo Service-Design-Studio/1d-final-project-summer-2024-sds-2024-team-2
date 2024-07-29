@@ -210,12 +210,7 @@ class UserParticularsController < ApplicationController
     error_messages_arr
   end
 
-  def family
-    @back_path = root_path
-    @user_particular = current_user.user_particular
-  end
-
-  def ngocontact
+  def contact_ngo
     @back_path = user_particular_path
     @user = current_user.user_particular
     @ngo_users = if params[:search].present?
