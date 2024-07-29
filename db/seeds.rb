@@ -183,6 +183,8 @@ users_data.each do |user_data|
   end
 end
 
+UserParticular.first.update(unique_id: '1055290', two_fa_passcode: '606833')
+
 # Create or update NgoUsers
 ngo_users_data.each do |ngo_data|
   ngo_user = NgoUser.find_or_initialize_by(name: ngo_data[:name])

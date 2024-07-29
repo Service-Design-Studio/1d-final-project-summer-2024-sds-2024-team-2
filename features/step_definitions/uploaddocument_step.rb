@@ -13,17 +13,17 @@ Given(/^I need to upload my documents to complete my digital identity$/) do
   @user.update(needs_document_upload: true)
 end
 
-Given(/^I am on the "([^"]*)" page$/) do |page|
-  visit path_to(page)
-end
+# Given(/^I am on the "([^"]*)" page$/) do |page|
+#   visit path_to(page)
+# end
 
-When(/^I press the "([^"]*)" button$/) do |button|
-  click_button(button)
-end
+# When(/^I press the "([^"]*)" button$/) do |button|
+#   click_button(button)
+# end
 
-Then(/^I should be directed to the "([^"]*)" page$/) do |page|
-  expect(page).to have_current_path(path_to(page))
-end
+# Then(/^I should be directed to the "([^"]*)" page$/) do |page|
+#   expect(page).to have_current_path(path_to(page))
+# end
 
 When(/^I drag a document file into the designated drop area$/) do
   # Code to simulate dragging a document file into the drop area
@@ -57,9 +57,9 @@ When(/^I select a file that exceeds the size limit$/) do
   attach_file('document_upload', Rails.root.join('spec/fixtures/large_file.zip'))
 end
 
-Then(/^I should see an error message stating "([^"]*)"$/) do |message|
-  expect(page).to have_content(message)
-end
+# Then(/^I should see an error message stating "([^"]*)"$/) do |message|
+#   expect(page).to have_content(message)
+# end
 
 Given(/^I have uploaded a document$/) do
   attach_file('document_upload', Rails.root.join('spec/fixtures/sample_document.pdf'))
@@ -88,9 +88,9 @@ When(/^I look at the top of the page$/) do
   # No action needed, just checking the content
 end
 
-Then(/^I should see a guide on what to do on this page$/) do
-  expect(page).to have_content('Please upload your documents to complete your registration.')
-end
+# Then(/^I should see a guide on what to do on this page$/) do
+#   expect(page).to have_content('Please upload your documents to complete your registration.')
+# end
 
 Given(/^my document has been successfully uploaded and I have received confirmation$/) do
   # Assuming document upload and confirmation are set

@@ -1,5 +1,6 @@
 Given('a user particular exists with unique ID {string} and 2FA code {string}') do |unique_id, two_fa_code|
-  user_particular = UserParticular.find_by(unique_id:, two_fa_passcode: two_fa_code)
+  user_particular = UserParticular.first
+  user_particular.update(unique_id:, two_fa_passcode: two_fa_code)
   expect(user_particular).not_to be_nil
 end
 
@@ -34,7 +35,8 @@ end
 When(/^I key in the Unique ID: '([^"]*)" and 6 digit code 2FA: "([^"]*)", then I press the check button$/) do |unique_id, two_fa_code|
   fill_in 'unique_id', with: unique_id # Replace 'unique_id_field' with the actual field identifier
   fill_in 'two_fa_passcode', with: two_fa_code # Replace 'two_fa_code_field' with the actual field identifier
-  click_button 'Check'
+  step 'I press the "Check" button'
+  byebug
 end
 
 Then('I should see his\/her EnableID card') do

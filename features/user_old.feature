@@ -53,8 +53,6 @@ Scenario: Navigating to the Search NGOs page
     And I should see a list of NGOs
 
 
-Feature: Bulletin Board on User Home Page
-
 
 
 Scenario: Saved Post

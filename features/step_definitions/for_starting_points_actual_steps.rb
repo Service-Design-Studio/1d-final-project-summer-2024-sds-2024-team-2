@@ -13,9 +13,8 @@ Given(/^I am now on the user particulars home page as a new user$/) do
   raise "User creation failed: #{user.errors.full_messages.join(', ')}" unless user.persisted?
 
   fill_in 'Log in EnableID', with: user.username
-  fill_in 'Password', with: user.password
+  fill_in 'Password', with: "newuserpassword"
   step 'I press the "Log in" button'
-  login_as(user, scope: :user)
   visit root_path
   expected_path = '/'
   raise "Expected to be on #{expected_path}, but was on #{current_path}" unless current_path == expected_path

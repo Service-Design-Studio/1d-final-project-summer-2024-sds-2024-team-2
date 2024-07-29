@@ -11,15 +11,14 @@ require 'selenium/webdriver'
 require 'warden'
 require 'devise'
 require 'simplecov'
+require 'cucumber/rails'
+
 SimpleCov.start
 World(Warden::Test::Helpers)
 Warden.test_mode!
 After { Warden.test_reset! } # devise inherits from warden, putting this here enables login_as methods in steps file
 
-# Previous content of test helper now starts here
-
-require 'cucumber/rails'
-Capybara.default_driver = :selenium_chrome_headless
+Capybara.default_driver = :selenium_chrome
 Capybara.server_port = 3002
 Capybara.app_host = 'http://127.0.0.1:3002'
 # By default, any exception happening in your Rails application will bubble up
@@ -45,9 +44,14 @@ ActionController::Base.allow_rescue = false
 DatabaseCleaner.strategy = :transaction
 
 # Start the transaction before each scenario
-
+Before do
+  DatabaseCleaner.start
+end
 
 # Rollback the transaction after each scenario
+After do
+  DatabaseCleaner.clean
+end
 
 # You may also want to configure DatabaseCleaner to use different strategies for certain features and scenarios.
 # See the DatabaseCleaner documentation for details. Example:
