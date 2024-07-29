@@ -3,7 +3,7 @@
 # newer version of cucumber-rails. Consider adding your own code to a new file
 # instead of editing this one. Cucumber will automatically load all features/**/*.rb
 # files.
-SimpleCov.start
+
 
 require 'database_cleaner/active_record'
 require 'capybara/cucumber'
@@ -11,7 +11,7 @@ require 'selenium/webdriver'
 require 'warden'
 require 'devise'
 require 'simplecov'
-
+SimpleCov.start
 World(Warden::Test::Helpers)
 Warden.test_mode!
 After { Warden.test_reset! } # devise inherits from warden, putting this here enables login_as methods in steps file
