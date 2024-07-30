@@ -21,7 +21,7 @@ class UserParticularsController < ApplicationController
 
     # Check if validation passes
     if error_messages_arr.empty?
-      @user_particular = UserParticular.create_user_particular(user_particular_params)
+      @user_particular = UserParticular.create(user_particular_params)
 
       # Check if user particular creation was successful
       if @user_particular.persisted?

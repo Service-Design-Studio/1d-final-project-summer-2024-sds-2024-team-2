@@ -70,7 +70,7 @@ RSpec.describe UserParticularsController, type: :controller do
 
   describe 'GET #show' do
     it 'renders show template' do
-      @user_particular = UserParticular.create_user_particular(@valid_attributes)
+      @user_particular = UserParticular.create(@valid_attributes)
       get :show, params: { id: @user_particular.id }
       expect(response).to render_template(:show)
     end
@@ -78,7 +78,7 @@ RSpec.describe UserParticularsController, type: :controller do
 
   describe 'GET #document' do
     it 'renders document template' do
-      @user_particular = UserParticular.create_user_particular(@valid_attributes)
+      @user_particular = UserParticular.create(@valid_attributes)
       get :document, params: { id: @user_particular.id }
       expect(response).to render_template(:document)
     end
@@ -109,7 +109,7 @@ RSpec.describe UserParticularsController, type: :controller do
   describe 'GET #edit' do
     context 'after user edits particulars with failed parameters' do
       it 'renders edit template with data from parameters' do
-        @user_particular_db = UserParticular.create_user_particular(@valid_attributes) #create to provide the id for edit action
+        @user_particular_db = UserParticular.create(@valid_attributes) #create to provide the id for edit action
         @param_attributes = @valid_attributes.merge(full_name: 'Not John', id: @user_particular_db.id)
         @user_particular = UserParticular.new(@param_attributes)
         get :edit, params: { id: @user_particular_db.id, user_particular: @param_attributes }
@@ -122,7 +122,7 @@ RSpec.describe UserParticularsController, type: :controller do
 
     context 'user opens edit particulars page initially' do
       it 'renders edit template with data from database' do
-        @user_particular = UserParticular.create_user_particular(@valid_attributes)
+        @user_particular = UserParticular.create(@valid_attributes)
         get :edit, params: { id: @user_particular.id }
         
         # Check that :user_particular is correctly assigned to database record
@@ -211,7 +211,7 @@ RSpec.describe UserParticularsController, type: :controller do
   describe 'POST #generate_2fa' do
     context 'when 2FA passcode generation is successful' do
       it 'generates and returns a 2FA passcode' do
-        @user_particular = UserParticular.create_user_particular(@valid_attributes)
+        @user_particular = UserParticular.create(@valid_attributes)
         post :generate_2fa, params: { id: @user_particular.id }, format: :json
 
         @user_particular.reload
@@ -222,7 +222,7 @@ RSpec.describe UserParticularsController, type: :controller do
 
     context 'when 2FA passcode generation fails' do
       it 'returns an error message' do
-        @user_particular = UserParticular.create_user_particular(@valid_attributes)
+        @user_particular = UserParticular.create(@valid_attributes)
 
         # Force the save method called in generate_2fa to return false
         allow_any_instance_of(UserParticular).to receive(:save).and_return(false)
@@ -348,7 +348,7 @@ RSpec.describe UserParticularsController, type: :controller do
 
     context 'no search param' do
       it 'renders contact ngo template with all ngo users' do
-        @user_particular = UserParticular.create_user_particular(@valid_attributes)
+        @user_particular = UserParticular.create(@valid_attributes)
         get :contact_ngo, params: { id: @user_particular.id }
 
         expect(assigns(:ngo_users)).to eq(NgoUser.all)
@@ -358,7 +358,7 @@ RSpec.describe UserParticularsController, type: :controller do
 
     context 'with search param' do
       it 'renders contact ngo template with filtered ngo users' do
-        @user_particular = UserParticular.create_user_particular(@valid_attributes)
+        @user_particular = UserParticular.create(@valid_attributes)
         get :contact_ngo, params: { id: @user_particular.id, search: 'Test' }
 
         filtered_ngos = NgoUser.where('name LIKE ?', '%Test%')

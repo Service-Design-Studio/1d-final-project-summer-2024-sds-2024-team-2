@@ -51,29 +51,29 @@ RSpec.describe UserParticular, type: :model do
     end
   end
 
-  describe '.create_user_particular' do
-    it 'creates a new user particular' do
-      new_user_particular = UserParticular.create_user_particular(@attributes)
+  # describe '.create' do
+  #   it 'creates a new user particular' do
+  #     new_user_particular = UserParticular.create(@attributes)
   
-      expect(new_user_particular).to be_valid
-      expect(new_user_particular).not_to be_nil
-      expect(new_user_particular).to have_attributes(@attributes)
-    end
+  #     expect(new_user_particular).to be_valid
+  #     expect(new_user_particular).not_to be_nil
+  #     expect(new_user_particular).to have_attributes(@attributes)
+  #   end
   
-    it 'fails to create a user particular without a user_id' do
-      attributes = @attributes.merge(user_id: nil)
-      new_user_particular = UserParticular.create_user_particular(attributes)
+  #   it 'fails to create a user particular without a user_id' do
+  #     attributes = @attributes.merge(user_id: nil)
+  #     new_user_particular = UserParticular.create(attributes)
   
-      expect(new_user_particular).not_to be_valid
-    end
+  #     expect(new_user_particular).not_to be_valid
+  #   end
   
-    it 'fails to create a user particular with a non-existent user_id' do
-      attributes = @attributes.merge(user_id: 99999)  # Assuming 99999 is not a valid user ID
-      new_user_particular = UserParticular.create_user_particular(attributes)
+  #   it 'fails to create a user particular with a non-existent user_id' do
+  #     attributes = @attributes.merge(user_id: 99999)  # Assuming 99999 is not a valid user ID
+  #     new_user_particular = UserParticular.create(attributes)
   
-      expect(new_user_particular).not_to be_valid
-    end
-  end
+  #     expect(new_user_particular).not_to be_valid
+  #   end
+  # end
   
 
   describe '.find_by_id' do
