@@ -6,6 +6,7 @@ class NgoUsersController < ApplicationController
   def show
     @back_path = ngo_users_path
     @ngo_user = NgoUser.find(params[:id])
+    @ngo_user = NgoUser.find(params[:id])
     nil unless params[:unique_id].present?
     @ngo_users = NgoUser.all
     @bulletins = Bulletin.all.order(updated_at: :desc) # Ensures @bulletins is an array even if the query finds no records for NIL posts in bulletin board
@@ -65,6 +66,7 @@ class NgoUsersController < ApplicationController
 
   def inbox
     @back_path = ngo_user_path
+    @ngo_user = NgoUser.find(params[:id])
     @ngo_user = NgoUser.find(params[:id])
     @messages = Message.all_received_messages(@ngo_user.id)
   end
