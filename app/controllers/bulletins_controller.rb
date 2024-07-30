@@ -9,7 +9,7 @@ class BulletinsController < ApplicationController
 
   def create
     logger.debug "User ID: #{params[:user_id]}"
-    @ngo_user = NgoUser.find_by_id(params[:bulletin][:user_id])
+    @ngo_user = NgoUser.find(params[:bulletin][:user_id])
     @bulletin = Bulletin.new(bulletin_params)
     if @bulletin.save
       flash[:success] = "Post added successfully."

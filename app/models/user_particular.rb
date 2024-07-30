@@ -9,9 +9,9 @@ class UserParticular < ApplicationRecord
   #   UserParticular.create(attributes)
   # end
 
-  def self.find_by_id(id)
-    UserParticular.find_by(id:)
-  end
+  # def self.find_by_id(id)
+  #   UserParticular.find_by(id:)
+  # end
 
   def self.find_by_unique_id(unique_id)
     UserParticular.find_by(unique_id:)

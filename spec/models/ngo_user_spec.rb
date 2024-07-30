@@ -9,28 +9,28 @@ RSpec.describe NgoUser, type: :model do
     end
   end
 
-  describe '.find_by_id' do
-    it 'returns the ngo user with the correct attributes' do
-      created_ngo_user = NgoUser.create!(name: "Test NGO", image_url: "test_ngo.png")
+  # describe '.find_by_id' do
+  #   it 'returns the ngo user with the correct attributes' do
+  #     created_ngo_user = NgoUser.create!(name: "Test NGO", image_url: "test_ngo.png")
 
-      attributes = { 
-        name: "Test NGO",
-        image_url: "test_ngo.png"
-      }
+  #     attributes = { 
+  #       name: "Test NGO",
+  #       image_url: "test_ngo.png"
+  #     }
     
-      # Test the find_by_id method
-      found_ngo_user = NgoUser.find_by_id(created_ngo_user.id)
-      expect(found_ngo_user).not_to be_nil
-      attributes.each do |key, value|
-        expect(found_ngo_user.send(key)).to eq(value)
-      end
-    end 
+  #     # Test the find_by_id method
+  #     found_ngo_user = NgoUser.find_by_id(created_ngo_user.id)
+  #     expect(found_ngo_user).not_to be_nil
+  #     attributes.each do |key, value|
+  #       expect(found_ngo_user.send(key)).to eq(value)
+  #     end
+  #   end 
     
-    it 'returns nil if no ngo user with the specified ID is found' do
-      found_ngo_user = NgoUser.find_by_id(999999) # Assuming there's no ngo user with ID 999999
-      expect(found_ngo_user).to be_nil
-    end
-  end
+  #   it 'returns nil if no ngo user with the specified ID is found' do
+  #     found_ngo_user = NgoUser.find_by_id(999999) # Assuming there's no ngo user with ID 999999
+  #     expect(found_ngo_user).to be_nil
+  #   end
+  # end
 
   describe '.search_by_name' do
     it 'returns the ngo user when given the full name' do

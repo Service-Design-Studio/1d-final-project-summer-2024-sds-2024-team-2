@@ -76,21 +76,21 @@ RSpec.describe UserParticular, type: :model do
   # end
   
 
-  describe '.find_by_id' do
-    it 'returns the user particular with the specified ID' do
-      # Test the find_by_id method
-      found_user_particular = UserParticular.find_by_id(@user_particular.id)
-      expect(found_user_particular).not_to be_nil
-      @attributes.each do |key, value|
-          expect(found_user_particular.send(key)).to eq(value)
-      end
-    end  
+  # describe '.find_by_id' do
+  #   it 'returns the user particular with the specified ID' do
+  #     # Test the find_by_id method
+  #     found_user_particular = UserParticular.find_by_id(@user_particular.id)
+  #     expect(found_user_particular).not_to be_nil
+  #     @attributes.each do |key, value|
+  #         expect(found_user_particular.send(key)).to eq(value)
+  #     end
+  #   end  
 
-    it 'returns nil if no user particular with the specified ID is found' do
-      found_user_particular = UserParticular.find_by_id(999999) # Assuming there's no user particular with ID 999999
-      expect(found_user_particular).to be_nil
-    end
-  end
+  #   it 'returns nil if no user particular with the specified ID is found' do
+  #     found_user_particular = UserParticular.find_by_id(999999) # Assuming there's no user particular with ID 999999
+  #     expect(found_user_particular).to be_nil
+  #   end
+  # end
 
   describe '.find_by_unique_id' do
     it 'returns the user particular with the specified unique ID' do
