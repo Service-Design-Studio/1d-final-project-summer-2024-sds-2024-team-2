@@ -73,9 +73,11 @@ class UserParticularsController < ApplicationController
     @back_path = root_path
     set_dropdown_options
 
+    # if user updated form with invalid parameters
     if params[:user_particular]
       @user_particular = UserParticular.new(user_particular_params)
       @user_particular.id = params[:id] # Required for error flow
+    # user is editing the form from scratch
     else
       @user_particular = UserParticular.find(params[:id])
     end
@@ -216,7 +218,7 @@ class UserParticularsController < ApplicationController
     @on_saved_page = true
   end
 
-  def ngocontact
+  def contact_ngo
     @back_path = user_particular_path
     @user = current_user.user_particular
     @ngo_users = if params[:search].present?

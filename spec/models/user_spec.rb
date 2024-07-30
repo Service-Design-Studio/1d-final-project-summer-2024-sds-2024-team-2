@@ -76,4 +76,24 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe '.find_for_database_authentication' do
+    let!(:user) { User.create!(username: 'dbuser', email: 'db@user.com', phone_number: '11111111', password: 'testpassword', password_confirmation: 'testpassword') }
+
+    it 'finds user by username' do
+      expect(User.find_for_database_authentication(login: 'dbuser')).to eq(user)
+    end
+
+    it 'finds user by email' do
+      expect(User.find_for_database_authentication(login: 'db@user.com')).to eq(user)
+    end
+
+    it 'finds user by phone number' do
+      expect(User.find_for_database_authentication(login: '11111111')).to eq(user)
+    end
+
+    it 'returns nil if no user is found' do
+      expect(User.find_for_database_authentication(login: 'nonexistent')).to be_nil
+    end
+  end
 end

@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   post 'user_particulars/:id/generate_2fa', to: 'user_particulars#generate_2fa', as: 'generate_2fa'
   get 'user_particulars/:id/history', to: 'user_particulars#history', as: 'user_history'
   get 'user_particulars/:id/document', to: 'user_particulars#document', as: 'user_document'
-  get 'user_particulars/:id/ngocontact', to: 'user_particulars#ngocontact', as: 'ngocontact'
+  get 'user_particulars/:id/contact_ngo', to: 'user_particulars#contact_ngo', as: 'contact_ngo'
   post 'user_particulars/:id/:ngoid/message', to: 'user_particulars#message', as: 'user_message'
 
   resources :user_particulars do

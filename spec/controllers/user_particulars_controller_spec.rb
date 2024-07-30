@@ -54,7 +54,7 @@ RSpec.describe UserParticularsController, type: :controller do
     sign_in @user
   end
 
-  # Rollback transaction after each test case
+  # Rollback transaction after each test suite
   around(:each) do |example|
       ActiveRecord::Base.transaction do
       example.run
@@ -85,17 +85,50 @@ RSpec.describe UserParticularsController, type: :controller do
   end
 
   describe 'GET #new' do
-    it 'renders new template' do
-      get :new
-      expect(response).to render_template(:new)
+    context 'when session has user_particular_params' do
+      it 'fills up the form with previously filled data' do
+        session[:user_particular_params] = @valid_attributes.except(:user_id)
+        get :new
+
+        expect(assigns(:user_particular)).to have_attributes(@valid_attributes.except(:user_id))
+        expect(response).to render_template(:new)
+      end
+    end
+
+    context 'when session does not have user_particular_params' do
+      it 'creates a new empty UserParticular object' do
+        session[:user_particular_params] = nil
+        get :new
+
+        expect(assigns(:user_particular)).to be_a_new(UserParticular)
+        expect(response).to render_template(:new)
+      end
     end
   end
 
   describe 'GET #edit' do
-    it 'renders edit template' do
-      @user_particular = UserParticular.create_user_particular(@valid_attributes)
-      get :edit, params: { id: @user_particular.id }
-      expect(response).to render_template(:edit)
+    context 'after user edits particulars with failed parameters' do
+      it 'renders edit template with data from parameters' do
+        @user_particular_db = UserParticular.create_user_particular(@valid_attributes) #create to provide the id for edit action
+        @param_attributes = @valid_attributes.merge(full_name: 'Not John', id: @user_particular_db.id)
+        @user_particular = UserParticular.new(@param_attributes)
+        get :edit, params: { id: @user_particular_db.id, user_particular: @param_attributes }
+        
+        # Check that :user_particular is correctly assigned to database record
+        expect(assigns(:user_particular)).to eq(@user_particular)
+        expect(response).to render_template(:edit)
+      end
+    end
+
+    context 'user opens edit particulars page initially' do
+      it 'renders edit template with data from database' do
+        @user_particular = UserParticular.create_user_particular(@valid_attributes)
+        get :edit, params: { id: @user_particular.id }
+        
+        # Check that :user_particular is correctly assigned to database record
+        expect(assigns(:user_particular)).to eq(@user_particular)
+        expect(response).to render_template(:edit)
+      end
     end
   end
 
@@ -296,4 +329,42 @@ RSpec.describe UserParticularsController, type: :controller do
     end
   end
 
+  describe 'GET #contact_ngo' do
+    before do
+      ngo_users_data = [
+        { name: 'Test NGO 1', image_url: 'test_ngo_1.png' },
+        { name: 'Test NGO 2', image_url: 'test_ngo_2.png' },
+        { name: 'Oxfam', image_url: 'oxfam.png' },
+        { name: 'World Vision', image_url: 'worldvision.png' },
+        { name: 'Human Rights Watch', image_url: 'humanrightswatch.png' }
+      ]
+
+      @ngo_users = ngo_users_data.map do |ngo_data|
+        NgoUser.find_or_create_by(name: ngo_data[:name]) do |ngo_user|
+          ngo_user.image_url = ngo_data[:image_url]
+        end
+      end
+    end
+
+    context 'no search param' do
+      it 'renders contact ngo template with all ngo users' do
+        @user_particular = UserParticular.create_user_particular(@valid_attributes)
+        get :contact_ngo, params: { id: @user_particular.id }
+
+        expect(assigns(:ngo_users)).to eq(NgoUser.all)
+        expect(response).to render_template(:contact_ngo)
+      end
+    end
+
+    context 'with search param' do
+      it 'renders contact ngo template with filtered ngo users' do
+        @user_particular = UserParticular.create_user_particular(@valid_attributes)
+        get :contact_ngo, params: { id: @user_particular.id, search: 'Test' }
+
+        filtered_ngos = NgoUser.where('name LIKE ?', '%Test%')
+        expect(assigns(:ngo_users)).to match_array(filtered_ngos)
+        expect(response).to render_template(:contact_ngo)
+      end
+    end
+  end
 end

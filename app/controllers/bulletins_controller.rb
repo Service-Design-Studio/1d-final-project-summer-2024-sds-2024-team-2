@@ -1,11 +1,11 @@
 class BulletinsController < ApplicationController
-  def index
-    @bulletins = Bulletin.all
-    @ngo_users = NgoUser.all
-  end
+  # def index
+  #   @bulletins = Bulletin.all
+  #   @ngo_users = NgoUser.all
+  # end
 
-  def update
-  end
+  # def update
+  # end
 
   def create
     logger.debug "User ID: #{params[:user_id]}"
