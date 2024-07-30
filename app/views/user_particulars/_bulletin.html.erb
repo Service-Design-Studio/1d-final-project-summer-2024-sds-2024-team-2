@@ -132,6 +132,7 @@
         if (data.success) {
           element.querySelector('i').classList.remove('bi-bookmark-fill');
           element.querySelector('i').classList.add('bi-bookmark');
+          $(element).closest('.event-card').remove();
         } else {
           console.error('Error:', data.error);
         }

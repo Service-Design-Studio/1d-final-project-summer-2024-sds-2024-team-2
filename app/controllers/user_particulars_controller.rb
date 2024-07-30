@@ -211,7 +211,7 @@ class UserParticularsController < ApplicationController
   def saved_post
     @back_path = root_path
     @user_particular = current_user.user_particular
-    @bulletins = SavedPost.all.order(updated_at: :desc)
+    @bulletins = Bulletin.joins(:saved_posts).where(saved_posts: { user_id: current_user.id })
     @on_saved_page = true
   end
 
