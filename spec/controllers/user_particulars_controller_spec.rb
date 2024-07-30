@@ -203,7 +203,7 @@ RSpec.describe UserParticularsController, type: :controller do
         patch :update, params: { id: 99999, user_particular: @valid_attributes.merge(full_name: 'new name') }
     
         expect(response).to redirect_to(edit_user_particular_path(99999, user_particular: @valid_attributes.merge(full_name: 'new name')))
-        expect(flash[:error_message]).to eq 'Edit failed. Please fix the error(s) below:'
+        expect(flash[:error_message]).to eq 'Edit failed.'
       end
     end
   end

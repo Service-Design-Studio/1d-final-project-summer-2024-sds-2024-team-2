@@ -79,7 +79,7 @@ class UserParticularsController < ApplicationController
       @user_particular.id = params[:id] # Required for error flow
     # user is editing the form from scratch
     else
-      @user_particular = UserParticular.find(params[:id])
+      @user_particular = UserParticular.find_by(id: params[:id])
     end
   end
 
@@ -89,16 +89,15 @@ class UserParticularsController < ApplicationController
 
     # Check if validation passes
     if error_messages_arr.empty?
-      logger.debug "OVER HERE! UPDATE! #{user_particular_params}"
-      @user_particular = UserParticular.update_user_particular(params[:id], user_particular_params)
+      @user_particular = UserParticular.find_by(id: params[:id])
 
-      # Check if edit was successful
-      if @user_particular
+      # Check if user particular exists and if edit was successful
+      if @user_particular && @user_particular.update(user_particular_params)
         flash[:success] = 'Digital ID was successfully edited!'
         UserParticular.reset_verification(params[:id]) # Set status to pending and reset verifier_ngo
         redirect_to @user_particular # redirects to /user_particulars/:id
       else
-        flash[:error_message] = 'Edit failed. Please fix the error(s) below:'
+        flash[:error_message] = 'Edit failed.'
         redirect_to edit_user_particular_path(params[:id], user_particular: user_particular_params)
       end
     else
@@ -145,7 +144,7 @@ class UserParticularsController < ApplicationController
   end
 
   def generate_2fa
-    @user_particular = UserParticular.find(params[:id])
+    @user_particular = UserParticular.find_by(id: params[:id])
     @user_particular.generate_2fa_secret
     if @user_particular.save
       respond_to do |format|

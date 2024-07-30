@@ -21,13 +21,13 @@ class UserParticular < ApplicationRecord
   #   UserParticular.find_by(unique_id: unique_id, two_fa_passcode: two_fa_passcode)
   # end
 
-  def self.update_user_particular(id, attributes)
-    user_particular = find_by(id: id)
-    return nil unless user_particular
+  # def self.update_user_particular(id, attributes)
+  #   user_particular = find_by(id: id)
+  #   return nil unless user_particular
     
-    user_particular.update(attributes)
-    user_particular
-  end
+  #   user_particular.update(attributes)
+  #   user_particular
+  # end
   
 
   def self.reset_verification(id)
@@ -48,9 +48,5 @@ class UserParticular < ApplicationRecord
   def generate_2fa_secret
     self.two_fa_passcode = rand(100_000..999_999)
   end
-
-  # def verified_by_ngo_user_name
-  #   self.verified_by_ngo_user&.name
-  # end
 
 end
