@@ -14,7 +14,7 @@ Scenario: Adding a saved post
     Then the bookmark icon for the "Gebirah Aid Giveaway", ID: "1" event card is filled
     When I press the "Saved Post" button
     Then I should be redirected to the "Saved Post" page
-    And I should see the "Gebirah Aid Giveaway", ID: "1" event card
+    And the "Gebirah Aid Giveaway", ID: "1" event card should be present
 
 Scenario: Messaging a NGO
     When I press on the message icon on the "Gebirah Aid Giveaway", ID: "1" event card
@@ -52,6 +52,6 @@ Scenario: Adding a saved post function on the opened modal
     Then the bookmark icon for the "Gebirah Aid Giveaway", ID: "1" event card is filled
     When I press the "Saved Post" button
     Then I should be redirected to the "Saved Post" page
-    And I should see the "Gebirah Aid Giveaway", ID: "1" event card
+    And the "Gebirah Aid Giveaway", ID: "1" event card should be present
 
 

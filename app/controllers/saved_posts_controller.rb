@@ -33,6 +33,7 @@ class SavedPostsController < ApplicationController
       )
 
       if saved_post.save
+        puts "Saved post: #{saved_post.inspect}"
         render json: { success: true, action: 'saved' }
       else
         render json: { success: false }

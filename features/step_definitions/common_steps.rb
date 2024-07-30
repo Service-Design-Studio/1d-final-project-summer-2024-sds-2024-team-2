@@ -78,9 +78,14 @@ end
 
 # Maps page names to their corresponding paths
 def path_to(page_name)
+  if has_selector?('#EnableID_usertitle')
+    user_id = find('#EnableID_usertitle')['data-user-id']
+  else
+    user_id = nil
+  end
   case page_name.downcase
   when 'home'
-    [root_path, user_particular_path]
+    user_particular_path(user_id)
   when 'login'
     new_user_session_path
   when 'ngogebirah'
@@ -92,7 +97,7 @@ def path_to(page_name)
   when 'registration'
     new_user_registration_path
   when 'saved post'
-    saved_post_user_path
+    saved_post_user_particular_path(user_id)
   else
     raise "Undefined page: #{page_name}"
   end
