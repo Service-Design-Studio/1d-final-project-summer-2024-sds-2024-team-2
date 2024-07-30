@@ -124,6 +124,7 @@ RSpec.describe UserParticularsController, type: :controller do
   describe 'GET #show' do
     it 'renders show template' do
       @user_particular = UserParticular.create(@valid_attributes)
+      @user_particular = UserParticular.create(@valid_attributes)
       get :show, params: { id: @user_particular.id }
       expect(response).to render_template(:show)
     end
@@ -131,6 +132,7 @@ RSpec.describe UserParticularsController, type: :controller do
 
   describe 'GET #document' do
     it 'renders document template' do
+      @user_particular = UserParticular.create(@valid_attributes)
       @user_particular = UserParticular.create(@valid_attributes)
       get :document, params: { id: @user_particular.id }
       expect(response).to render_template(:document)
@@ -163,6 +165,7 @@ RSpec.describe UserParticularsController, type: :controller do
     context 'after user edits particulars with failed parameters' do
       it 'renders edit template with data from parameters' do
         @user_particular_db = UserParticular.create(@valid_attributes) #create to provide the id for edit action
+        @user_particular_db = UserParticular.create(@valid_attributes) #create to provide the id for edit action
         @param_attributes = @valid_attributes.merge(full_name: 'Not John', id: @user_particular_db.id)
         @user_particular = UserParticular.new(@param_attributes)
         get :edit, params: { id: @user_particular_db.id, user_particular: @param_attributes }
@@ -175,6 +178,7 @@ RSpec.describe UserParticularsController, type: :controller do
 
     context 'user opens edit particulars page initially' do
       it 'renders edit template with data from database' do
+        @user_particular = UserParticular.create(@valid_attributes)
         @user_particular = UserParticular.create(@valid_attributes)
         get :edit, params: { id: @user_particular.id }
         
