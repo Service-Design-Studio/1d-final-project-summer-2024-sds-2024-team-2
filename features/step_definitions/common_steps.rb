@@ -2,6 +2,10 @@ Then(/^I should see "([^"]*)"$/) do |name|
   expect(page).to have_content("#{name}", wait: 2) # Wait for up to 2 seconds
 end
 
+Then(/^I should not see "([^"]*)"$/) do |name|
+  expect(page).to have_no_content(name, wait: 2) # Wait for up to 2 seconds
+end
+
 Then(/^I should see the following filled-in details$/) do |table|
   table.hashes.each do |row|
     step "I should see \"#{row['Field']}\""
@@ -31,8 +35,8 @@ When(/^I press the "([^"]*)" button$/) do |btn_name|
     click_button(btn_name)
   elsif has_link?(btn_name)
     click_link(btn_name)
-  elsif has_css?("[aria-label='#{btn_name}']")
-    find("[aria-label='#{btn_name}']").click
+  elsif has_css?("[aria_label='#{btn_name}']")
+    find("[aria_label='#{btn_name}']").click
   else
     raise "No button or link found with name '#{btn_name}'"
   end
@@ -78,11 +82,11 @@ end
 
 # Maps page names to their corresponding paths
 def path_to(page_name)
-  if has_selector?('#EnableID_usertitle')
-    user_id = find('#EnableID_usertitle')['data-user-id']
-  else
-    user_id = nil
-  end
+  user_id = if has_selector?('#EnableID_usertitle')
+              find('#EnableID_usertitle')['data-user-id']
+            else
+              nil
+            end
   case page_name.downcase
   when 'home'
     user_particular_path(user_id)

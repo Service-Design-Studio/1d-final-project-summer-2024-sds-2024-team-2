@@ -524,6 +524,7 @@ DEPENDENCIES
   capybara
   cucumber-rails
   database_cleaner
+  database_cleaner-active_record
   debug
   devise
   erb_lint

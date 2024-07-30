@@ -52,7 +52,7 @@
                 <i style='text-center text-decoration: none; color: orange;' class="bi bi-bookmark-fill"></i>
               <% end %>
             <% else %>
-              <%= link_to '#', onclick: 'toggleSavePost(this)', data: { bulletin_id: bulletin.id, user_id: @user.id }, style: 'text-decoration: none;', aria: "#{bulletin.title} #{bulletin.id}" do %>
+              <%= link_to '#', onclick: 'toggleSavePost(this)', data: { bulletin_id: bulletin.id, user_id: @user.id }, style: 'text-decoration: none;', aria_label: "toggle #{bulletin.title} #{bulletin.id}" do %>
                 <i style='text-center text-decoration: none; color: orange;' class="bi <%= saved ? 'bi-bookmark-fill' : 'bi-bookmark' %>"></i>
               <% end %>
             <% end %>
@@ -147,7 +147,14 @@
       var icon = element.querySelector('i');
       var bulletinId = element.dataset.bulletinId;
       var userId = element.dataset.userId;
-
+      const csrfTokenMetaTag = document.querySelector('meta[name="csrf-token"]');
+        if (csrfTokenMetaTag) {
+        const csrfToken = csrfTokenMetaTag.getAttribute('content');
+        // Proceed with your logic using csrfToken
+        } else {
+        console.error('CSRF token meta tag not found');
+        }
+      
       // Toggle the 'saved' class or perform an action
       icon.classList.toggle('bi-bookmark-fill');
       icon.classList.toggle('bi-bookmark');

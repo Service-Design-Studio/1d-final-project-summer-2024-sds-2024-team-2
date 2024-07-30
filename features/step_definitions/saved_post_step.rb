@@ -19,16 +19,29 @@ When(/^I press on the unfilled bookmark icon on the "([^"]+)", ID: "([^"]+)" eve
   expect(bookmark_icon[:class]).to include('bi-bookmark')
 
   # Simulate a click on this <i> element
-  bookmark_icon.click
+  step "I press the \"toggle #{title} #{id}\" button"
+end
+
+When(/^I press on the filled bookmark icon on the "([^"]+)", ID: "([^"]+)" event card$/) do |title, id|
+  # Locate the event card with the specified title and ID
+  byebug
+  event_card = find(".event-card[data-title='#{title}'][data-bulletin-id='#{id}']")
+
+  # Within this event card, find the <i> element that is a direct child of the <a> element with the onclick attribute set to toggleSavePost(this)
+  bookmark_icon = event_card.find("a[onclick='toggleSavePost(this)'] > i.bi-bookmark-fill")
+
+  # Verify that the <i> element has the class 'bi-bookmark'
+  expect(bookmark_icon[:class]).to include('bi-bookmark-fill')
+
+  # Simulate a click on this <i> element
+  step "I press the \"toggle #{title} #{id}\" button"
 end
 
 Then(/^the bookmark icon for the "([^"]+)", ID: "([^"]+)" event card is filled$/) do |title, id|
   # Locate the event card with the specified title and ID
   event_card = find(".event-card[data-title='#{title}'][data-bulletin-id='#{id}']")
-
   # Within this event card, find the <i> element that is a direct child of the <a> element with the onclick attribute set to toggleSavePost(this)
   bookmark_icon = event_card.find("a[onclick='toggleSavePost(this)'] > i")
-
   # Verify that the <i> element has the class 'bi-bookmark-fill'
   expect(bookmark_icon[:class]).to include('bi-bookmark-fill')
 end
@@ -39,4 +52,11 @@ And(/^the "([^"]+)", ID: "([^"]+)" event card should be present$/) do |title, id
   event_card = find(".event-card[data-title='#{title}'][data-bulletin-id='#{id}']", visible: true)
   # Verify that the event card is present
   expect(event_card).to be_present
+end
+
+Given(/^I have saved a "([^"]+)", ID: "([^"]+)" event card$/) do |title, id|
+  # Press on the unfilled bookmark icon to save the event
+  step "I press on the unfilled bookmark icon on the \"#{title}\", ID: \"#{id}\" event card"
+  # Verify that the bookmark icon is filled
+  step "the bookmark icon for the \"#{title}\", ID: \"#{id}\" event card is filled"
 end

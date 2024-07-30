@@ -212,6 +212,7 @@ class UserParticularsController < ApplicationController
     @back_path = root_path
     @user_particular = current_user.user_particular
     @bulletins = Bulletin.joins(:saved_posts).where(saved_posts: { user_id: current_user.id })
+    flash[:notice] = 'There are no saved posts!' if @bulletins.empty?
     @on_saved_page = true
   end
 
