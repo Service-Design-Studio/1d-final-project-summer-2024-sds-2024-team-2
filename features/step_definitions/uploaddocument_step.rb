@@ -17,10 +17,6 @@ Given(/^I need to upload my documents to complete my digital identity$/) do
   @user.update(needs_document_upload: true)
 end
 
-Then(/^I press the "Documents" button$/) do
-  click_button('Documents')
-end
-
 When(/^I drag a document file into the designated drop area$/) do
   attach_file('document_upload', Rails.root.join('spec/fixtures/sample_document.pdf'))
 end
@@ -52,6 +48,14 @@ When(/^I select a file that exceeds the size limit$/) do
   attach_file('document_upload', Rails.root.join('spec/fixtures/large_file.zip'))
 end
 
+Then(/^I should see an error message stating "Unsupported file type. Please upload a PDF, DOCX, or JPG file."$/) do
+  expect(page).to have_content('Unsupported file type. Please upload a PDF, DOCX, or JPG file.')
+end
+
+Then(/^I should see an error message stating "File size exceeds the maximum limit of 5MB. Please upload a smaller file."$/) do
+  expect(page).to have_content('File size exceeds the maximum limit of 5MB. Please upload a smaller file.')
+end
+
 Given(/^I have uploaded a document$/) do
   attach_file('document_upload', Rails.root.join('spec/fixtures/sample_document.pdf'))
   click_button('Upload')
@@ -77,6 +81,10 @@ end
 
 When(/^I look at the top of the page$/) do
   # No action needed, just checking the content
+end
+
+Then(/^I should see a guide on what to do on this page$/) do
+  expect(page).to have_content('Please upload your documents to complete your registration.')
 end
 
 Given(/^my document has been successfully uploaded and I have received confirmation$/) do

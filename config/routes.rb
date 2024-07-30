@@ -15,7 +15,7 @@ Rails.application.routes.draw do
   get 'user_particulars/:id/document', to: 'user_particulars#document', as: 'user_document'
   get 'user_particulars/:id/ngocontact', to: 'user_particulars#ngocontact', as: 'ngocontact'
   post 'user_particulars/:id/:ngoid/message', to: 'user_particulars#message', as: 'user_message'
-  # Resources: UserParticulars
+
   resources :user_particulars do
     member do
       get 'saved_post'
@@ -35,4 +35,8 @@ Rails.application.routes.draw do
 
   resources :bulletins
   resources :saved_posts
+
+  # Add this block to handle document upload
+  resources :documents, only: [:new, :create]
+
 end

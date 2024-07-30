@@ -1,5 +1,5 @@
 Then(/^I should see "([^"]*)"$/) do |name|
-  expect(page).to have_content("#{name}", wait: 2) # Wait for up to 2 seconds
+  expect(page).to have_content(name, wait: 2) # Wait for up to 2 seconds
 end
 
 Then(/^I should not see "([^"]*)"$/) do |name|
@@ -26,7 +26,7 @@ Then(/^I should be redirected to the "([^"]*)" page$/) do |page_name|
 end
 
 Given(/^that a User account by the Username of "([^"]*)", Email of "([^"]*)", Phone Number of "([^"]*)" exist$/) do |username, email, phone_number|
-  user = User.find_by(username:, email:, phone_number:)
+  user = User.find_by(username: username, email: email, phone_number: phone_number)
   expect(user).not_to be_nil, "No user found with Username: #{username}, Email: #{email}, Phone Number: #{phone_number}"
 end
 
@@ -35,12 +35,24 @@ When(/^I press the "([^"]*)" button$/) do |btn_name|
     click_button(btn_name)
   elsif has_link?(btn_name)
     click_link(btn_name)
-  elsif has_css?("[aria_label='#{btn_name}']")
-    find("[aria_label='#{btn_name}']").click
+  elsif has_css?("[aria-label='#{btn_name}']")
+    find("[aria-label='#{btn_name}']").click
   else
     raise "No button or link found with name '#{btn_name}'"
   end
 end
+
+Then(/^I should be directed to the "([^"]*)" page$/) do |page|
+  expected_path = case page
+                  when "Upload Document"
+                    new_document_path
+                  # Add other mappings here if needed
+                  else
+                    raise "Path mapping not defined for page: #{page}"
+                  end
+  expect(page).to have_current_path(expected_path)
+end
+
 # Step to navigate to a specific page
 Given(/^I am on the "([^"]*)" page$/) do |page|
   puts "Current URL: #{current_url}"
@@ -51,13 +63,14 @@ end
 When(/^I fill in the following fields$/) do |table|
   fill_in_form(table)
 end
+
 # Helper Methods
 
 # Fills in a form based on the given table data
 def fill_in_form(table)
   table.hashes.each do |row|
     case row['Field'].downcase
-    when row['Field'] == 'Password'
+    when 'password'
       fill_in 'Password', with: row['Value'], match: :prefer_exact
     when 'country of origin'
       select row['Value'], from: row['Field']
@@ -66,8 +79,7 @@ def fill_in_form(table)
       select row['Value'], from: "#{row['Field'].downcase}_select"
     when 'date of birth', 'date of arrival in malaysia'
       # For HTML5 date fields, ensure the date is in 'YYYY-MM-DD' format
-      fill_in row['Field'], with: row['Value'].to_date.strftime('%d-%m-%Y') unless row['Value'].to_s.strip.empty?
-      # For regular input fields
+      fill_in row['Field'], with: row['Value'].to_date.strftime('%Y-%m-%d') unless row['Value'].to_s.strip.empty?
     when 'phone number'
       select('+65', from: 'country_code_select') # Selects the country code from the dropdown
       fill_in 'phone_number_field', with: row['Value'] # Fills in the phone number field
