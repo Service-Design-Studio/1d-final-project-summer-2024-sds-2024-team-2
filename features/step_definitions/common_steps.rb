@@ -2,11 +2,19 @@ Then(/^I should see "([^"]*)"$/) do |name|
   expect(page).to have_content("#{name}", wait: 2) # Wait for up to 2 seconds
 end
 
+Then(/^I should not see "([^"]*)"$/) do |name|
+  expect(page).to have_no_content(name, wait: 2) # Wait for up to 2 seconds
+end
+
 Then(/^I should see the following filled-in details$/) do |table|
   table.hashes.each do |row|
     step "I should see \"#{row['Field']}\""
     step "I should see \"#{row['Value']}\""
   end
+end
+
+Then(/^I should enter the "Home" page$/) do
+  expect(current_path).to eq('/')
 end
 
 Then(/^I should stay on the "([^"]*)" page$/) do |page_name|
@@ -27,8 +35,8 @@ When(/^I press the "([^"]*)" button$/) do |btn_name|
     click_button(btn_name)
   elsif has_link?(btn_name)
     click_link(btn_name)
-  elsif has_css?("[aria-label='#{btn_name}']")
-    find("[aria-label='#{btn_name}']").click
+  elsif has_css?("[aria_label='#{btn_name}']")
+    find("[aria_label='#{btn_name}']").click
   else
     raise "No button or link found with name '#{btn_name}'"
   end
@@ -74,9 +82,14 @@ end
 
 # Maps page names to their corresponding paths
 def path_to(page_name)
+  user_id = if has_selector?('#EnableID_usertitle')
+              find('#EnableID_usertitle')['data-user-id']
+            else
+              nil
+            end
   case page_name.downcase
   when 'home'
-    [root_path, user_particular_path]
+    user_particular_path(user_id)
   when 'login'
     new_user_session_path
   when 'ngogebirah'
@@ -87,6 +100,8 @@ def path_to(page_name)
     new_user_particular_path
   when 'registration'
     new_user_registration_path
+  when 'saved post'
+    saved_post_user_particular_path(user_id)
   else
     raise "Undefined page: #{page_name}"
   end

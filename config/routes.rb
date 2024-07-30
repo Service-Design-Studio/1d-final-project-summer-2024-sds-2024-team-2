@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-
   root 'user_particulars#show' # set root path of web app as /user_particulars/show for now
 
   devise_for :users, controllers: {
@@ -16,10 +15,10 @@ Rails.application.routes.draw do
   get 'user_particulars/:id/document', to: 'user_particulars#document', as: 'user_document'
   get 'user_particulars/:id/contact_ngo', to: 'user_particulars#contact_ngo', as: 'contact_ngo'
   post 'user_particulars/:id/:ngoid/message', to: 'user_particulars#message', as: 'user_message'
-  get 'user_particulars/family'
   # Resources: UserParticulars
   resources :user_particulars do
     member do
+      get 'saved_post'
       get 'page2'
     end
   end
@@ -35,6 +34,5 @@ Rails.application.routes.draw do
   end
 
   resources :bulletins
-
-
+  resources :saved_posts
 end

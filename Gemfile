@@ -74,6 +74,7 @@ group :test do
   gem 'rails-controller-testing'
   gem 'selenium-webdriver'
   gem 'simplecov'
+  gem 'database_cleaner-active_record'
 end
 
 group :production do

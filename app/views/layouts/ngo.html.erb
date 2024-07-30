@@ -3,6 +3,7 @@
   <head>
     <title>EnableID</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="csrf-token" content="<%= form_authenticity_token %>">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
@@ -26,6 +27,9 @@
           <% else %>
               <h4 class="m-0 text-nowrap" style="background-color: #0eac95; color: white; margin-bottom:0;"><%= @ngo_user&.name || "NGO" %></h4>
           <% end %>
+        </div>
+        <div class="col-1 d-flex justify-content-end align-items-center">
+          <%= button_to "Sign out", destroy_user_session_path, method: 'delete', class: "text-nowrap btn btn-light" %>
         </div>
         <div class="col-auto"></div> <!-- Empty column to balance the layout -->
       </div>

@@ -1,13 +1,13 @@
-<div id="bulletin" class="d-flex flex-column pri-container m-0 add-small-shadow p-3 pb-3" style='width:100%; max-height: 75vh;'>
+<div id="bulletin" class="d-flex flex-column pri-container m-0 add-small-shadow p-3 pb-3" style='font-size: 0.7rem; width:100%; max-height: 75vh;'>
   <div class="d-flex mb-4">
     <div class="flex-column flex w-100">
-      <h5 class='text-center'>Bulletin Board</h5>
+      <h6 class='text-center'>Bulletin Board</h6>
       <div class="input-group w-100 bg-dark search-bar p-1" style='border-radius: 40px;'>
-        <span class="input-group-text border-0 text-white" style="font-size: 0.7em; background-color:transparent;">
+        <span class="input-group-text border-0 text-white" style="font-size: 0.7rem; background-color:transparent;">
           <i class="fas fa-bars"></i>
         </span>
         <input type="search" class="form-control bg-dark text-white border-0" id="search-input" placeholder="Search Post" aria-label="Search" aria-describedby="search-addon" style="font-size: 1em;"/>
-        <span class="input-group-text border-0 text-white" style="font-size: 0.7em; background-color:transparent;">
+        <span class="input-group-text border-0 text-white" style="font-size: 0.7rem; background-color:transparent;">
           <i class="fas fa-search"></i>
         </span>
       </div>
@@ -18,12 +18,13 @@
       </button>
     <% end %>
   </div>
-  <div class="container-fluid mx-0 overflow-auto flex" style="font-size: 0.7em;">
-    <div class="row" style='max-height: 100%;' id="event-cards-container">
+  <div class="container-fluid mx-0 overflow-auto flex" style="font-size: 0.7rem;">
+    <div class="row justify-content-evenly" style='max-height: 100%;' id="event-cards-container">
       <% @bulletins.each do |bulletin| %>
+        <% saved = @saved_posts.include?(bulletin.id) %>
         <% ngo_user = @ngo_users.find { |user| user.name == bulletin.ngo_name } %>
-        <div class="col-auto event-card card p-0" style="min-width:170px;" data-ngoname="<%= bulletin.ngo_name %>" data-title="<%= bulletin.title %>" data-description="<%= bulletin.description %>" data-date="<%= bulletin.date ? bulletin.date.strftime("%d %B %Y") : "Date not available" %>" data-location="<%= bulletin.location %>" data-image-url="<%= ngo_user&.image_url.present? ? ngo_user.image_url : 'default.png' %>" >
-          <div class="p-0 d-flex flex-column w-100 h-100" data-bs-toggle="modal" data-bs-target="#eventCards">
+        <div class="col-sm-6 col-md-4 col-lg-3 mb-4 event-card card p-0" style="min-width:140px; max-width: 220px;" data-bulletin-id="<%= bulletin.id %>" data-ngoname="<%= bulletin.ngo_name %>" data-title="<%= bulletin.title %>" data-description="<%= bulletin.description %>" data-date="<%= bulletin.date ? bulletin.date.strftime("%d %B %Y") : "Date not available" %>" data-location="<%= bulletin.location %>" data-image-url="<%= ngo_user&.image_url.present? ? ngo_user.image_url : 'default.png' %>" >
+          <div class="px-1 d-flex flex-column w-100 h-100" data-bs-toggle="modal" data-bs-target="#eventCards">
             <div class="d-flex flex-grow-1 w-100 align-items-center justify-content-center">
               <% if ngo_user&.image_url.present? %>
                 <%= image_tag ngo_user.image_url, alt: "#{ngo_user.name} image", style: 'max-width: 100px; max-height: 100px; object-fit: contain;' %>
@@ -35,27 +36,31 @@
               <li class="card-title h6"><%= bulletin.title %></li>
               <li>Date: <%= bulletin.date ? bulletin.date.strftime("%d %B %Y") : "Date not available" %></li>
               <li>Location: <%= bulletin.location %></li>
-              <li>Information: <%= bulletin.description %></li>
+              <li class="truncate-small-multiline">Information: <%= bulletin.description %></li>
             </ul>
             <div class="mt-auto d-flex px-1 w-100 align-items-center justify-content-between">
-              <small class="text-muted"><%= bulletin.ngo_name %></small>
-              <small class="text-end text-muted pr-1"><%= time_ago_in_words(bulletin.created_at) %> ago</small>
+              <small class="text-muted truncate-small-multiline"><%= bulletin.ngo_name %></small>
+              <small class="text-nowrap text-end text-muted pr-1"><%= time_ago_in_words(bulletin.created_at) %> ago</small>
             </div>
           </div>
           <div class="d-flex px-1 w-100 align-items-center justify-content-between" style="font-size: 1.3em; border-top: solid 1px lightgrey">
-            <%= link_to '#', onclick: 'toggleSavePost(this)', style: 'text-decoration: none;' do %>
+            <%= link_to '#', onclick: '', style: 'text-decoration: none;' do %>
               <i style='text-center text-decoration: none; color: black;' class="bi bi-send"></i>
             <% end %>
-            <%= link_to '#', onclick: 'toggleSavePost(this)', style: 'text-decoration: none;' do %>
-              <i style='text-center text-decoration: none; color: orange;' class="bi bi-bookmark"></i>
+            <% if @on_saved_page %>
+              <%= link_to '#', onclick: 'deleteSavePost(this)', data: { bulletin_id: bulletin.id, user_id: @user.id }, style: 'text-decoration: none;', aria: "#{bulletin.title} #{bulletin.id}"  do %>
+                <i style='text-center text-decoration: none; color: orange;' class="bi bi-bookmark-fill"></i>
+              <% end %>
+            <% else %>
+              <%= link_to '#', onclick: 'toggleSavePost(this)', data: { bulletin_id: bulletin.id, user_id: @user.id }, style: 'text-decoration: none;', aria_label: "toggle #{bulletin.title} #{bulletin.id}" do %>
+                <i style='text-center text-decoration: none; color: orange;' class="bi <%= saved ? 'bi-bookmark-fill' : 'bi-bookmark' %>"></i>
+              <% end %>
             <% end %>
           </div>
         </div>
       <% end %>
     </div>
   </div>
-
-
   <!-- Modal -->
   <div class="modal fade" id="eventCards" tabindex="-1" aria-labelledby="eventCardsLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -70,6 +75,7 @@
           <p id="modal-description"></p>
           <p id="modal-date"></p>
           <p id="modal-location"></p>
+          <p id="modal-id"></p>
         </div>
         <div class="modal-footer d-flex justify-content-evenly">
           <button type="button" class="btn-dark px-3 customhome-button">Add to Saved <i style='color: orange;' class="ml-2 m-0 bi bi-bookmark fs-5"></i></button>
@@ -77,49 +83,105 @@
       </div>
     </div>
   </div>
-
-  
-
 </div>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script>
-    $(document).ready(function() {
-      $('#search-input').on('input', function() {
-        var searchQuery = $(this).val().toLowerCase();
-        $('.event-card').each(function() {
-          var title = $(this).data('title');
-          var description = $(this).data('description');
-          var ngoName = $(this).data('ngoname');
-          if (title.includes(searchQuery) || description.includes(searchQuery) || ngoName.includes(searchQuery)) {
-            $(this).show();
-          } else {
-            $(this).hide();
-          }
-        });
-      });
-
-      $('.event-card').on('click', function() {
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('#search-input').on('input', function() {
+      var searchQuery = $(this).val().toLowerCase();
+      $('.event-card').each(function() {
         var title = $(this).data('title');
         var description = $(this).data('description');
-        var date = $(this).data('date');
-        var location = $(this).data('location');
-        var ngoname = $(this).data('ngoname');
-        //var imageUrl = $(this).data('image-url');
-        $('#modal-ngoname').text(ngoname);
-        $('#modal-title').text(title);
-        $('#modal-description').text("Description: " + description);
-        $('#modal-date').text("Date: " + date);
-        $('#modal-location').text("Location: " + location);
-        //$('#modal-photo').attr('src', "app/assets/images/" + imageUrl);
+        var ngoName = $(this).data('ngoname');
+        if (title.includes(searchQuery) || description.includes(searchQuery) || ngoName.includes(searchQuery)) {
+          $(this).show();
+        } else {
+          $(this).hide();
+        }
       });
+    });
 
+    $('.event-card').on('click', function() {
+      var title = $(this).data('title');
+      var description = $(this).data('description');
+      var date = $(this).data('date');
+      var location = $(this).data('location');
+      var ngoname = $(this).data('ngoname');
+      var id = $(this).data('bulletin-id');
+      //var imageUrl = $(this).data('image-url');
+      $('#modal-ngoname').text(ngoname);
+      $('#modal-title').text(title);
+      $('#modal-description').text("Description: " + description);
+      $('#modal-date').text("Date: " + date);
+      $('#modal-location').text("Location: " + location);
+      $('#modal-id').text("Event ID: " + id);
+      //$('#modal-photo').attr('src', "app/assets/images/" + imageUrl);
+    });
 
-      window.toggleSavePost = function(element) {
-        // Toggle the 'saved' class or perform an action
-        var icon = element.querySelector('i');
+    deleteSavePost = function(element) {
+      const bulletinId = element.dataset.bulletinId;
+      const userId = element.dataset.userId;
+
+      fetch(`/saved_posts/${userId}?bulletinId=${bulletinId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ user_id: userId })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          element.querySelector('i').classList.remove('bi-bookmark-fill');
+          element.querySelector('i').classList.add('bi-bookmark');
+          $(element).closest('.event-card').remove();
+        } else {
+          console.error('Error:', data.error);
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    }
+
+    toggleSavePost = function(element) {
+      var icon = element.querySelector('i');
+      var bulletinId = element.dataset.bulletinId;
+      var userId = element.dataset.userId;
+      const csrfTokenMetaTag = document.querySelector('meta[name="csrf-token"]');
+        if (csrfTokenMetaTag) {
+        const csrfToken = csrfTokenMetaTag.getAttribute('content');
+        // Proceed with your logic using csrfToken
+        } else {
+        console.error('CSRF token meta tag not found');
+        }
+      
+      // Toggle the 'saved' class or perform an action
+      icon.classList.toggle('bi-bookmark-fill');
+      icon.classList.toggle('bi-bookmark');
+
+      // Make an AJAX request to toggle the saved state
+      fetch(`/saved_posts?bulletin_id=${bulletinId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (!data.success) {
+          // Revert the icon toggle if the request failed
+          icon.classList.toggle('bi-bookmark-fill');
+          icon.classList.toggle('bi-bookmark');
+          alert('Failed to toggle save state');
+        }
+      })
+      .catch(error => {
+        // Revert the icon toggle if there was an error
         icon.classList.toggle('bi-bookmark-fill');
         icon.classList.toggle('bi-bookmark');
-      };
-      
-    });
-  </script>
+        alert('An error occurred');
+      });
+    };
+  });
+</script>

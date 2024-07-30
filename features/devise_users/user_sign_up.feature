@@ -17,7 +17,7 @@ Scenario: All valid fields in Register for EnableID
     | Email                   | abcdefg@mail.com  |
     | Contact number          | 12341234    |
     And I press the "Register" button
-    Then I should be redirected to the "Home" page
+    Then I should enter the "Home" page
 
 Scenario: All invalid fields in Register for EnableID
     Given I fill in the following fields

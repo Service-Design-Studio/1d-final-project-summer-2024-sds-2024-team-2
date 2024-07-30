@@ -3,6 +3,7 @@ class UserParticularsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user_particular
   before_action :set_ngo_users
+  before_action :set_saved_posts, only: %i[saved_post show]
 
   def show
     @bulletins = Bulletin.all.order(updated_at: :desc)
@@ -43,11 +44,11 @@ class UserParticularsController < ApplicationController
   def new
     @back_path = root_path
     # Fill up form with previously filled up data, if not create empty object
-    if session[:user_particular_params].present?
-      @user_particular = UserParticular.new(session[:user_particular_params])
-    else
-      @user_particular = UserParticular.new
-    end
+    @user_particular = if session[:user_particular_params].present?
+                         UserParticular.new(session[:user_particular_params])
+                       else
+                         UserParticular.new
+                       end
 
     set_dropdown_options
   end
@@ -67,7 +68,6 @@ class UserParticularsController < ApplicationController
       redirect_to new_user_particular_path
     end
   end
-
 
   def edit
     @back_path = root_path
@@ -210,15 +210,22 @@ class UserParticularsController < ApplicationController
     error_messages_arr
   end
 
+  def saved_post
+    @back_path = root_path
+    @user_particular = current_user.user_particular
+    @bulletins = Bulletin.joins(:saved_posts).where(saved_posts: { user_id: current_user.id })
+    flash[:notice] = 'There are no saved posts!' if @bulletins.empty?
+    @on_saved_page = true
+  end
+
   def contact_ngo
     @back_path = user_particular_path
     @user = current_user.user_particular
     @ngo_users = if params[:search].present?
-      NgoUser.search_by_name(params[:search])
-    else
-      NgoUser.all_ngo_users
-    end
-    
+                   NgoUser.search_by_name(params[:search])
+                 else
+                   NgoUser.all_ngo_users
+                 end
   end
 
   def message
@@ -227,9 +234,8 @@ class UserParticularsController < ApplicationController
     ngo_id = params[:ngoid]
     message_content = params[:message][:content]
 
-
     # Here, you can create a new message or perform other actions, e.g.,
-    @message = Message.new(user_id: user_id, ngo_users_id: ngo_id, message: message_content)
+    @message = Message.new(user_id:, ngo_users_id: ngo_id, message: message_content)
 
     if @message.save
       render json: { status: 'success', message: 'Message sent successfully!' }, status: :created
@@ -243,5 +249,9 @@ class UserParticularsController < ApplicationController
   def set_ngo_users
     @ngo_users = NgoUser.all
     @user = current_user
+  end
+
+  def set_saved_posts
+    @saved_posts = current_user.saved_posts.pluck(:bulletin_id)
   end
 end

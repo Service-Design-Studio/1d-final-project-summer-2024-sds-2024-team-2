@@ -67,4 +67,7 @@ Rails.application.configure do
   config.action_controller.raise_on_missing_callback_actions = true
   # added after recommendation from co-pilot yirong
   config.assets.compile = true
+
+  # Ensure that CSRF is enabled in the test environment
+  config.action_controller.allow_forgery_protection = true
 end
