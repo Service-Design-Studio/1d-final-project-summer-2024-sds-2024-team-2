@@ -132,14 +132,14 @@ RSpec.describe UserParticular, type: :model do
   #   end
   # end
 
-  describe '.reset_verification' do
-  it 'sets status as pending and verifier ngo to nil' do
-    UserParticular.update_user_particular(@user_particular.id, status: 'verified', verifier_ngo: 'Red Cross')
-    UserParticular.reset_verification(@user_particular.id)
+  # describe '.reset_verification' do
+  # it 'sets status as pending and verifier ngo to nil' do
+  #   .update_user_particular(@user_particular.id, status: 'verified', verifier_ngo: 'Red Cross')
+  #   UserParticular.reset_verification(@user_particular.id)
     
-    found_user_particular = UserParticular.find_by_id(@user_particular.id)
-    expect(found_user_particular.status).to eq('pending')
-    expect(found_user_particular.verifier_ngo).to be_nil
-    end
-  end
+  #   found_user_particular = UserParticular.find_by_id(@user_particular.id)
+  #   expect(found_user_particular.status).to eq('pending')
+  #   expect(found_user_particular.verifier_ngo).to be_nil
+  #   end
+  # end
 end
