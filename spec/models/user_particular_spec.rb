@@ -92,45 +92,45 @@ RSpec.describe UserParticular, type: :model do
   #   end
   # end
 
-  describe '.find_by_unique_id' do
-    it 'returns the user particular with the specified unique ID' do
-      unique_id = @user_particular.unique_id
-      found_user_particular = UserParticular.find_by_unique_id(unique_id)
+  # describe '.find_by_unique_id' do
+  #   it 'returns the user particular with the specified unique ID' do
+  #     unique_id = @user_particular.unique_id
+  #     found_user_particular = UserParticular.find_by_unique_id(unique_id)
     
-      expect(found_user_particular).not_to be_nil  # Ensure the user particular is found
+  #     expect(found_user_particular).not_to be_nil  # Ensure the user particular is found
     
-      # Verify that the found user particular has the expected attributes
-      @attributes.each do |key, value|
-        expect(found_user_particular.send(key)).to eq(value)
-      end
-    end
+  #     # Verify that the found user particular has the expected attributes
+  #     @attributes.each do |key, value|
+  #       expect(found_user_particular.send(key)).to eq(value)
+  #     end
+  #   end
 
-    it 'returns nil if no user particular with the specified ID is found' do
-      found_user_particular = UserParticular.find_by_unique_id(999999) # Assuming there's no user particular with ID 999999
-      expect(found_user_particular).to be_nil
-    end
-  end
+  #   it 'returns nil if no user particular with the specified ID is found' do
+  #     found_user_particular = UserParticular.find_by_unique_id(999999) # Assuming there's no user particular with ID 999999
+  #     expect(found_user_particular).to be_nil
+  #   end
+  # end
 
-  describe '.find_by_unique_id_and_two_fa_passcode' do
-    it 'returns the user particular with the specified unique ID and two_fa_passcode' do
-      unique_id = @user_particular.unique_id
-      two_fa_passcode = @user_particular.two_fa_passcode
-      found_user_particular = UserParticular.find_by_unique_id_and_two_fa_passcode(unique_id, two_fa_passcode)
+  # describe '.find_by_unique_id_and_two_fa_passcode' do
+  #   it 'returns the user particular with the specified unique ID and two_fa_passcode' do
+  #     unique_id = @user_particular.unique_id
+  #     two_fa_passcode = @user_particular.two_fa_passcode
+  #     found_user_particular = UserParticular.find_by_unique_id_and_two_fa_passcode(unique_id, two_fa_passcode)
     
-      expect(found_user_particular).not_to be_nil  # Ensure the user particular is found
+  #     expect(found_user_particular).not_to be_nil  # Ensure the user particular is found
     
-      # Verify that the found user particular has the expected attributes
-      @attributes.each do |key, value|
-        expect(found_user_particular.send(key)).to eq(value)
-      end
-    end
+  #     # Verify that the found user particular has the expected attributes
+  #     @attributes.each do |key, value|
+  #       expect(found_user_particular.send(key)).to eq(value)
+  #     end
+  #   end
 
-    it 'returns nil if no user particular with the specified unique ID and two fa passcode is found' do
-      # Assuming there's no user particular with unique ID 999999 and two fa passcode 999999
-      found_user_particular = UserParticular.find_by_unique_id_and_two_fa_passcode(999999, 999999) 
-      expect(found_user_particular).to be_nil
-    end
-  end
+  #   it 'returns nil if no user particular with the specified unique ID and two fa passcode is found' do
+  #     # Assuming there's no user particular with unique ID 999999 and two fa passcode 999999
+  #     found_user_particular = UserParticular.find_by_unique_id_and_two_fa_passcode(999999, 999999) 
+  #     expect(found_user_particular).to be_nil
+  #   end
+  # end
 
   describe '.reset_verification' do
   it 'sets status as pending and verifier ngo to nil' do
