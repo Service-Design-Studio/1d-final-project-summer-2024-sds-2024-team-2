@@ -36,7 +36,7 @@ Rails.application.routes.draw do
   resources :bulletins
   resources :saved_posts
 
-  # Add this block to handle document upload
-  resources :documents, only: [:new, :create]
+  # Document routes
+  resources :documents, only: [:new, :create, :show, :edit, :update, :destroy]
 
 end

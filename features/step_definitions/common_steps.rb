@@ -50,7 +50,7 @@ Then(/^I should be directed to the "([^"]*)" page$/) do |page|
                   else
                     raise "Path mapping not defined for page: #{page}"
                   end
-  expect(page).to have_current_path(expected_path)
+  expect(current_path).to eq(expected_path)
 end
 
 # Step to navigate to a specific page
@@ -104,6 +104,8 @@ def path_to(page_name)
     user_particular_path(user_id)
   when 'login'
     new_user_session_path
+  when 'upload document'
+    new_document_path
   when 'ngogebirah'
     ngo_gebirah_path
   when 'user verification'
