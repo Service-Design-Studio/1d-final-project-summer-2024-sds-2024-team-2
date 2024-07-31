@@ -25,8 +25,19 @@ Scenario: Adding a message to the common bulletin board
 
 Scenario: View my events
   When I press the "My Events" button
-  Then I should be redirected to the "My Events" page
-  And I should see a list of events posted by my NGO
+  Then I should see event cards by my NGO only
+
+Scenario: Empty bulletin board
+  Given my NGO has no posts
+  When I press the "My Events" button
+  Then I should see "No posts yet"
+
+Scenario: Change to normal view of bulletin board after pressing My Events button
+  When I press the "My Events" button
+  Then I should see event cards by my NGO only
+  When I press the "View All Events" button
+  Then I should see event cards by all NGOs
+
 
 Scenario: Viewing added post on bulletin board on user home page
   Given I am now on the user particulars home page as a new user
