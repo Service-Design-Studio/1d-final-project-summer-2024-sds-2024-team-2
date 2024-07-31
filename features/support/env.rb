@@ -43,9 +43,6 @@ ActionController::Base.allow_rescue = false
 # Configure DatabaseCleaner to use transactions
 DatabaseCleaner.strategy = :transaction
 
-# Use truncation for JavaScript scenarios
-Cucumber::Rails::Database.javascript_strategy = :truncation
-
 # Start the transaction before each scenario
 Before do
   DatabaseCleaner.start
@@ -58,7 +55,7 @@ end
 
 # Ensure that the database is cleaned before the entire test suite runs
 Before('@clean') do
-  DatabaseCleaner.clean_with(:truncation)
+  DatabaseCleaner.clean_with(:transaction)
 end
 
 # You may also want to configure DatabaseCleaner to use different strategies for certain features and scenarios.
