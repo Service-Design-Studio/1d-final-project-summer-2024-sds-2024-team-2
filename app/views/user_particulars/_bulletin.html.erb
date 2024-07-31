@@ -21,7 +21,7 @@
   <div class="container-fluid mx-0 overflow-auto flex" style="font-size: 0.7rem;">
     <div class="row justify-content-evenly" style='max-height: 100%;' id="event-cards-container">
       <% @bulletins.each do |bulletin| %>
-        <% saved = @saved_posts.include?(bulletin.id) %>
+        <% saved = @saved_posts&.include?(bulletin.id) %>
         <% ngo_user = @ngo_users.find { |user| user.name == bulletin.ngo_name } %>
         <div class="col-sm-6 col-md-4 col-lg-3 mb-4 event-card card p-0" style="min-width:140px; max-width: 220px;" data-bulletin-id="<%= bulletin.id %>" data-ngoname="<%= bulletin.ngo_name %>" data-title="<%= bulletin.title %>" data-description="<%= bulletin.description %>" data-date="<%= bulletin.date ? bulletin.date.strftime("%d %B %Y") : "Date not available" %>" data-location="<%= bulletin.location %>" data-image-url="<%= ngo_user&.image_url.present? ? ngo_user.image_url : 'default.png' %>" >
           <div class="px-1 d-flex flex-column w-100 h-100" data-bs-toggle="modal" data-bs-target="#eventCards">
@@ -52,8 +52,10 @@
                 <i style='text-center text-decoration: none; color: orange;' class="bookmarker bi bi-bookmark-fill"></i>
               <% end %>
             <% else %>
+            <% if @user %>
               <%= link_to '#', onclick: 'toggleSavePost(this)', data: { bulletin_id: bulletin.id, user_id: @user.id }, style: 'text-decoration: none;', aria_label: "toggle #{bulletin.title} #{bulletin.id}" do %>
                 <i style='text-center text-decoration: none; color: orange;' class="bookmarker bi <%= saved ? 'bi-bookmark-fill' : 'bi-bookmark' %>"></i>
+              <% end %>
               <% end %>
             <% end %>
           </div>
