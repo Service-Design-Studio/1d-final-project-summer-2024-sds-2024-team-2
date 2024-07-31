@@ -5,7 +5,7 @@
       <% if @user_particular&.present? %>
         <% case @user_particular&.status %>
         <% when "pending" %>
-          <%= link_to new_user_particular_path(@user_particular), class: "edit-link-right-align edit-icon-link" do %>
+          <%= link_to edit_user_particular_path(@user_particular), class: "edit-link-right-align edit-icon-link" do %>
             <i class="fas fa-edit"></i>
           <% end %>
         <% when "verified" %>
