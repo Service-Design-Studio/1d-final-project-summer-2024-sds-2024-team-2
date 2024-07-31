@@ -17,7 +17,14 @@ When(/^I press the "([^"]*)" button$/) do |button|
 end
 
 Then(/^I should be directed to the "([^"]*)" page$/) do |page|
-  expect(current_path).to eq(path_to(page))
+  expected_path = case page
+                  when "Upload Document"
+                    new_user_particular_document_path(@user.id) # Ensure the user ID is correctly referenced
+                  # Add other mappings here if needed
+                  else
+                    path_to(page) # Default to path_to method for other pages
+                  end
+  expect(current_path).to eq(expected_path)
 end
 
 Then(/^I should see "([^"]*)"$/) do |name|
@@ -47,27 +54,7 @@ Then(/^I should be redirected to the "([^"]*)" page$/) do |page_name|
   expect(current_path).to eq(path_to(page_name))
 end
 
-Then(/^I should be directed to the "([^"]*)" page$/) do |page|
-  expected_path = case page
-                  when "Upload Document"
-                    "/user_particulars/#{@user.id}/document" # Ensure the user ID is correctly referenced
-                  # Add other mappings here if needed
-                  else
-                    raise "Path mapping not defined for page: #{page}"
-                  end
-  expect(current_path).to eq(expected_path)
-end
-
-Given(/^that a User account by the Username of "([^"]*)", Email of "([^"]*)", Phone Number of "([^"]*)" exist$/) do |username, email, phone_number|
-  user = User.find_by(username: username, email: email, phone_number: phone_number)
-  expect(user).not_to be_nil, "No user found with Username: #{username}, Email: #{email}, Phone Number: #{phone_number}"
-end
-
-When(/^I fill in the following fields$/) do |table|
-  fill_in_form(table)
-end
-
-# Helper Methods
+# Additional helper methods
 
 # Fills in a form based on the given table data
 def fill_in_form(table)
