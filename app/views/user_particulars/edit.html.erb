@@ -63,24 +63,24 @@
       <%= form.label :ethnicity, "Ethnicity" %><span class="text-danger">*</span>
       <%= form.select :ethnicity, options_for_select(@ethnicities, @user_particular["ethnicity"]), {}, { class: "form-control", required: true, id: "ethnicity_select" } %>
       <!-- Hidden Text Field for Ethnicity -->
-      <div id="ethnicity_other_field" style="display: none;">
-        <input name="others[ethnicity]" type="text" class="form-control" placeholder="Specify other ethnicity">
+      <div>
+        <input id="ethnicity_other_field" name="others[ethnicity]" type="text" class="form-control" placeholder="Specify other ethnicity" style="display: none;">
       </div>
     </div>
     <div class="form-group">
       <%= form.label :religion, "Religion" %><span class="text-danger">*</span>
       <%= form.select :religion, options_for_select(@religions, @user_particular["religion"]), {}, { class: "form-control", required: true, id: "religion_select" } %>
       <!-- Hidden Religion Other Field -->
-      <div id="religion_other_field" style="display: none;">
-        <input name="others[religion]" type="text" class="form-control" placeholder="Specify other religion">
+      <div>
+        <input id="religion_other_field" name="others[religion]" type="text" class="form-control" placeholder="Specify other religion" style="display: none;">
       </div>
     </div>
     <div class="form-group">
       <%= form.label :gender, "Gender" %><span class="text-danger">*</span>
       <%= form.select :gender, options_for_select(['Male', 'Female', 'Others'], @user_particular["gender"]), {}, { class: "form-control", required: true, id: "gender_select" } %>
       <!-- Hidden Text Field for Gender -->
-      <div id="gender_other_field" style="display: none;">
-        <input name="others[gender]" type="text" class="form-control" placeholder="Specify other gender">
+      <div>
+        <input id="gender_other_field" name="others[gender]" type="text" class="form-control" placeholder="Specify other gender" style="display: none;">
       </div>
     </div>
     <div class="form-group">
@@ -162,19 +162,52 @@
     // Initial update for both phone number fields
     updateAllFullPhoneNumbers();
 
-    // Others options
-    // Function to toggle visibility of input fields
+    // Initialize values for other dropdown field if value exists and is not in dropdown options
+    // Convert Ruby dropdown option arrays to JSON 
+    const ethnicityOptions = <%= @ethnicities.to_json.html_safe %>;
+    const religionOptions = <%= @religions.to_json.html_safe %>;
+    const genderOptions = ['Male', 'Female'];
+
+    // Get values from params
+    const ethnicityValue = "<%= @user_particular['ethnicity'].to_s %>";
+    const religionValue = "<%= @user_particular['religion'].to_s %>";
+    const genderValue = "<%= @user_particular['gender'].to_s %>";
+
+    // Function to toggle visibility of "Others" fields and set value for hidden input field
+    function initialiseOtherField(selectId, otherFieldId, value, options) {
+      const selectElement = document.getElementById(selectId);
+      const otherField = document.getElementById(otherFieldId);
+      
+      if (options.includes(value)) {
+        selectElement.value = value;
+        otherField.style.display = 'none';
+      } else {
+        selectElement.value = 'Others';
+        otherField.style.display = 'block';
+        otherField.value = value;
+      }
+    }
+
+    // Apply the logic for each field
+    initialiseOtherField('ethnicity_select', 'ethnicity_other_field', ethnicityValue, ethnicityOptions);
+    initialiseOtherField('gender_select', 'gender_other_field', genderValue, genderOptions);
+    initialiseOtherField('religion_select', 'religion_other_field', religionValue, religionOptions);
+    
+    // Function to toggle visibility of input Others fields
     function toggleOtherField(selectElementId, otherFieldId) {
-    const selectElement = document.getElementById(selectElementId);
-    const otherField = document.getElementById(otherFieldId);
-    selectElement.addEventListener('change', function() {
-    if (this.value === 'Others') {
-    otherField.style.display = 'block';
-    } else {
-    otherField.style.display = 'none';
+      const selectElement = document.getElementById(selectElementId);
+      const otherField = document.getElementById(otherFieldId);
+      
+      selectElement.addEventListener('change', function() {
+        if (this.value === 'Others') {
+          otherField.style.display = 'block';
+        } else {
+          otherField.style.display = 'none';
+          otherField.value = '';
+        }
+      });
     }
-    });
-    }
+
     // Initialize toggle for each dropdown
     toggleOtherField('religion_select', 'religion_other_field');
     toggleOtherField('ethnicity_select', 'ethnicity_other_field');

@@ -16,7 +16,7 @@ class UserParticularsController < ApplicationController
   # No need for content when using @user_particular from before_action
 
   def create
-    error_messages_arr = validate_user_particulars(UserParticular.new(user_particular_params))
+    error_messages_arr = validate_user_particulars(UserParticular.new(user_particular_params), params[:others])
     flash[:error] = error_messages_arr
 
     # Check if validation passes
@@ -186,34 +186,46 @@ class UserParticularsController < ApplicationController
       error_messages_arr << 'Select country of origin from the dropdown list.'
     end
 
-    if !ethnicity_options.delete('Others').include?(user_particular[:ethnicity])
-      # if others hash is present but ethnicity text field is empty
-      if others.present? && others[:ethnicity].blank?
-        error_messages_arr << 'Select ethnicity from the dropdown list.'
-      end
-    # Check if selected ethnicity is in dropdown options, if others wasn't selected
-    else
-      error_messages_arr << 'Select ethnicity from the dropdown list.'
-    end
+    # Check if 'others' is present and that each indiviual field is filled up
+    if others.present?
 
-    if !religion_options.delete('Others').include?(user_particular[:religion])
-      # if others hash is present but religion text field is empty
-      if others.present? && others[:religion].blank?
-        error_messages_arr << 'Select religion from the dropdown list.'
+      # Check if others[:ethnicity] is blank
+      if others[:ethnicity].blank?
+        error_messages_arr << 'Please specify your ethnicity.'
+      # Ensure others[:ethnicity] contains only valid characters
+      elsif others[:ethnicity] =~ /[^a-zA-Z-,]/
+        error_messages_arr << 'Ethnicity can only contain letters, hyphens (-), and commas (,).'
       end
-    # Check if selected religion is in dropdown options, if others wasn't selected
-    else
-      error_messages_arr << 'Select religion from the dropdown list.'
-    end
 
-    if !['Male', 'Female'].include?(user_particular[:gender])
-      # if others hash is present but gender text field is empty
-      if others.present? && others[:gender].blank?
-        error_messages_arr << 'Select gender from the dropdown list.'
+      # Check if others[:religion] is blank
+      if others[:religion].blank?
+        error_messages_arr << 'Please specify your religion.'
+      # Ensure others[:gender] contains only valid characters
+      elsif others[:religion] =~ /[^a-zA-Z-,]/
+        error_messages_arr << 'Religion can only contain letters, hyphens (-), and commas (,).'
       end
-    # Check if selected gender is in dropdown options, if others wasn't selected
+
+      # Check if others[:gender] is blank
+      if others[:gender].blank?
+        error_messages_arr << 'Please specify your gender.'
+      # Ensure others[:gender] contains only valid characters
+      elsif others[:gender] =~ /[^a-zA-Z-,]/
+        error_messages_arr << 'Gender can only contain letters, hyphens (-), and commas (,).'
+      end
+
+    # If 'others' is not present, check that each individual field is valid
     else
-      error_messages_arr << 'Select gender from the dropdown list.'
+      if !ethnicity_options.include?(user_particular[:ethnicity])
+        error_messages_arr << 'Please select ethnicity from the dropdown list only.'
+      end
+
+      if !religion_options.include?(user_particular[:religion])
+        error_messages_arr << 'Please select religion from the dropdown list only.'
+      end
+
+      if !['Male', 'Female'].include?(user_particular[:gender])
+        error_messages_arr << 'Please select gender from the dropdown list only.'
+      end
     end
 
     if Date.parse(user_particular[:date_of_birth].to_s) > Date.today
