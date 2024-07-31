@@ -19,7 +19,7 @@ end
 Then(/^I should be directed to the "([^"]*)" page$/) do |page|
   expected_path = case page
                   when "Upload Document"
-                    new_user_particular_document_path(@user.id) # Ensure the user ID is correctly referenced
+                    new_user_particular_document_path(@user_particular) # Ensure the user_particular is correctly referenced
                   # Add other mappings here if needed
                   else
                     path_to(page) # Default to path_to method for other pages

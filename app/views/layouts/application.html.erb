@@ -26,13 +26,13 @@
   </head>
   <body class="d-flex flex-column min-vh-100 bg-light" style="overflow-x:hidden;">
     <div class="container-fluid justify-content-center p-0">
-      <div class="row flex-nowrap align-items-center m-0 justify-content-between p-2", style="background-color: #f1536a; color: white; margin-bottom:0;">
+      <div class="row flex-nowrap align-items-center m-0 justify-content-between p-2" style="background-color: #f1536a; color: white; margin-bottom:0;">
         <div class="col-1 d-flex justify-content-start align-items-center">
           <% if @back_path.present? %>
             <%= button_to "Back", @back_path, method: 'get', class: "text-nowrap btn btn-light" %>
           <% end %>
         </div>
-        <h5 id="EnableID_usertitle" data-user-id ="<%= @user.id %>" class="text-center m-0 col-10 text-nowrap">Welcome, <%= @user_particular&.full_name || current_user.email %>!</h5>
+        <h5 id="EnableID_usertitle" data-user-id="<%= @user&.id %>" class="text-center m-0 col-10 text-nowrap">Welcome, <%= @user_particular&.full_name || current_user.email %>!</h5>
         <div class="col-1 d-flex justify-content-end align-items-center">
           <%= button_to "Sign out", destroy_user_session_path, method: 'delete', class: "text-nowrap btn btn-light" %>
         </div>
@@ -40,7 +40,7 @@
       <%= yield %>
     </div>
     <main class="flex-fill"></main>
-    <footer class="footer mt-auto bg-dark text-white-50 p-2", style="max-height:70px; font-size: 0.7em;">
+    <footer class="footer mt-auto bg-dark text-white-50 p-2" style="max-height:70px; font-size: 0.7em;">
       <div class="container p-0 text-center">
         <small>&copy; EnableID 2024</small>
         <br>
