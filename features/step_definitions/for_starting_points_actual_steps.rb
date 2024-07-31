@@ -36,21 +36,22 @@ Given(/^I am already on NGO "Gebirah" verify a user page$/) do
   step 'I should see "Verify" button'
 end
 
+# features/step_definitions/for_starting_points_actual_steps.rb
+
 # Getting started but as an already verified user
 Given(/^I am now on the user particulars home page as a verified user$/) do
   step 'I am on the "Login" page'
   fill_in 'Log in EnableID', with: 'user1'
   fill_in 'Password', with: 'password1'
   step 'I press the "Log in" button'
-  user = User.find_by(username: 'user1')
-  login_as(user, scope: :user)
+  @user = User.find_by(username: 'user1')
+  login_as(@user, scope: :user)
   visit root_path
   expected_path = '/'
   raise "Expected to be on #{expected_path}, but was on #{current_path}" unless current_path == expected_path
 
   step 'I should see "Welcome, "'
   step 'I should see "EnableID - Verified by Gebirah"'
-  # Set this before running your tests
 end
 
 # Getting started but as an already verified user

@@ -1,3 +1,5 @@
+# features/step_definitions/uploaddocument_step.rb
+
 Given(/^I am an undocumented individual$/) do
   @user = User.create!(
     username: 'undocumented_user',
@@ -105,4 +107,35 @@ end
 
 Then(/^I should receive a notification that my documents are being reviewed$/) do
   expect(page).to have_content('Your documents are being reviewed')
+end
+
+# Additional Steps
+
+When(/^I fill in "([^"]*)" with "([^"]*)"$/) do |field, value|
+  fill_in field, with: value
+end
+
+When(/^I upload a document$/) do
+  attach_file('document_upload', Rails.root.join('spec/fixtures/sample_document.pdf'))
+  fill_in 'Title', with: 'Sample Document'
+  fill_in 'Description', with: 'This is a test document.'
+  click_button 'Upload'
+end
+
+Then(/^I click on the "([^"]*)" button next to the uploaded document$/) do |button|
+  within('.uploaded-document') do
+    click_button(button)
+  end
+end
+
+Then(/^I should be able to preview the document in a new tab$/) do
+  expect(page).to have_selector('.document-preview')
+end
+
+When(/^I select "([^"]*)" from the dropdown menu to categorize the document$/) do |category|
+  select category, from: 'document_category'
+end
+
+Then(/^the document should be categorized correctly$/) do
+  expect(page).to have_select('document_category', selected: 'Education')
 end

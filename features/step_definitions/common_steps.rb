@@ -1,3 +1,5 @@
+# features/step_definitions/common_steps.rb
+
 Then(/^I should see "([^"]*)"$/) do |name|
   expect(page).to have_content(name, wait: 2) # Wait for up to 2 seconds
 end
@@ -25,6 +27,17 @@ Then(/^I should be redirected to the "([^"]*)" page$/) do |page_name|
   expect(current_path).to eq(path_to(page_name))
 end
 
+Then(/^I should be directed to the "([^"]*)" page$/) do |page|
+  expected_path = case page
+                  when "Upload Document"
+                    "/user_particulars/#{@user.id}/document" # Ensure the user ID is correctly referenced
+                  # Add other mappings here if needed
+                  else
+                    raise "Path mapping not defined for page: #{page}"
+                  end
+  expect(current_path).to eq(expected_path)
+end
+
 Given(/^that a User account by the Username of "([^"]*)", Email of "([^"]*)", Phone Number of "([^"]*)" exist$/) do |username, email, phone_number|
   user = User.find_by(username: username, email: email, phone_number: phone_number)
   expect(user).not_to be_nil, "No user found with Username: #{username}, Email: #{email}, Phone Number: #{phone_number}"
@@ -40,17 +53,6 @@ When(/^I press the "([^"]*)" button$/) do |btn_name|
   else
     raise "No button or link found with name '#{btn_name}'"
   end
-end
-
-Then(/^I should be directed to the "([^"]*)" page$/) do |page|
-  expected_path = case page
-                  when "Upload Document"
-                    new_document_path
-                  # Add other mappings here if needed
-                  else
-                    raise "Path mapping not defined for page: #{page}"
-                  end
-  expect(current_path).to eq(expected_path)
 end
 
 # Step to navigate to a specific page
