@@ -34,19 +34,24 @@
       <!-- Buttons Container, put under sub main container -->
       <div class="pri-container py-3 px-2 d-flex w-100 flex-column flex-wrap">
         <div class="row mb-2 d-flex justify-content-center gap-2">
-          <%= link_to new_user_particular_document_path(@user_particular), id: 'documents-button', class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
-            <i class="fas fa-file-alt fs-5"></i> Documents
+          <%if @user_particular%>
+            <%= link_to new_user_particular_document_path(@user_particular), id: 'documents-button', class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
+              <i class="fas fa-file-alt fs-5"></i> Documents
+            <% end %>
           <% end %>
-          <%= link_to user_history_path(@user_particular), class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
+
+          <%= link_to user_history_path(@user), class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
             <i class="fas fa-history fs-5"></i> Activity History
           <% end %>
         </div>
         <div class="row d-flex justify-content-center gap-2">
-          <%= link_to saved_post_user_particular_path(@user_particular), class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
-            <i style='color: orange;' class="bi bi-bookmark-fill fs-5"></i> Saved Post
-          <% end %>
-          <%= link_to contact_ngo_path(@user_particular), class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
-            <i class="fas fa-search fs-5"></i> Search NGOs
+          <%if @user_particular%>
+            <%= link_to saved_post_user_particular_path(@user_particular), class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
+              <i style='color: orange;' class="bi bi-bookmark-fill fs-5"></i> Saved Post
+            <% end %>
+            <%= link_to contact_ngo_path(@user_particular), class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
+              <i class="fas fa-search fs-5"></i> Search NGOs
+            <% end %>
           <% end %>
         </div>
       </div>
