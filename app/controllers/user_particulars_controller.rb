@@ -3,7 +3,7 @@ class UserParticularsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user_particular
   before_action :set_ngo_users
-  before_action :set_saved_posts, only: %i[saved_post show]
+  before_action :set_saved_posts
 
   def show
     @bulletins = Bulletin.all.order(updated_at: :desc)

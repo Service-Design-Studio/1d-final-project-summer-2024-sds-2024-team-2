@@ -51,11 +51,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_31_133823) do
   end
 
   create_table "documents", force: :cascade do |t|
-    t.string "title"
+    t.string "title", null: false
     t.text "description"
+    t.string "attachable_type", null: false
+    t.integer "attachable_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+<<<<<<< HEAD
     t.integer "user_particular_id"
+=======
+    t.index ["attachable_type", "attachable_id"], name: "index_documents_on_attachable"
+>>>>>>> 776b7b6e7d4472dc9c78a8fa51ba187dcd2bfe35
   end
 
   create_table "messages", force: :cascade do |t|
