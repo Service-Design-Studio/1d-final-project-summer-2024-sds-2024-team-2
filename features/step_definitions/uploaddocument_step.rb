@@ -1,11 +1,9 @@
-# features/step_definitions/uploaddocument_step.rb
-
 Given(/^I am an undocumented individual$/) do
   @user = User.create!(
     username: 'undocumented_user',
     email: 'undocumented@example.com',
     phone_number: '1234567890',
-    password: 'password', # Set the password attribute
+    password: 'password',
     registered: false,
     needs_document_upload: true
   )
