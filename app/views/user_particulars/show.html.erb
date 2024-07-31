@@ -1,15 +1,14 @@
-  <div class="container-fluid mt-4 d-flex justify-content-center">
-    <!-- Left Side (Digital ID, 2FA, Buttons) -->
+<div class="container-fluid mt-4 d-flex justify-content-center">
+  <!-- Left Side (Digital ID, 2FA, Buttons) -->
   <div class='row d-flex justify-content-center'>
     <div class="col-lg-3 col-md-12">
       <!-- Digital ID Card Container -->
       <div class="d-flex justify-content-between align-items-center">
         <%= render 'digitalid' %>
       </div>
-
     
       <div style='font-size: 0.7em;'>
-        <!--Display messages at the top of the page-->
+        <!-- Display messages at the top of the page -->
         <%- if flash[:notice] %>
           <div class="alert alert-info text-center"><%= flash[:notice] %></div>
         <%- elsif flash[:success] %>
@@ -28,72 +27,55 @@
         <% end %>
       </div>
       <!-- 2FA Container -->
-        <div class="d-flex gap-2 my-2 w-100 justify-content-center align-items-center">
-          <button id="generate-2fa-btn" class="py-2 px-2 text-nowrap generate-2fa-button" style="font-size:0.8em;">Generate 2FA Passcode:</button>
-          <span id='two-fa-passcode' class='py-2 text-nowrap two-fa-passcode-input text-center' style="font-size:0.8em;"><%= @user_particular&.two_fa_passcode || "2FA unavailable" %></span>
+      <div class="d-flex gap-2 my-2 w-100 justify-content-center align-items-center">
+        <button id="generate-2fa-btn" class="py-2 px-2 text-nowrap generate-2fa-button" style="font-size:0.8em;">Generate 2FA Passcode:</button>
+        <span id='two-fa-passcode' class='py-2 text-nowrap two-fa-passcode-input text-center' style="font-size:0.8em;"><%= @user_particular&.two_fa_passcode || "2FA unavailable" %></span>
+      </div>
+      <!-- Buttons Container, put under sub main container -->
+      <div class="pri-container py-3 px-2 d-flex w-100 flex-column flex-wrap">
+        <div class="row mb-2 d-flex justify-content-center gap-2">
+          <%= link_to user_document_path(@user), id: 'documents-button', class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
+            <i class="fas fa-file-alt fs-5"></i> Documents
+          <% end %>
+          <%= link_to user_history_path(@user), class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
+            <i class="fas fa-history fs-5"></i> Activity History
+          <% end %>
         </div>
-        <!-- Buttons Container, put under sub main container -->
-        <div class="pri-container py-3 px-2 d-flex w-100 flex-column flex-wrap">
-          <div class="row mb-2 d-flex justify-content-center gap-2">
-            <%= link_to user_document_path(@user), class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
-              <i class="fas fa-file-alt fs-5"></i> Documents
-            <% end %>
-            <%= link_to user_history_path(@user), class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
-              <i class="fas fa-history fs-5"></i> Activity History
-            <% end %>
-          </div>
-          <div class="row d-flex justify-content-center gap-2">
-            <%= link_to saved_post_user_particular_path(@user), class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
-              <i style='color: orange;' class="bi bi-bookmark-fill fs-5"></i> Saved Post
-            <% end %>
-            <%= link_to contact_ngo_path(@user), class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
-              <i class="fas fa-search fs-5"></i> Search NGOs
-            <% end %>
-          </div>
+        <div class="row d-flex justify-content-center gap-2">
+          <%= link_to saved_post_user_particular_path(@user), class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
+            <i style='color: orange;' class="bi bi-bookmark-fill fs-5"></i> Saved Post
+          <% end %>
+          <%= link_to contact_ngo_path(@user), class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
+            <i class="fas fa-search fs-5"></i> Search NGOs
+          <% end %>
         </div>
-
+      </div>
     </div>
     <!-- Right Side (Bulletin Board) -->
     <div class="col-lg-8 col-md-12 mx-0 d-flex justify-content-center">
       <%= render 'bulletin' %>
     </div>
   </div>
-  </div>
-  <!--
-<div class='row justify-content-center'>
-  <% if @user_particular.nil? %>
-    <%= link_to "Fill in your particulars to get your Digital ID!", new_user_particular_path, class: "btn btn-danger", id: "fill-in-particulars-btn" %>
-  <% else %>
-    <% if @user_particular.status == 'verified' %>
-      <button type="button" class="btn btn-primary p-3" data-bs-toggle="modal" data-bs-target="#verificationWarningModal">
-        Edit your particulars!
-      </button>
-    <% else %>
-      <%= link_to "Edit your Particulars!", edit_user_particular_path(@user_particular), class: "btn btn-primary btn-danger p-3" %>
-    <% end %>
-  <% end %>
 </div>
-<%# End of EnableID card partial and filling in/edit button%>
--->
-  <!-- Modal -->
-  <div class="modal fade" id="verificationWarningModal" tabindex="-1" role="dialog" aria-labelledby="verificationWarningModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="verificationWarningModalLabel">Caution!</h5>
-          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          If you continue, you will lose your verification status and will need to be verified again by an NGO admin. Do you want to proceed?
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <% if @user_particular.present? %>
-            <%= link_to "Proceed", edit_user_particular_path(@user_particular), class: "btn btn-danger" %>
-          <% end %>
-        </div>
+
+<!-- Modal -->
+<div class="modal fade" id="verificationWarningModal" tabindex="-1" role="dialog" aria-labelledby="verificationWarningModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="verificationWarningModalLabel">Caution!</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        If you continue, you will lose your verification status and will need to be verified again by an NGO admin. Do you want to proceed?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <% if @user_particular.present? %>
+          <%= link_to "Proceed", edit_user_particular_path(@user_particular), class: "btn btn-danger" %>
+        <% end %>
       </div>
     </div>
   </div>

@@ -21,6 +21,7 @@ Rails.application.routes.draw do
       get 'saved_post'
       get 'page2'
     end
+    resources :documents, only: [:new, :create, :show, :edit, :update, :destroy]
   end
 
   resources :ngo_users do
@@ -35,8 +36,4 @@ Rails.application.routes.draw do
 
   resources :bulletins
   resources :saved_posts
-
-  # Document routes
-  resources :documents, only: [:new, :create, :show, :edit, :update, :destroy]
-
 end
