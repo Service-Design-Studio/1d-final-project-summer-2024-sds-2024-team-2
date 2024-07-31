@@ -65,7 +65,8 @@ Rails.application.configure do
 
   # Raise error when a before_action's only/except options reference missing actions
   config.action_controller.raise_on_missing_callback_actions = true
-  # added after recommendation from co-pilot yirong
+
+  # Added after recommendation from co-pilot yirong
   config.assets.compile = true
 
   # Ensure that CSRF is enabled in the test environment

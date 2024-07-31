@@ -87,7 +87,7 @@ def path_to(page_name)
   user_id = if has_selector?('#EnableID_usertitle')
               find('#EnableID_usertitle')['data-user-id']
             else
-              @user&.id || '' # Fallback to using @user.id
+              @user_particular.id # Fallback to using @user_particular.id
             end
   case page_name.downcase
   when 'home'

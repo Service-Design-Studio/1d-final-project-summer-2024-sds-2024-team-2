@@ -44,7 +44,7 @@ Given(/^I am now on the user particulars home page as a verified user$/) do
   step 'I press the "Log in" button'
   @user = User.find_by(username: 'user1')
   raise "User not found" unless @user
-  @user_particular = @user.user_particular # Ensure user_particular is fetched from user
+  @user_particular = @user.user_particular
   raise "User Particular not found" unless @user_particular
   login_as(@user, scope: :user)
   visit user_particular_path(@user_particular)
@@ -54,6 +54,7 @@ Given(/^I am now on the user particulars home page as a verified user$/) do
   step 'I should see the welcome message'
   step 'I should see "EnableID - Verified by Gebirah"'
 end
+
 
 Then(/^I should see the welcome message$/) do
   expect(page).to have_content("Welcome, ", wait: 2)
