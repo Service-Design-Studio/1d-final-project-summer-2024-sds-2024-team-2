@@ -56,7 +56,7 @@ class UserParticularsController < ApplicationController
   def confirm
     session[:user_particular_params] = user_particular_params # Use the session to store the model
     @user_particular = UserParticular.new(user_particular_params) # The Model object to store the hidden keyed params
-    error_messages_arr = validate_user_particulars(@user_particular)
+    error_messages_arr = validate_user_particulars(@user_particular, params[:others])
     flash[:error] = error_messages_arr
 
     if error_messages_arr.empty?
@@ -84,7 +84,7 @@ class UserParticularsController < ApplicationController
   end
 
   def update
-    error_messages_arr = validate_user_particulars(UserParticular.new(user_particular_params))
+    error_messages_arr = validate_user_particulars(UserParticular.new(user_particular_params), params[:others])
     flash[:error] = error_messages_arr
 
     # Check if validation passes
@@ -156,7 +156,7 @@ class UserParticularsController < ApplicationController
     end
   end
 
-  def validate_user_particulars(user_particular)
+  def validate_user_particulars(user_particular, others)
     error_messages_arr = []
 
     unless user_particular[:full_name] =~ /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžæÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u
@@ -181,17 +181,39 @@ class UserParticularsController < ApplicationController
       end
     end
 
-    # Check if selected option is in dropdown options
-    unless user_particular[:country_of_origin].in? country_options
+    # Check if selected country is in dropdown options
+    if !country_options.include?(user_particular[:country_of_origin])
       error_messages_arr << 'Select country of origin from the dropdown list.'
     end
 
-    unless user_particular[:ethnicity].in? ethnicity_options
+    if !ethnicity_options.delete('Others').include?(user_particular[:ethnicity])
+      # if others hash is present but ethnicity text field is empty
+      if others.present? && others[:ethnicity].blank?
+        error_messages_arr << 'Select ethnicity from the dropdown list.'
+      end
+    # Check if selected ethnicity is in dropdown options, if others wasn't selected
+    else
       error_messages_arr << 'Select ethnicity from the dropdown list.'
     end
 
-    unless user_particular[:religion].in? religion_options
+    if !religion_options.delete('Others').include?(user_particular[:religion])
+      # if others hash is present but religion text field is empty
+      if others.present? && others[:religion].blank?
+        error_messages_arr << 'Select religion from the dropdown list.'
+      end
+    # Check if selected religion is in dropdown options, if others wasn't selected
+    else
       error_messages_arr << 'Select religion from the dropdown list.'
+    end
+
+    if !['Male', 'Female'].include?(user_particular[:gender])
+      # if others hash is present but gender text field is empty
+      if others.present? && others[:gender].blank?
+        error_messages_arr << 'Select gender from the dropdown list.'
+      end
+    # Check if selected gender is in dropdown options, if others wasn't selected
+    else
+      error_messages_arr << 'Select gender from the dropdown list.'
     end
 
     if Date.parse(user_particular[:date_of_birth].to_s) > Date.today

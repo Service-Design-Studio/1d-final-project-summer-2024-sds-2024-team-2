@@ -72,7 +72,7 @@
         <%= form.select :religion, options_for_select(@religions, @user_particular["religion"]), {}, { class: "form-control", required: true, id: "religion_select" } %>
         <!-- Hidden Religion Other Field -->
         <div id="religion_other_field" style="display: none;">
-          <input name="others[religion]" type="text" class="form-control" placeholder="Specify other ethnicity">
+          <input name="others[religion]" type="text" class="form-control" placeholder="Specify other religion">
         </div>
       </div>
       <div class="form-group">
@@ -80,7 +80,7 @@
         <%= form.select :gender, options_for_select(['Male', 'Female', 'Others'], @user_particular["gender"]), {}, { class: "form-control", required: true, id: "gender_select" } %>
         <!-- Hidden Text Field for Gender -->
         <div id="gender_other_field" style="display: none;">
-          <input name="others[gender]" type="text" class="form-control" placeholder="Specify other ethnicity">
+          <input name="others[gender]" type="text" class="form-control" placeholder="Specify other gender">
         </div>
       </div>
       <div class="form-group">
