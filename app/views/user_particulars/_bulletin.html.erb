@@ -44,16 +44,16 @@
             </div>
           </div>
           <div class="d-flex px-1 w-100 align-items-center justify-content-between" style="font-size: 1.3em; border-top: solid 1px lightgrey">
-            <%= link_to '#', onclick: '', style: 'text-decoration: none;' do %>
-              <i style='text-center text-decoration: none; color: black;' class="bi bi-send"></i>
+            <%= link_to '#', onclick: '', style: 'text-decoration: none;', aria_label: "sender #{bulletin.title} #{bulletin.id}" do %>
+              <i style='text-center text-decoration: none; color: black;' class="sender bi bi-send"></i>
             <% end %>
             <% if @on_saved_page %>
-              <%= link_to '#', onclick: 'deleteSavePost(this)', data: { bulletin_id: bulletin.id, user_id: @user.id }, style: 'text-decoration: none;', aria: "#{bulletin.title} #{bulletin.id}"  do %>
-                <i style='text-center text-decoration: none; color: orange;' class="bi bi-bookmark-fill"></i>
+              <%= link_to '#', onclick: 'deleteSavePost(this)', data: { bulletin_id: bulletin.id, user_id: @user.id }, style: 'text-decoration: none;', aria_label: "toggle #{bulletin.title} #{bulletin.id}"  do %>
+                <i style='text-center text-decoration: none; color: orange;' class="bookmarker bi bi-bookmark-fill"></i>
               <% end %>
             <% else %>
               <%= link_to '#', onclick: 'toggleSavePost(this)', data: { bulletin_id: bulletin.id, user_id: @user.id }, style: 'text-decoration: none;', aria_label: "toggle #{bulletin.title} #{bulletin.id}" do %>
-                <i style='text-center text-decoration: none; color: orange;' class="bi <%= saved ? 'bi-bookmark-fill' : 'bi-bookmark' %>"></i>
+                <i style='text-center text-decoration: none; color: orange;' class="bookmarker bi <%= saved ? 'bi-bookmark-fill' : 'bi-bookmark' %>"></i>
               <% end %>
             <% end %>
           </div>

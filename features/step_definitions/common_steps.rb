@@ -9,8 +9,8 @@ When(/^I press the "([^"]*)" button$/) do |button|
     click_button(button)
   elsif has_link?(button)
     click_link(button)
-  elsif has_css?("[aria-label='#{button}']")
-    find("[aria-label='#{button}']").click
+  elsif has_css?("[aria_label='#{button}']")
+    find("[aria_label='#{button}']").click
   else
     raise "No button or link found with name '#{button}'"
   end
@@ -87,7 +87,7 @@ def path_to(page_name)
   user_id = if has_selector?('#EnableID_usertitle')
               find('#EnableID_usertitle')['data-user-id']
             else
-              @user.id # Fallback to using @user.id
+              @user&.id || '' # Fallback to using @user.id
             end
   case page_name.downcase
   when 'home'
