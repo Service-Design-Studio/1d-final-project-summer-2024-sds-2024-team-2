@@ -1,6 +1,7 @@
 class UserParticular < ApplicationRecord
   belongs_to :user
   has_one_attached :profile_picture
+  has_many :documents, dependent: :destroy # Add this line to establish the association
 
   before_create :assign_unique_id
   before_create :generate_2fa_secret
@@ -24,11 +25,10 @@ class UserParticular < ApplicationRecord
   def self.update_user_particular(id, attributes)
     user_particular = find_by(id: id)
     return nil unless user_particular
-    
+
     user_particular.update(attributes)
     user_particular
   end
-  
 
   def self.reset_verification(id)
     user_particular = UserParticular.find_by(id:)
@@ -52,5 +52,4 @@ class UserParticular < ApplicationRecord
   # def verified_by_ngo_user_name
   #   self.verified_by_ngo_user&.name
   # end
-
 end
