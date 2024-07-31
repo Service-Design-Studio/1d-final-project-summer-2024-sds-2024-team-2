@@ -1,5 +1,3 @@
-# features/step_definitions/common_steps.rb
-
 Given(/^I am on the "([^"]*)" page$/) do |page|
   visit path_to(page)
 end
@@ -19,10 +17,9 @@ end
 Then(/^I should be directed to the "([^"]*)" page$/) do |page|
   expected_path = case page
                   when "Upload Document"
-                    new_user_particular_document_path(@user_particular) # Ensure the user_particular is correctly referenced
-                  # Add other mappings here if needed
+                    new_user_particular_document_path(@user_particular)
                   else
-                    path_to(page) # Default to path_to method for other pages
+                    path_to(page)
                   end
   expect(current_path).to eq(expected_path)
 end
@@ -84,10 +81,10 @@ end
 
 # Maps page names to their corresponding paths
 def path_to(page_name)
-  user_id = if has_selector?('#EnableID_usertitle')
-              find('#EnableID_usertitle')['data-user-id']
+  user_id = if defined?(@user_particular) && @user_particular.present?
+              @user_particular.id
             else
-              @user_particular.id # Fallback to using @user_particular.id
+              UserParticular.last.id # Fallback to the most recent UserParticular if @user_particular is not set
             end
   case page_name.downcase
   when 'home'
