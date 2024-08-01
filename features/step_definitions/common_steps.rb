@@ -51,6 +51,10 @@ Then(/^I should be redirected to the "([^"]*)" page$/) do |page_name|
   expect(current_path).to eq(path_to(page_name))
 end
 
+When(/^I fill in the following fields$/) do |table|
+  fill_in_form(table)
+end
+
 # Additional helper methods
 
 # Fills in a form based on the given table data

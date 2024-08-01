@@ -35,7 +35,7 @@
       <div class="pri-container py-3 px-2 d-flex w-100 flex-column flex-wrap">
         <div class="row mb-2 d-flex justify-content-center gap-2">
           <%if @user_particular%>
-            <%= link_to new_user_particular_document_path(@user_particular), id: 'documents-button', class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
+            <%= link_to new_user_particular_document_path(@user), id: 'documents-button', class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
               <i class="fas fa-file-alt fs-5"></i> Documents
             <% end %>
           <% end %>
