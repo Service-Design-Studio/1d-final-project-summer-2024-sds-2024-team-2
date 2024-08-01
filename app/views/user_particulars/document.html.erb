@@ -73,62 +73,91 @@
             margin-top: 20px;
         }
 
-        .uploaded-file-card {
+        .uploaded-file {
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 10px;
-            border: 1px solid #eee;
-            margin-bottom: 10px;
-            border-radius: 5px;
+            border-bottom: 1px solid #eee;
         }
 
         .uploaded-file-details {
-            display: flex;
-            flex-direction: column;
             flex: 1;
+            display: flex;
+            align-items: center;
         }
 
         .file-name {
+            flex-grow: 1;
             font-size: 16px;
-            margin-bottom: 5px;
+            margin-right: 10px;
         }
 
         .file-info {
             font-size: 14px;
             color: #666;
-            margin-bottom: 10px;
+            margin-right: 20px;
         }
 
         .form-control.dropdown {
-            width: 100%;
-            margin-bottom: 10px;
+            width: 150px;
+            margin-right: 20px;
         }
 
         .description-container {
-            width: 100%;
+            width: 200px;
+            height: 40px;
+            margin-right: 20px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-buttons .btn {
+            font-size: 14px;
+            padding: 5px 10px;
+        }
+
+        .action-buttons .btn-danger {
+            background-color: red;
+            border-color: red;
+        }
+
+        .action-buttons .btn-primary {
+            background-color: blue;
+            border-color: blue;
+        }
+
+        /* Card layout */
+        .uploaded-file-card {
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .uploaded-file-details {
+            display: flex;
+            flex-direction: column;
             margin-bottom: 10px;
         }
 
         .file-actions {
             display: flex;
-            flex-direction: column;
-            gap: 10px;
+            justify-content: space-between;
         }
 
-        .file-actions .btn {
-            font-size: 14px;
-            padding: 5px 10px;
+        .file-name {
+            font-weight: bold;
         }
 
-        .file-actions .btn-danger {
-            background-color: red;
-            border-color: red;
-        }
-
-        .file-actions .btn-primary {
-            background-color: blue;
-            border-color: blue;
+        .file-info {
+            margin-top: 5px;
         }
     </style>
 </head>
