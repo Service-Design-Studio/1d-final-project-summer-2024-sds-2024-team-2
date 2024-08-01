@@ -162,37 +162,6 @@
       // Initial update for both phone number fields
       updateAllFullPhoneNumbers();
     });
-
-    // Initialize values for other dropdown field if value exists and is not in dropdown options
-    // Convert Ruby dropdown option arrays to JSON 
-    const ethnicityOptions = <%= @ethnicities.to_json.html_safe %>;
-    const religionOptions = <%= @religions.to_json.html_safe %>;
-    const genderOptions = ['Male', 'Female'];
-
-    // Get values from params
-    const ethnicityValue = "<%= @user_particular['ethnicity'].to_s %>";
-    const religionValue = "<%= @user_particular['religion'].to_s %>";
-    const genderValue = "<%= @user_particular['gender'].to_s %>";
-
-    // Function to toggle visibility of "Others" fields and set value for hidden input field
-    function initialiseOtherField(selectId, otherFieldId, value, options) {
-      const selectElement = document.getElementById(selectId);
-      const otherField = document.getElementById(otherFieldId);
-      
-      if (options.includes(value)) {
-        selectElement.value = value;
-        otherField.style.display = 'none';
-      } else {
-        selectElement.value = 'Others';
-        otherField.style.display = 'block';
-        otherField.value = value;
-      }
-    }
-
-    // Apply the logic for each field
-    initialiseOtherField('ethnicity_select', 'ethnicity_other_field', ethnicityValue, ethnicityOptions);
-    initialiseOtherField('gender_select', 'gender_other_field', genderValue, genderOptions);
-    initialiseOtherField('religion_select', 'religion_other_field', religionValue, religionOptions);
     
     // Function to toggle visibility of input Others fields
     function toggleOtherField(selectElementId, otherFieldId) {
