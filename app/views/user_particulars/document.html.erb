@@ -40,12 +40,6 @@
             color: blue;
         }
 
-        /* Style for the file details */
-        .file-details {
-            margin-top: 10px;
-            font-size: 16px;
-        }
-
         /* Style for the dropdown menu */
         .dropdown-menu {
             margin-top: 10px;
@@ -74,105 +68,67 @@
             padding-bottom: 20px;
         }
 
-        /* Style for the file list */
-        .file-list {
-            max-height: 300px;
-            overflow-y: auto;
+        /* Style for the uploaded files */
+        .uploaded-files-container {
             margin-top: 20px;
-            padding: 0;
-            list-style-type: none;
         }
 
-        .file-list-item {
+        .uploaded-file {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            align-items: flex-start;
             padding: 10px;
-            border-bottom: 1px solid #ccc;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
         }
 
-        .file-list-item span {
+        .uploaded-file-details {
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            margin-bottom: 10px;
         }
 
-        .file-list-item img {
-            width: 20px;
-            height: 20px;
-            margin-right: 10px;
+        .file-name {
+            font-size: 16px;
+            margin-bottom: 5px;
         }
 
-        .file-preview {
-            text-align: center;
-            margin-top: 20px;
+        .file-info {
+            font-size: 14px;
+            color: #666;
         }
 
-        .file-preview img {
-            max-width: 100%;
-            height: auto;
-        }
-
-        .upload-status {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .document-list {
+        .form-control.dropdown {
             width: 100%;
+            margin-bottom: 10px;
         }
 
-        .document-list table {
+        .description-container {
             width: 100%;
+            height: 40px;
+            margin-bottom: 10px;
         }
 
-        .document-list table th,
-        .document-list table td {
-            padding: 10px;
-            border-bottom: 1px solid #ccc;
-            text-align: left;
-        }
-
-        .document-list table th {
-            background-color: #f8f8f8;
-        }
-
-        .document-list .status-verified {
-            color: green;
-        }
-
-        .document-list .status-unverified {
-            color: red;
-        }
-
-        .document-list .action-buttons {
+        .action-buttons {
             display: flex;
             gap: 10px;
         }
 
-        .upload-section {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
+        .action-buttons .btn {
+            font-size: 14px;
+            padding: 5px 10px;
         }
 
-        .upload-section .form-section,
-        .upload-section .document-list {
-            flex: 1;
-            margin: 10px;
+        .action-buttons .btn-danger {
+            background-color: red;
+            border-color: red;
         }
 
-        /* Ensure the select element is wide enough to display the text */
-        select {
-            min-width: 150px; /* Adjust this value as needed */
-        }
-
-        .alert-heading {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .description-container {
-            margin-top: 10px;
+        .action-buttons .btn-primary {
+            background-color: blue;
+            border-color: blue;
         }
     </style>
 </head>
@@ -210,24 +166,11 @@
                 <div id="uploadStatus" class="upload-status"></div>
             </div>
 
-            <!-- Existing Documents -->
-            <div class="document-list" id="uploadedDocumentsContainer" style="display: none;">
+            <!-- Uploaded Documents -->
+            <div class="uploaded-files-container" id="uploadedDocumentsContainer" style="display: none;">
                 <h2 class="text-center">Uploaded Documents</h2>
-                <table class="table" id="uploadedDocumentsTable">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Size</th>
-                            <th>Date</th>
-                            <th>Status</th>
-                            <th>Select Type</th>
-                            <th>Action</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody id="documentTableBody">
-                    </tbody>
-                </table>
+                <div id="uploadedDocumentsList">
+                </div>
             </div>
         </div>
     </div>
@@ -244,11 +187,9 @@
 
         // Function to update the file list display
         function updateFileList() {
-            console.log("Updating file list...");
             var fileListContainer = document.getElementById('fileList');
             fileListContainer.innerHTML = ''; // Clear previous file list
             selectedFiles.forEach(file => {
-                console.log("Adding file to list: ", file);
                 var fileItem = document.createElement('li');
                 fileItem.classList.add('file-list-item');
                 var fileTypeIcon = getFileTypeIcon(file.type);
@@ -325,13 +266,11 @@
             event.preventDefault();
             dropArea.classList.remove('hover'); // Remove hover effect on drop
             const files = Array.from(event.dataTransfer.files); // Get files from drop event
-            console.log("Dropped files: ", files);
             handleFiles(files);
         });
 
         fileInput.addEventListener('change', (event) => {
             const files = Array.from(event.target.files); // Get files from file input
-            console.log("Selected files: ", files);
             handleFiles(files);
         });
 
@@ -341,14 +280,11 @@
             files.forEach(file => {
                 if (!['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg'].includes(file.type)) {
                     document.getElementById('statusMessage').innerText = 'Unsupported file type. Please upload a PDF, DOCX, or JPG file.';
-                    console.log("Unsupported file type: ", file.type);
                 } else if (file.size > 5242880) { // 5MB limit
                     document.getElementById('statusMessage').innerText = 'File size exceeds the maximum limit of 5MB. Please upload a smaller file.';
-                    console.log("File size exceeds limit: ", file.size);
                 } else {
                     selectedFiles.push(file);
                     validFiles.push(file);
-                    console.log("Valid file added: ", file);
                 }
             });
             updateFileList(); // Update the file list display
@@ -394,35 +330,34 @@
 
         // Function to add uploaded documents to the list of uploaded documents
         function addUploadedDocumentsToList(files) {
-            var uploadedDocumentsTable = document.getElementById('documentTableBody');
+            var uploadedDocumentsList = document.getElementById('uploadedDocumentsList');
             files.forEach(file => {
                 if (['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg'].includes(file.type) && file.size <= 5242880) {
-                    var newRow = document.createElement('tr');
-                    newRow.innerHTML = `
-                        <td>${file.name}</td>
-                        <td>${formatFileSize(file.size)}</td>
-                        <td>${formatDate(new Date())}</td>
-                        <td class="status-unverified">Unverified</td>
-                        <td>
+                    var listItem = document.createElement('div');
+                    listItem.classList.add('uploaded-file');
+                    listItem.innerHTML = `
+                        <div class="uploaded-file-details">
+                            <span class="file-name">${file.name}</span>
+                            <span class="file-info">Size: ${formatFileSize(file.size)} Date: ${formatDate(new Date())} Status: Unverified</span>
                             <select class="form-control dropdown">
                                 <option value="education">Education</option>
                                 <option value="medical">Medical</option>
                                 <option value="personal documents">Personal Documents</option>
                                 <option value="property">Property</option>
                             </select>
-                        </td>
-                        <td class="action-buttons">
+                            <textarea class="form-control description-container" placeholder="Enter Description..."></textarea>
+                        </div>
+                        <div class="action-buttons">
                             <button class="btn btn-primary btn-sm" onclick="previewDocument('${URL.createObjectURL(file)}')">Preview</button>
                             <button class="btn btn-danger btn-sm" onclick="deleteDocument(this)">Delete</button>
-                        </td>
-                        <td><textarea class="form-control description-container" placeholder="Enter Description..."></textarea></td>
+                        </div>
                     `;
-                    uploadedDocumentsTable.appendChild(newRow);
+                    uploadedDocumentsList.appendChild(listItem);
                 }
             });
 
             // Show or hide the uploaded documents section based on the number of files
-            if (uploadedDocumentsTable.children.length > 0) {
+            if (uploadedDocumentsList.children.length > 0) {
                 document.getElementById('uploadedDocumentsContainer').style.display = 'block';
             } else {
                 document.getElementById('uploadedDocumentsContainer').style.display = 'none';
@@ -431,11 +366,13 @@
 
         // Function to delete a document
         function deleteDocument(button) {
-            var row = button.closest('tr');
-            row.remove();
+            var listItem = button.closest('.uploaded-file');
+            var fileName = listItem.querySelector('.file-name').innerText;
+            removeFile(fileName);
+            listItem.remove();
 
             // Check if there are remaining files and update the display accordingly
-            if (document.getElementById('documentTableBody').children.length === 0) {
+            if (document.getElementById('uploadedDocumentsList').children.length === 0) {
                 document.getElementById('uploadedDocumentsContainer').style.display = 'none';
             }
         }
