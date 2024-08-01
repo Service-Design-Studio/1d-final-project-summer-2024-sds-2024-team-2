@@ -8,112 +8,109 @@
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Style for the file upload wrapper */
         .file-upload-wrapper {
             position: relative;
             width: 100%;
-            height: 200px;
-            border: 4px dashed #d6d6d6;
+            height: auto;
+            border: 2px dashed #d6d6d6;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #d6d6d6;
-            cursor: pointer;
-            text-align: center;
-            margin-bottom: 20px;
             flex-direction: column;
+            padding: 20px;
+            margin-bottom: 20px;
         }
 
-        /* Hover effect for the file upload wrapper */
-        .file-upload-wrapper:hover {
-            background-color: #f5f5f5;
-        }
-
-        /* Hide the file input field */
         .file-upload-wrapper input[type="file"] {
             display: none;
         }
 
-        /* Style for the text inside the file upload wrapper */
         .file-upload-wrapper span {
-            font-size: 20px;
-            color: blue;
+            font-size: 18px;
+            margin-bottom: 10px;
         }
 
-        /* Style for the card layout */
-        .uploaded-file-card {
-            border: 1px solid #ddd;
-            border-radius: 8px;
+        .file-upload-wrapper button {
+            margin-top: 10px;
+        }
+
+        .uploaded-files-list {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .uploaded-file-item {
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #d6d6d6;
             padding: 10px;
             margin-bottom: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .file-name {
+            font-weight: bold;
+        }
+
+        .file-details {
             display: flex;
-            flex-direction: column;
+            flex-wrap: wrap;
+            margin-top: 5px;
         }
 
-        .uploaded-file-details {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 10px;
+        .file-details span {
+            margin-right: 15px;
         }
 
-        .file-info {
-            font-size: 14px;
-            color: #666;
+        .file-details select,
+        .file-details textarea {
+            margin-top: 5px;
         }
 
-        .action-buttons {
+        .file-actions {
             display: flex;
             gap: 10px;
+            margin-top: 10px;
         }
 
-        .action-buttons .btn {
-            font-size: 14px;
-            padding: 5px 10px;
+        .delete-button,
+        .preview-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
         }
 
-        .action-buttons .btn-danger {
-            background-color: red;
-            border-color: red;
+        .delete-button {
+            color: red;
         }
 
-        .action-buttons .btn-primary {
-            background-color: blue;
-            border-color: blue;
+        .preview-button {
+            color: blue;
         }
     </style>
 </head>
 
 <body>
     <div class="container mt-5">
-        <div class="alert alert-info text-center" style="font-size: 0.9em;" role="alert">
+        <div class="alert alert-info text-center" role="alert">
             <h5 class="alert-heading">Guide</h5>
             <p>To upload your documents, please follow these steps:</p>
             <ol>
                 <li>Drag and drop your documents into the designated area or click to select files.</li>
                 <li>Once all documents are uploaded, they will appear in the 'Uploaded Documents' section.</li>
-                <li>You can preview or delete the uploaded documents from the list.</li>
+                <li>You can delete the uploaded documents from the list.</li>
             </ol>
         </div>
-        <div class="upload-section">
-            <!-- Form for file upload -->
-            <div class="form-section">
-                <form id="uploadForm">
-                    <!-- File upload wrapper -->
-                    <div class="file-upload-wrapper" data-mdb-file-upload-init id="dropArea">
-                        <span>Drag and drop your documents below. Supported formats: PDF, DOCX, JPG. Max size: 5MB.</span>
-                        <button type="button" class="btn btn-primary mt-2" id="selectDocumentButton">Select Document</button>
-                        <input type="file" id="fileInput" multiple>
-                    </div>
-                </form>
-                <!-- Status message -->
-                <div id="statusMessage" class="text-center mt-3"></div>
-            </div>
+        <div class="file-upload-wrapper">
+            <span>Drag and drop your documents below. Supported formats: PDF, DOCX, JPG. Max size: 5MB.</span>
+            <button type="button" class="btn btn-primary" id="selectDocumentButton">Browse...</button>
+            <input type="file" id="fileInput" multiple>
+        </div>
 
-            <!-- Uploaded Documents -->
-            <div class="uploaded-files-container" id="uploadedDocumentsContainer" style="display: none;">
-                <h2 class="text-center">Uploaded Documents</h2>
-                <div id="uploadedDocumentsList"></div>
-            </div>
+        <div class="uploaded-files-list" id="uploadedFilesList">
+            <!-- Uploaded files will appear here -->
         </div>
     </div>
 
@@ -122,212 +119,73 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-    <!-- JavaScript to handle file upload -->
     <script>
-        // Variable to store selected files
         let selectedFiles = [];
 
-        // Function to update the file list display
-        function updateFileList() {
-            var fileListContainer = document.getElementById('fileList');
-            fileListContainer.innerHTML = ''; // Clear previous file list
-            selectedFiles.forEach(file => {
-                var fileItem = document.createElement('li');
-                fileItem.classList.add('file-list-item');
-                var fileTypeIcon = getFileTypeIcon(file.type);
-                fileItem.innerHTML = `<span><img src="${fileTypeIcon}" alt="icon">${file.name} (${formatFileSize(file.size)}) - ${formatDate(new Date())}</span>`;
-                fileListContainer.appendChild(fileItem);
-            });
-
-            // Show the file list if files are selected
-            if (selectedFiles.length > 0) {
-                document.getElementById('fileList').style.display = 'block';
-            } else {
-                document.getElementById('fileList').style.display = 'none';
-            }
-        }
-
-        // Function to get file type icon
-        function getFileTypeIcon(fileType) {
-            switch (fileType) {
-                case 'application/pdf':
-                    return 'https://image.flaticon.com/icons/svg/337/337946.svg';
-                case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-                    return 'https://image.flaticon.com/icons/svg/337/337932.svg';
-                case 'image/jpeg':
-                    return 'https://image.flaticon.com/icons/svg/337/337940.svg';
-                default:
-                    return 'https://image.flaticon.com/icons/svg/137/137932.svg';
-            }
-        }
-
-        // Function to format file size
-        function formatFileSize(bytes) {
-            const units = ['bytes', 'KB', 'MB', 'GB', 'TB'];
-            let unitIndex = 0;
-            let size = bytes;
-
-            // Convert bytes to the largest unit possible
-            while (size >= 1024 && unitIndex < units.length - 1) {
-                size /= 1024;
-                unitIndex++;
-            }
-
-            // Return size with two decimal places and unit
-            return size.toFixed(2) + ' ' + units[unitIndex];
-        }
-
-        // Function to format date to dd/mm/yy
-        function formatDate(date) {
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-            const year = String(date.getFullYear()).substr(-2);
-            return `${day}/${month}/${year}`;
-        }
-
-        // Function to remove a file from the list
-        function removeFile(fileName) {
-            selectedFiles = selectedFiles.filter(file => file.name !== fileName);
-            updateFileList();
-        }
-
-        // Event listeners for drag and drop functionality
-        const dropArea = document.getElementById('dropArea');
-        const fileInput = document.getElementById('fileInput');
-
-        dropArea.addEventListener('dragover', (event) => {
-            event.preventDefault();
-            dropArea.classList.add('hover'); // Add hover effect on dragover
+        document.getElementById('selectDocumentButton').addEventListener('click', function () {
+            document.getElementById('fileInput').click();
         });
 
-        dropArea.addEventListener('dragleave', () => {
-            dropArea.classList.remove('hover'); // Remove hover effect on dragleave
-        });
-
-        dropArea.addEventListener('drop', (event) => {
-            event.preventDefault();
-            dropArea.classList.remove('hover'); // Remove hover effect on drop
-            const files = Array.from(event.dataTransfer.files); // Get files from drop event
+        document.getElementById('fileInput').addEventListener('change', function (event) {
+            const files = Array.from(event.target.files);
             handleFiles(files);
         });
 
-        fileInput.addEventListener('change', (event) => {
-            const files = Array.from(event.target.files); // Get files from file input
-            handleFiles(files);
-        });
-
-        // Function to handle files
         function handleFiles(files) {
-            let validFiles = [];
             files.forEach(file => {
                 if (!['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg'].includes(file.type)) {
-                    document.getElementById('statusMessage').innerText = 'Unsupported file type. Please upload a PDF, DOCX, or JPG file.';
+                    alert('Unsupported file type. Please upload a PDF, DOCX, or JPG file.');
                 } else if (file.size > 5242880) { // 5MB limit
-                    document.getElementById('statusMessage').innerText = 'File size exceeds the maximum limit of 5MB. Please upload a smaller file.';
+                    alert('File size exceeds the maximum limit of 5MB. Please upload a smaller file.');
                 } else {
                     selectedFiles.push(file);
-                    validFiles.push(file);
+                    addUploadedFilesToList([file]);
                 }
             });
-            updateFileList(); // Update the file list display
-            if (validFiles.length > 0) {
-                document.getElementById('statusMessage').innerText = 'Files attached successfully!';
-                addUploadedDocumentsToList(validFiles); // Add uploaded documents to the list
-            }
         }
 
-        // Event listener for form submission to handle the file upload process
-        document.getElementById('uploadForm').addEventListener('submit', function (event) {
-            event.preventDefault(); // Prevent default form submission
-            if (selectedFiles.length === 0) {
-                document.getElementById('statusMessage').innerText = 'Please select files to upload.';
-                return;
-            }
-
-            var formData = new FormData();
-            selectedFiles.forEach(file => {
-                formData.append('files[]', file);
-            });
-
-            // Create and send an AJAX request to upload the files
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/your_existing_upload_route', true); // Replace with your actual upload route
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    document.getElementById('uploadStatus').innerText = 'Files uploaded successfully!';
-                    // Add uploaded files to the uploaded documents list
-                    addUploadedDocumentsToList(selectedFiles);
-                    // Clear selected files after upload
-                    selectedFiles = [];
-                    updateFileList();
-                } else {
-                    document.getElementById('uploadStatus').innerText = 'File upload failed! Status: ' + xhr.status + ' Response: ' + xhr.responseText;
-                }
-            };
-            xhr.onerror = function () {
-                document.getElementById('uploadStatus').innerText = 'File upload failed due to a network error.';
-            };
-            xhr.send(formData);
-        });
-
-        // Function to add uploaded documents to the list of uploaded documents
-        function addUploadedDocumentsToList(files) {
-            var uploadedDocumentsList = document.getElementById('uploadedDocumentsList');
+        function addUploadedFilesToList(files) {
+            const uploadedFilesList = document.getElementById('uploadedFilesList');
             files.forEach(file => {
-                if (['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg'].includes(file.type) && file.size <= 5242880) {
-                    var listItem = document.createElement('div');
-                    listItem.classList.add('uploaded-file-card');
-                    listItem.innerHTML = `
-                        <div class="uploaded-file-details">
-                            <strong>${file.name}</strong>
-                            <span class="file-info">Size: ${formatFileSize(file.size)} Date: ${formatDate(new Date())} Status: Unverified</span>
-                            <select class="form-control dropdown">
-                                <option value="education">Education</option>
-                                <option value="medical">Medical</option>
-                                <option value="personal documents">Personal Documents</option>
-                                <option value="property">Property</option>
-                            </select>
-                            <textarea class="form-control" placeholder="Enter Description..."></textarea>
-                        </div>
-                        <div class="action-buttons">
-                            <button class="btn btn-primary btn-sm" onclick="previewDocument('${URL.createObjectURL(file)}')">Preview</button>
-                            <button class="btn btn-danger btn-sm" onclick="deleteDocument(this)">Delete</button>
-                        </div>
-                    `;
-                    uploadedDocumentsList.appendChild(listItem);
+                const listItem = document.createElement('div');
+                listItem.classList.add('uploaded-file-item');
+                listItem.innerHTML = `
+                    <span class="file-name">${file.name}</span>
+                    <div class="file-details">
+                        <span class="file-size">Size: ${(file.size / 1024).toFixed(2)} KB</span>
+                        <span class="file-date">Date: ${new Date().toLocaleDateString()}</span>
+                        <span class="file-status">Status: Unverified</span>
+                        <select class="form-control dropdown">
+                            <option value="education">Education</option>
+                            <option value="medical">Medical</option>
+                            <option value="personal documents">Personal Documents</option>
+                            <option value="property">Property</option>
+                        </select>
+                        <textarea class="form-control description-container" placeholder="Enter Description..."></textarea>
+                    </div>
+                    <div class="file-actions">
+                        <button class="preview-button" onclick="previewFile('${URL.createObjectURL(file)}')">Preview</button>
+                        <button class="delete-button" onclick="deleteFile('${file.name}')">Delete</button>
+                    </div>
+                `;
+                uploadedFilesList.appendChild(listItem);
+            });
+        }
+
+        function deleteFile(fileName) {
+            selectedFiles = selectedFiles.filter(file => file.name !== fileName);
+            const uploadedFilesList = document.getElementById('uploadedFilesList');
+            const fileItems = Array.from(uploadedFilesList.children);
+            fileItems.forEach(item => {
+                if (item.querySelector('.file-name').textContent === fileName) {
+                    uploadedFilesList.removeChild(item);
                 }
             });
-
-            // Show or hide the uploaded documents section based on the number of files
-            if (uploadedDocumentsList.children.length > 0) {
-                document.getElementById('uploadedDocumentsContainer').style.display = 'block';
-            } else {
-                document.getElementById('uploadedDocumentsContainer').style.display = 'none';
-            }
         }
 
-        // Function to delete a document
-        function deleteDocument(button) {
-            var listItem = button.closest('.uploaded-file-card');
-            var fileName = listItem.querySelector('strong').innerText;
-            removeFile(fileName);
-            listItem.remove();
-
-            // Check if there are remaining files and update the display accordingly
-            if (document.getElementById('uploadedDocumentsList').children.length === 0) {
-                document.getElementById('uploadedDocumentsContainer').style.display = 'none';
-            }
-        }
-
-        // Function to preview a document in a new tab
-        function previewDocument(fileUrl) {
+        function previewFile(fileUrl) {
             window.open(fileUrl, '_blank');
         }
-
-        // Event listener for "Select Document" button
-        document.getElementById('selectDocumentButton').addEventListener('click', function () {
-            fileInput.click();
-        });
     </script>
 </body>
 
