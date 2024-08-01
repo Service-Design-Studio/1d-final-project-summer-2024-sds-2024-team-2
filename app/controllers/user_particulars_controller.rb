@@ -16,7 +16,10 @@ class UserParticularsController < ApplicationController
   # No need for content when using @user_particular from before_action
 
   def create
-    error_messages_arr = validate_user_particulars(UserParticular.new(user_particular_params), params[:others])
+    user_particular_temp = UserParticular.new(user_particular_params) # The Model object to store the hidden keyed params
+
+    # Validate user particulars
+    error_messages_arr = validate_user_particulars(user_particular_temp) 
     flash[:error] = error_messages_arr
 
     # Check if validation passes
@@ -56,7 +59,12 @@ class UserParticularsController < ApplicationController
   def confirm
     session[:user_particular_params] = user_particular_params # Use the session to store the model
     @user_particular = UserParticular.new(user_particular_params) # The Model object to store the hidden keyed params
-    error_messages_arr = validate_user_particulars(@user_particular, params[:others])
+
+    # Validate user particulars
+    user_particular_errors = validate_user_particulars(@user_particular) || []
+    dropdown_errors = validate_user_particulars_dropdown(@user_particular, params[:others]) || []
+
+    error_messages_arr = user_particular_errors + dropdown_errors
     flash[:error] = error_messages_arr
 
     if error_messages_arr.empty?
@@ -84,12 +92,15 @@ class UserParticularsController < ApplicationController
   end
 
   def update
-    error_messages_arr = validate_user_particulars(UserParticular.new(user_particular_params), params[:others])
+    # Validate user particulars
+    user_particular_errors = validate_user_particulars(@user_particular) || []
+    dropdown_errors = validate_user_particulars_dropdown(@user_particular, params[:others]) || []
+
+    error_messages_arr = user_particular_errors + dropdown_errors
     flash[:error] = error_messages_arr
 
     # Check if validation passes
     if error_messages_arr.empty?
-      logger.debug "OVER HERE! UPDATE! #{user_particular_params}"
       @user_particular = UserParticular.update_user_particular(params[:id], user_particular_params)
 
       # Check if edit was successful
@@ -156,7 +167,7 @@ class UserParticularsController < ApplicationController
     end
   end
 
-  def validate_user_particulars(user_particular, others)
+  def validate_user_particulars(user_particular)
     error_messages_arr = []
 
     unless user_particular[:full_name] =~ /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžæÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u
@@ -186,48 +197,6 @@ class UserParticularsController < ApplicationController
       error_messages_arr << 'Select country of origin from the dropdown list.'
     end
 
-    # Check if 'others' is present and that each indiviual field is filled up
-    if others.present?
-
-      # Check if others[:ethnicity] is blank
-      if others[:ethnicity].blank?
-        error_messages_arr << 'Please specify your ethnicity.'
-      # Ensure others[:ethnicity] contains only valid characters
-      elsif others[:ethnicity] =~ /[^a-zA-Z-,]/
-        error_messages_arr << 'Ethnicity can only contain letters, hyphens (-), and commas (,).'
-      end
-
-      # Check if others[:religion] is blank
-      if others[:religion].blank?
-        error_messages_arr << 'Please specify your religion.'
-      # Ensure others[:gender] contains only valid characters
-      elsif others[:religion] =~ /[^a-zA-Z-,]/
-        error_messages_arr << 'Religion can only contain letters, hyphens (-), and commas (,).'
-      end
-
-      # Check if others[:gender] is blank
-      if others[:gender].blank?
-        error_messages_arr << 'Please specify your gender.'
-      # Ensure others[:gender] contains only valid characters
-      elsif others[:gender] =~ /[^a-zA-Z-,]/
-        error_messages_arr << 'Gender can only contain letters, hyphens (-), and commas (,).'
-      end
-
-    # If 'others' is not present, check that each individual field is valid
-    else
-      if !ethnicity_options.include?(user_particular[:ethnicity])
-        error_messages_arr << 'Please select ethnicity from the dropdown list only.'
-      end
-
-      if !religion_options.include?(user_particular[:religion])
-        error_messages_arr << 'Please select religion from the dropdown list only.'
-      end
-
-      if !['Male', 'Female'].include?(user_particular[:gender])
-        error_messages_arr << 'Please select gender from the dropdown list only.'
-      end
-    end
-
     if Date.parse(user_particular[:date_of_birth].to_s) > Date.today
       error_messages_arr << 'Date of birth cannot be in the future.'
     end
@@ -240,6 +209,52 @@ class UserParticularsController < ApplicationController
     if Date.parse(user_particular[:date_of_arrival].to_s) < Date.parse(user_particular[:date_of_birth].to_s)
       error_messages_arr << 'Date of arrival cannot be earlier than date of birth.'
     end
+
+    error_messages_arr
+  end
+
+  def validate_user_particulars_dropdown(user_particular, others)
+    error_messages_arr = []
+    # Check if 'others' is present and that each indiviual field is filled up
+    if others.present?
+      # Check if others[:ethnicity] is blank
+      if user_particular[:ethnicity].blank? && others[:ethnicity].blank?
+        error_messages_arr << 'Please specify your ethnicity.'
+      # Ensure others[:ethnicity] contains only valid characters
+      elsif others[:ethnicity] =~ /[^a-zA-Z-,]/
+        error_messages_arr << 'Ethnicity can only contain letters, hyphens (-), and commas (,).'
+      end
+
+      # Check if others[:religion] is blank
+      if user_particular[:religion].blank? && others[:religion].blank?
+        error_messages_arr << 'Please specify your religion.'
+      # Ensure others[:gender] contains only valid characters
+      elsif others[:religion] =~ /[^a-zA-Z-,]/
+        error_messages_arr << 'Religion can only contain letters, hyphens (-), and commas (,).'
+      end
+
+      # Check if others[:gender] is blank
+      if user_particular[:gender].blank? && others[:gender].blank?
+        error_messages_arr << 'Please specify your gender.'
+      # Ensure others[:gender] contains only valid characters
+      elsif others[:gender] =~ /[^a-zA-Z-,]/
+        error_messages_arr << 'Gender can only contain letters, hyphens (-), and commas (,).'
+      end
+
+    # If 'others' is not present, check that each individual field is valid
+    else
+      if user_particular[:ethnicity].blank? || !ethnicity_options.include?(user_particular[:ethnicity])
+        error_messages_arr << 'Please select ethnicity from the dropdown list only.'
+      end
+
+      if user_particular[:religion].blank? || !religion_options.include?(user_particular[:religion])
+        error_messages_arr << 'Please select religion from the dropdown list only.'
+      end
+
+      if user_particular[:gender].blank? || !['Male', 'Female'].include?(user_particular[:gender])
+        error_messages_arr << 'Please select gender from the dropdown list only.'
+      end
+    end    
 
     error_messages_arr
   end
