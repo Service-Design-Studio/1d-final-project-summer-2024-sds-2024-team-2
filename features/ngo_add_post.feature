@@ -19,7 +19,7 @@ Scenario: Adding a message to the common bulletin board
   And I should see the added post by NGO on the bulletin board
 
 Scenario: Viewing added post on bulletin board on user home page
-  Given I am now on the user particulars home page as a new user
+  Given I am now logged in to the user particulars home page
   Then I should see event card with the following fields
   | Field                     | Value             |
   | Title                     | Event 1           |
