@@ -1,22 +1,20 @@
-<div id="user_history" class="add-small-shadow pri-container container mt-5 pt-4 px-3 pb-3" style='height: 75vh;'>
-  <div class='row'>
-    <h3 class='ml-5 mb-2'>Activity History</h3>
-  </div>
-  <div style="max-height:65vh; overflow-y: auto; overflow-x: hidden;">
+  <h3 class='text-center m-3'>Activity History</h3>
+  <div class='container'>
+  <div id="user_history" class="row d-flex justify-content-center" style="font-size:0.8em; max-height:65vh; overflow-y: auto; overflow-x: hidden;">
     <% @user_history.each do |history| %>
-      <%= link_to user_particular_path, style: "text-decoration: none; color: inherit;"  do %>
-        <div class="flex d-flex py-2 px-2 my-1 mx-3 bg-light add-small-shadow align-items-center" style='border-radius: 16px;'>
-          <div class="d-flex justify-content-center align-items-center mr-3" style="background-color: #f1536a; width: 60px; height: 60px; border-radius: 50%;">
+        <div class="py-1 col-11 flex d-flex bg-light add-small-shadow align-items-center my-1 mx-3" style='border-radius: 16px;'>
+          <div class="d-flex justify-content-center align-items-center p-2 mr-3" style="background-color: #f1536a; width: 15vw; height: 15vw; border-radius: 50%; max-width:60px; max-height:60px;">
             <i class="bi bi-person" style="color: white; font-size: 45px;"></i>
           </div>
           <div>
-            <h6><%= history.activity_title %><span class="text-muted"><small><%= " • #{time_ago_in_words(history.updated_at)}" %> ago</small></span></h6>
-            <div class="truncate-multiline">
-              <p><%= history.description %></p>
+            <h6 class='m-0'><%= history.activity_title %></h6>
+            <span class="text-muted"><small><%= " • #{time_ago_in_words(history.updated_at)}" %> ago</small></span>
+            <div>
+              <p class='m-0'><%= history.description %></p>
             </div>
           </div>
         </div>
-      <% end %>
     <% end %>
+  </div>
   </div>
 </div>

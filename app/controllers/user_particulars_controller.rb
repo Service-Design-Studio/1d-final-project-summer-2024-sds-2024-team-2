@@ -19,7 +19,7 @@ class UserParticularsController < ApplicationController
     user_particular_temp = UserParticular.new(user_particular_params) # The Model object to store the hidden keyed params
 
     # Validate user particulars
-    error_messages_arr = validate_user_particulars(user_particular_temp) 
+    error_messages_arr = validate_user_particulars(user_particular_temp)
     flash[:error] = error_messages_arr
 
     # Check if validation passes
@@ -29,6 +29,14 @@ class UserParticularsController < ApplicationController
       # Check if user particular creation was successful
       if @user_particular.persisted?
         @user_particular.profile_picture.attach(params[:user_particular][:profile_picture])
+
+        #update user history
+        UserHistory.create(
+          activity_title: 'Fill in Particulars',
+          description: 'User Particulars Updated! Pending verification.',
+          activity_type: 'Account',
+          user: current_user
+        )
 
         flash[:success] = 'Digital ID was successfully created!'
         redirect_to @user_particular # redirects to /user_particulars/:id
@@ -193,7 +201,7 @@ class UserParticularsController < ApplicationController
     end
 
     # Check if selected country is in dropdown options
-    if !country_options.include?(user_particular[:country_of_origin])
+    unless country_options.include?(user_particular[:country_of_origin])
       error_messages_arr << 'Select country of origin from the dropdown list.'
     end
 
@@ -251,10 +259,10 @@ class UserParticularsController < ApplicationController
         error_messages_arr << 'Please select religion from the dropdown list only.'
       end
 
-      if user_particular[:gender].blank? || !['Male', 'Female'].include?(user_particular[:gender])
+      if user_particular[:gender].blank? || !%w[Male Female].include?(user_particular[:gender])
         error_messages_arr << 'Please select gender from the dropdown list only.'
       end
-    end    
+    end
 
     error_messages_arr
   end

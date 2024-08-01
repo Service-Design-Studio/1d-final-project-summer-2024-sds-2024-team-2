@@ -9,10 +9,11 @@ Background:
 Scenario: Account creation, user particulars, and verification
     When I press the "Activity History" button
     Then I should be redirected to the "Activity History" page
-    And I should see "EnableID account created!"
+    And I should see "Created EnableID account"
     When I press the "Back" button
     Then I should be redirected to the "Home" page
 
+    When I press the "Fill in your particulars to get your Digital ID!" button
     Given I fill in the following fields
     | Field                     | Value        |
     | Full Name                 | Alice Tan    |

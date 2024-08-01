@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  get 'user_histories/create'
   # Set root path of web app
   root 'user_particulars#show'
 

@@ -25,7 +25,7 @@
     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
   </head>
   <body class="d-flex flex-column min-vh-100 bg-light" style="overflow-x:hidden;">
-    <div class="container-fluid justify-content-center p-0">
+    <div class="container-fluid flex-grow-1 justify-content-center p-0">
       <div class="row flex-nowrap align-items-center m-0 justify-content-between p-2" style="background-color: #f1536a; color: white; margin-bottom:0;">
         <div class="col-1 d-flex justify-content-start align-items-center">
           <% if @back_path.present? %>
@@ -39,18 +39,5 @@
       </div>
       <%= yield %>
     </div>
-    <main class="flex-fill"></main>
-    <footer class="footer mt-auto bg-dark text-white-50 p-2" style="max-height:70px; font-size: 0.7em;">
-      <div class="container p-0 text-center">
-        <small>&copy; EnableID 2024</small>
-        <br>
-        <a href="#" class="text-white">Contact us</a> | 
-        <a href="#" class="text-white">Share feedback</a> | 
-        <a href="#" class="text-white">Read FAQs</a> | 
-        <a href="#" class="text-white">Report vulnerability</a> | 
-        <a href="#" class="text-white">Privacy statement</a> | 
-        <a href="#" class="text-white">Terms of use</a> | 
-      </div>
-    </footer>
   </body>
 </html>

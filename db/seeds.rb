@@ -164,13 +164,14 @@ ngo_users_data = [
 # Create or update users and their particulars
 users_data.each do |user_data|
   user = User.find_or_initialize_by(username: user_data[:username])
-
+  UserHistoriesController.new.create_history_for_new_user(user)
   # Only create user data
   if user.new_record?
     user.email = user_data[:email]
     user.password = user_data[:password] # TODO: Has error when updating password during deployment
     user.phone_number = user_data[:phone_number]
     user.save!
+
   end
   particulars_data = user_data[:particulars]
   if particulars_data.nil?
@@ -203,7 +204,6 @@ end
     date: DateTime.now - rand(1..30),
     user_id: 1
   }
-
   user_history = UserHistory.find_or_initialize_by(id: i)
   user_history.update!(history_data)
 end
