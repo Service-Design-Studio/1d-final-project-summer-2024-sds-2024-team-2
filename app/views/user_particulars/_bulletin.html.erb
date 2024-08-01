@@ -44,18 +44,18 @@
             </div>
           </div>
           <div class="d-flex px-1 w-100 align-items-center justify-content-between" style="font-size: 1.3em; border-top: solid 1px lightgrey">
-            <%= link_to '#', onclick: '', style: 'text-decoration: none;', aria_label: "sender #{bulletin.title} #{bulletin.id}" do %>
-              <i style='text-center text-decoration: none; color: black;' class="sender bi bi-send"></i>
-            <% end %>
+            <a type="button" onclick="" style="text-decoration: none;" aria-label="sender <%= bulletin.title %> <%= bulletin.id %>" data-ngoid="<%= ngo_user.id %>" data-userid="<%= @user&.id || "" %>" data-bs-toggle="modal" data-bs-target="#sendModal" data-ngoname="<%= bulletin.ngo_name %>">
+              <i style="text-center text-decoration: none; color: black;" class="sender bi bi-send"></i>
+            </a>
             <% if @on_saved_page %>
               <%= link_to '#', onclick: 'deleteSavePost(this)', data: { bulletin_id: bulletin.id, user_id: @user.id }, style: 'text-decoration: none;', aria_label: "toggle #{bulletin.title} #{bulletin.id}"  do %>
                 <i style='text-center text-decoration: none; color: orange;' class="bookmarker bi bi-bookmark-fill"></i>
               <% end %>
             <% else %>
-            <% if @user %>
-              <%= link_to '#', onclick: 'toggleSavePost(this)', data: { bulletin_id: bulletin.id, user_id: @user.id }, style: 'text-decoration: none;', aria_label: "toggle #{bulletin.title} #{bulletin.id}" do %>
-                <i style='text-center text-decoration: none; color: orange;' class="bookmarker bi <%= saved ? 'bi-bookmark-fill' : 'bi-bookmark' %>"></i>
-              <% end %>
+              <% if @user %>
+                <%= link_to '#', onclick: 'toggleSavePost(this)', data: { bulletin_id: bulletin.id, user_id: @user.id }, style: 'text-decoration: none;', aria_label: "toggle #{bulletin.title} #{bulletin.id}" do %>
+                  <i style='text-center text-decoration: none; color: orange;' class="bookmarker bi <%= saved ? 'bi-bookmark-fill' : 'bi-bookmark' %>"></i>
+                <% end %>
               <% end %>
             <% end %>
           </div>
@@ -63,7 +63,7 @@
       <% end %>
     </div>
   </div>
-  <!-- Modal -->
+  <!-- Event Details Modal -->
   <div class="modal fade" id="eventCards" tabindex="-1" aria-labelledby="eventCardsLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -82,6 +82,30 @@
         <div class="modal-footer d-flex justify-content-evenly">
           <button type="button" class="btn-dark px-3 customhome-button">Add to Saved <i style='color: orange;' class="ml-2 m-0 bi bi-bookmark fs-5"></i></button>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Send a Message to NGO modal -->
+<div class="modal fade" id="sendModal" tabindex="-1" role="dialog" aria-labelledby="sendModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="send-modal-title" id="sendModalLabel"></h5>
+      </div>   
+      
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">Message:</label>
+            <textarea class="form-control" id="message-text"></textarea>
+            <small class="fst-italic" id="sendModalSubLabel"></small>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="user_send_message_btn">Send message</button>
       </div>
     </div>
   </div>
@@ -120,6 +144,14 @@
       //$('#modal-photo').attr('src', "app/assets/images/" + imageUrl);
     });
 
+    $('[aria-label^="sender"]').on('click', function() {
+      var ngoname = $(this).data('ngoname');
+      $('#sendModalSubLabel').text(ngoname +" will be able see your message linked to this event card, together with your EnableID");
+      $('#sendModalLabel').text("What do you want to tell " + ngoname +"?");
+      $('#sendModal').data('ngoid', $(this).data('ngoid'));
+      $('#sendModal').data('userid', $(this).data('userid'));
+    });
+
     deleteSavePost = function(element) {
       const bulletinId = element.dataset.bulletinId;
       const userId = element.dataset.userId;
@@ -156,7 +188,7 @@
         } else {
         console.error('CSRF token meta tag not found');
         }
-      
+
       // Toggle the 'saved' class or perform an action
       icon.classList.toggle('bi-bookmark-fill');
       icon.classList.toggle('bi-bookmark');
@@ -185,5 +217,37 @@
         alert('An error occurred');
       });
     };
+
+
+    $('#user_send_message_btn').click(function() {
+        var ngoId = $('#sendModal').data('ngoid');
+        var userId = $('#sendModal').data('userid');
+        var messageContent = $('#message-text').val();
+        
+        if (!messageContent.trim()) {
+            alert('Please enter a message before sending.');
+            $('#message-text').focus();
+            return;  // Stop the function if no message is entered
+        }
+
+        $.ajax({
+            url: '/user_particulars/' + userId + '/' + ngoId + '/message',  // Adjust the URL as necessary
+            type: 'POST',
+            data: {
+                message: { content: messageContent }
+            },
+            headers: {
+                'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') // Ensure CSRF token is sent
+            },
+            success: function(response) {
+                alert('Message sent successfully!');
+                $('#message-text').val('');
+                $('#sendModal').modal('hide');
+            },
+            error: function(xhr) {
+                alert('Error sending message: ' + xhr.responseText);
+            }
+        });
+    });
   });
 </script>

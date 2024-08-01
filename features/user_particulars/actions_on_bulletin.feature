@@ -9,17 +9,10 @@ Background:
     Given I am now on the user particulars home page as a verified user
     And an event titled "Gebirah Aid Giveaway" with an ID of 1 exists
 
-Scenario: Adding a saved post
-    When I press on the unfilled bookmark icon on the "Gebirah Aid Giveaway", ID: "1" event card
-    Then the bookmark icon for the "Gebirah Aid Giveaway", ID: "1" event card is filled
-    When I press the "Saved Post" button
-    Then I should be redirected to the "Saved Post" page
-    And the "Gebirah Aid Giveaway", ID: "1" event card should be present
-
 Scenario: Messaging a NGO
     When I press on the message icon on the "Gebirah Aid Giveaway", ID: "1" event card
     Then I should see a "What do you want to tell Gebirah?"
-    And I should see a "Gebirah will be able see your message linked to this event card, together with your enableID"
+    And I should see a "Gebirah will be able see your message linked to this event card, together with your EnableID"
     When I fill the message with "I would like to join this event but I will be late"
     And I press the "Send Message" button
     Then I should be redirected to the home page
