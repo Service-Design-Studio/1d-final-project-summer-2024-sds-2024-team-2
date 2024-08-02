@@ -164,7 +164,7 @@ ngo_users_data = [
 # Create or update users and their particulars
 users_data.each do |user_data|
   user = User.find_or_initialize_by(username: user_data[:username])
-  UserHistoriesController.new.create_history_for_new_user(user)
+
   # Only create user data
   if user.new_record?
     user.email = user_data[:email]
@@ -182,6 +182,7 @@ users_data.each do |user_data|
     user_particular.assign_attributes(particulars_data)
     user_particular.save!
   end
+  UserHistoriesController.new.create_history_for_new_user(user)
 end
 
 UserParticular.first.update(unique_id: '1055290', two_fa_passcode: '606833')

@@ -6,6 +6,7 @@ class UserParticularsController < ApplicationController
   before_action :set_saved_posts
 
   def show
+    logger.debug "Flash check: #{flash[:notice]}"
     @bulletins = Bulletin.all.order(updated_at: :desc)
   end
   # No need for content when using @user_particular from before_action
@@ -30,7 +31,7 @@ class UserParticularsController < ApplicationController
       if @user_particular.persisted?
         @user_particular.profile_picture.attach(params[:user_particular][:profile_picture])
 
-        #update user history
+        # update user history
         UserHistory.create(
           activity_title: 'Fill in Particulars',
           description: 'User Particulars Updated! Pending verification.',
@@ -293,11 +294,13 @@ class UserParticularsController < ApplicationController
 
     # Here, you can create a new message or perform other actions, e.g.,
     @message = Message.new(user_id:, ngo_users_id: ngo_id, message: message_content)
-
+    logger.debug @message
     if @message.save
-      render json: { status: 'success', message: 'Message sent successfully!' }, status: :created
+      flash[:notice] = "Message successfully sent to #{NgoUser.find(ngo_id).name}!"
+      render json: { success: true, notice: flash[:notice] }
     else
-      render json: { status: 'error', errors: @message.errors.full_messages }, status: :unprocessable_entity
+      flash[:alert] = 'Message sending failed.'
+      render json: { success: false, alert: flash[:alert] }
     end
   end
 

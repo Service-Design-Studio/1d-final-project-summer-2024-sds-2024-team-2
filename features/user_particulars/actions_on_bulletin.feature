@@ -16,7 +16,7 @@ Scenario: Messaging a NGO
     When I fill the message with "I would like to join this event but I will be late"
     And I press the "Send Message" button
     Then I should be redirected to the home page
-    And I should see "Message successfully sent to Gebirah"
+    And I should see "Message successfully sent to Gebirah!"
 
 Scenario: Modal showing more details about the event card
     When I press on the event card "Gebirah Aid Giveaway", ID: "1"

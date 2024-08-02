@@ -17,7 +17,7 @@ Rails.application.routes.draw do
   get 'user_particulars/:id/history', to: 'user_particulars#history', as: 'user_history'
   get 'user_particulars/:id/contact_ngo', to: 'user_particulars#contact_ngo', as: 'contact_ngo'
   post 'user_particulars/:id/:ngoid/message', to: 'user_particulars#message', as: 'user_message'
-
+  post 'user_particulars/:id/send_message/:ngoid', to: 'user_particulars#send_message', as: 'send_message'
   # Resources for user particulars, with nested documents resources
   resources :user_particulars do
     member do
