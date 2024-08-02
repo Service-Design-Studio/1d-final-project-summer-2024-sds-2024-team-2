@@ -171,6 +171,7 @@ users_data.each do |user_data|
     user.password = user_data[:password] # TODO: Has error when updating password during deployment
     user.phone_number = user_data[:phone_number]
     user.save!
+
   end
   particulars_data = user_data[:particulars]
   if particulars_data.nil?
@@ -181,6 +182,7 @@ users_data.each do |user_data|
     user_particular.assign_attributes(particulars_data)
     user_particular.save!
   end
+  UserHistoriesController.new.create_history_for_new_user(user)
 end
 
 UserParticular.first.update(unique_id: '1055290', two_fa_passcode: '606833')
@@ -203,7 +205,6 @@ end
     date: DateTime.now - rand(1..30),
     user_id: 1
   }
-
   user_history = UserHistory.find_or_initialize_by(id: i)
   user_history.update!(history_data)
 end

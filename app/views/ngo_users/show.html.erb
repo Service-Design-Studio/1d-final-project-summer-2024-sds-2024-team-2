@@ -78,8 +78,8 @@
                   <%= link_to ngo_user_path, class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
                     <i class="fas fa-history ml-2"></i> Interaction History
                   <% end %>
-                  <%= link_to ngo_user_path, class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
-                    <i class="fas fa-calendar ml-2"></i> Events
+                  <%= link_to ngo_user_path, class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;', id: "my-events-button" do %>
+                    <i class="fas fa-calendar ml-2"></i> My Events
                   <% end %>
                 </div>
               </div>
@@ -193,6 +193,23 @@
       if (showModal === 'check_user' || reopenModal) {
         $('#checkUserModal').modal('show');
       }
+    });
+  </script>
+  <!--My Events feature which hides ngo_user id event cards that dont match-->
+  <script>
+    $(document).ready(function() {
+      $('#my-events-button').on('click', function(event) {
+        event.preventDefault(); // Prevent the default action
+        var currentUserId = '<%= @ngo_user.id %>'; 
+        $('.event-card').each(function() {
+          var userId = $(this).data('user-id');
+          if (userId == currentUserId) {
+            $(this).show();
+          } else {
+            $(this).hide();
+          }
+        });
+      });
     });
   </script>
 </body>

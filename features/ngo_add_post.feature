@@ -19,6 +19,11 @@ Scenario: Adding a message to the common bulletin board
   And I should see the added post by NGO on the bulletin board
 
 Scenario: Viewing added post on bulletin board on user home page
-  Given I am on the user home page
-  Then I should see the added post by NGO on the bulletin board
+  Given I am now logged in to the user particulars home page
+  Then I should see event card with the following fields
+  | Field                     | Value             |
+  | Title                     | Event 1           |
+  | Description               | Food Distribution |
+  | Date                      | 31-1-2024         |
+  | Location                  | Malaysia          |
   

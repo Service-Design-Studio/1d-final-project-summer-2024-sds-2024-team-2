@@ -44,7 +44,7 @@
             </div>
           </div>
           <div class="d-flex px-1 w-100 align-items-center justify-content-between" style="font-size: 1.3em; border-top: solid 1px lightgrey">
-            <a type="button" onclick="" style="text-decoration: none;" aria_label="sender <%= bulletin.title %> <%= bulletin.id %>" data-ngoid="<%= ngo_user.id %>" data-userid="<%= @user&.id || "" %>" data-bs-toggle="modal" data-bs-target="#sendModal" data-ngoname="<%= bulletin.ngo_name %>">
+            <a type="button" onclick="" style="text-decoration: none;" aria-label="sender <%= bulletin.title %> <%= bulletin.id %>" data-ngoid="<%= ngo_user.id %>" data-userid="<%= @user&.id || "" %>" data-bs-toggle="modal" data-bs-target="#sendModal" data-ngoname="<%= bulletin.ngo_name %>">
               <i style="text-center text-decoration: none; color: black;" class="sender bi bi-send"></i>
             </a>
             <% if @on_saved_page %>
@@ -79,9 +79,12 @@
           <p id="modal-location"></p>
           <p id="modal-id"></p>
         </div>
-        <div class="modal-footer d-flex justify-content-evenly">
+        <div class="modal-footer d-flex justify-content-evenly" >
           <button id="modal-send-btn" type="button" class="btn-primary px-3 customhome-button" data-bs-toggle="modal" data-bs-target="#sendModal"><span class='mr-2'>Send a message </span><i style="text-center text-decoration: none; color: black;" class="m-0 sender bi bi-send fs-5"></i></button>
-          <button id="modal-saved-btn" type="button" class="btn-dark px-3 customhome-button"><span id='btn-span-text' class='mr-2'>Add to Saved </span><i style='color: orange;' class="m-0 bi bi-bookmark fs-5"></i></button>
+          <button id="modal-saved-btn" type="button" class="btn-dark px-3 customhome-button" onclick="toggleBookmark(this)">
+            <span class='mr-2'>Add to Saved </span>
+            <i style='color: orange;' class="m-0 bi bi-bookmark fs-5"></i>
+          </button>
         </div>
       </div>
     </div>
@@ -145,46 +148,38 @@
       //$('#modal-photo').attr('src', "app/assets/images/" + imageUrl);
     });
 
-    $('[aria_label^="sender"]').on('click', function() {
-      var ngoname = $(this).data('ngoname');
-      $('#sendModalSubLabel').text(ngoname +" will be able to see your message linked to this event card, together with your EnableID");
+    $('[aria-label^="sender"]').on('click', function() {
+      var ngoname = $('#modal-ngoname').data('ngoname');
+      $('#sendModalSubLabel').text(ngoname +" will be able see your message linked to this event card, together with your EnableID");
       $('#sendModalLabel').text("What do you want to tell " + ngoname +"?");
       $('#sendModal').data('ngoid', $(this).data('ngoid'));
       $('#sendModal').data('userid', $(this).data('userid'));
     });
 
     $('#modal-send-btn').click(function() {
-      var ngoname = $('#modal-ngoname').text();
-        $('#sendModalSubLabel').text(ngoname +" will be able to see your message linked to this event card, together with your EnableID");
+      var ngoname = $('#modal-title').text();
+        $('#sendModalSubLabel').text(ngoname +" will be able see your message linked to this event card, together with your EnableID");
         $('#sendModalLabel').text("What do you want to tell " + ngoname +"?");
         $('#sendModal').data('ngoid', $('#eventCards').data('ngoid'));
         $('#sendModal').data('userid', $('#eventCards').data('userid'));
     });
 
     $('#modal-saved-btn').click(function() {
+      var button = document.querySelector('#modal-saved-btn');
     // Find the <i> element within the button
-      var button = this;
-      console.log(button);
       var icon = button.querySelector('i');
-      console.log(icon);
-      var spanText = button.querySelector('#btn-span-text');
       // Toggle the class between bi-bookmark-fill and bi-bookmark
       if (icon.classList.contains('bi-bookmark')) {
-          icon.classList.remove('bi-bookmark');
-          icon.classList.add('bi-bookmark-fill');
-          spanText.textContent = 'Saved';
+      icon.classList.remove('bi-bookmark');
+      icon.classList.add('bi-bookmark-fill');
       } else {
-          icon.classList.remove('bi-bookmark-fill');
-          icon.classList.add('bi-bookmark');
-          spanText.textContent = 'Add to Saved';
+      icon.classList.remove('bi-bookmark-fill');
+      icon.classList.add('bi-bookmark');
       }
-      var ariaLabel = "toggle "+ $('#modal-title').text() +" "+ $('#modal-id').text().match(/\d+/)[0];
-      var matchingButton = document.querySelector(`a[aria_label="${ariaLabel}"]`);
-      console.log(`a[aria_label="${ariaLabel}"]`);
-      console.log(matchingButton);
+      var ariaLabel = "toggle "+ $('#modal-title').text() +" "+ $('#modal-id').text();
       // Call the toggleSavePost function
-      toggleSavePost(matchingButton);
-    });
+      toggleSavePost(button);
+    }
 
     deleteSavePost = function(element) {
       const bulletinId = element.dataset.bulletinId;
@@ -267,10 +262,7 @@
             url: '/user_particulars/' + userId + '/' + ngoId + '/message',  // Adjust the URL as necessary
             type: 'POST',
             data: {
-              message: {
-                content: messageContent,
-                event_title: $('#sendModalLabel').text()
-                }
+                message: { content: messageContent }
             },
             headers: {
                 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') // Ensure CSRF token is sent

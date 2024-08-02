@@ -1,9 +1,35 @@
+Given(/^I am on the "([^"]*)" page$/) do |page|
+  visit path_to(page)
+end
+
+When(/^I press the "([^"]*)" button$/) do |button|
+  if has_button?(button)
+    click_button(button)
+  elsif has_link?(button)
+    click_link(button)
+  elsif has_css?("[aria_label='#{button}']")
+    find("[aria_label='#{button}']").click
+  else
+    raise "No button or link found with name '#{button}'"
+  end
+end
+
+Then(/^I should be directed to the "([^"]*)" page$/) do |page|
+  expected_path = case page
+                  when "Upload Document"
+                    new_user_particular_document_path(@user_particular)
+                  else
+                    path_to(page)
+                  end
+  expect(current_path).to eq(expected_path)
+end
+
 Then(/^I should see "([^"]*)"$/) do |name|
-  expect(page).to have_content("#{name}", wait: 2) # Wait for up to 2 seconds
+  expect(page).to have_content(name, wait: 5)
 end
 
 Then(/^I should not see "([^"]*)"$/) do |name|
-  expect(page).to have_no_content(name, wait: 2) # Wait for up to 2 seconds
+  expect(page).to have_no_content(name, wait: 5)
 end
 
 Then(/^I should see the following filled-in details$/) do |table|
@@ -25,39 +51,17 @@ Then(/^I should be redirected to the "([^"]*)" page$/) do |page_name|
   expect(current_path).to eq(path_to(page_name))
 end
 
-Given(/^that a User account by the Username of "([^"]*)", Email of "([^"]*)", Phone Number of "([^"]*)" exist$/) do |username, email, phone_number|
-  user = User.find_by(username:, email:, phone_number:)
-  expect(user).not_to be_nil, "No user found with Username: #{username}, Email: #{email}, Phone Number: #{phone_number}"
-end
-
-When(/^I press the "([^"]*)" button$/) do |btn_name|
-  if has_button?(btn_name)
-    click_button(btn_name)
-  elsif has_link?(btn_name)
-    click_link(btn_name)
-  elsif has_css?("[aria_label='#{btn_name}']")
-    find("[aria_label='#{btn_name}']").click
-  else
-    raise "No button or link found with name '#{btn_name}'"
-  end
-end
-# Step to navigate to a specific page
-Given(/^I am on the "([^"]*)" page$/) do |page|
-  puts "Current URL: #{current_url}"
-  visit path_to(page)
-  puts "Current URL: #{current_url}"
-end
-
 When(/^I fill in the following fields$/) do |table|
   fill_in_form(table)
 end
-# Helper Methods
+
+# Additional helper methods
 
 # Fills in a form based on the given table data
 def fill_in_form(table)
   table.hashes.each do |row|
     case row['Field'].downcase
-    when row['Field'] == 'Password'
+    when 'password'
       fill_in 'Password', with: row['Value'], match: :prefer_exact
     when 'country of origin'
       select row['Value'], from: row['Field']
@@ -66,8 +70,7 @@ def fill_in_form(table)
       select row['Value'], from: "#{row['Field'].downcase}_select"
     when 'date of birth', 'date of arrival in malaysia'
       # For HTML5 date fields, ensure the date is in 'YYYY-MM-DD' format
-      fill_in row['Field'], with: row['Value'].to_date.strftime('%d-%m-%Y') unless row['Value'].to_s.strip.empty?
-      # For regular input fields
+      fill_in row['Field'], with: row['Value'].to_date.strftime('%Y-%m-%d') unless row['Value'].to_s.strip.empty?
     when 'phone number'
       select('+65', from: 'country_code_select') # Selects the country code from the dropdown
       fill_in 'phone_number_field', with: row['Value'] # Fills in the phone number field
@@ -82,16 +85,18 @@ end
 
 # Maps page names to their corresponding paths
 def path_to(page_name)
-  user_id = if has_selector?('#EnableID_usertitle')
-              find('#EnableID_usertitle')['data-user-id']
+  user_id = if defined?(@user_particular) && @user_particular.present?
+              @user_particular.id
             else
-              nil
+              UserParticular.last.id # Fallback to the most recent UserParticular if @user_particular is not set
             end
   case page_name.downcase
   when 'home'
     user_particular_path(user_id)
   when 'login'
     new_user_session_path
+  when 'upload document'
+    new_user_particular_document_path(user_id) # Ensure this matches your route helper
   when 'ngogebirah'
     ngo_gebirah_path
   when 'user verification'

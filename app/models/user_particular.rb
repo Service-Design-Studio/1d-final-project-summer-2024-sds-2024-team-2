@@ -1,6 +1,7 @@
 class UserParticular < ApplicationRecord
   belongs_to :user
   has_one_attached :profile_picture
+  has_many :documents, dependent: :destroy # Add this line to establish the association
 
   before_create :assign_unique_id
   before_create :generate_2fa_secret
