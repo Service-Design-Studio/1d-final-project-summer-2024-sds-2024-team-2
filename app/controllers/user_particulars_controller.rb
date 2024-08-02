@@ -25,7 +25,7 @@ class UserParticularsController < ApplicationController
 
     # Check if validation passes
     if error_messages_arr.empty?
-      @user_particular = UserParticular.create_user_particular(user_particular_params)
+      @user_particular = UserParticular.create(user_particular_params)
 
       # Check if user particular creation was successful
       if @user_particular.persisted?
@@ -96,7 +96,7 @@ class UserParticularsController < ApplicationController
       @user_particular.id = params[:id] # Required for error flow
     # user is editing the form from scratch
     else
-      @user_particular = UserParticular.find(params[:id])
+      @user_particular = UserParticular.find_by(id: params[:id])
     end
   end
 
@@ -110,15 +110,15 @@ class UserParticularsController < ApplicationController
 
     # Check if validation passes
     if error_messages_arr.empty?
-      @user_particular = UserParticular.update_user_particular(params[:id], user_particular_params)
+      @user_particular = UserParticular.find_by(id: params[:id])
 
-      # Check if edit was successful
-      if @user_particular
+      # Check if user particular exists and if edit was successful
+      if @user_particular && @user_particular.update(user_particular_params)
         flash[:success] = 'Digital ID was successfully edited!'
-        UserParticular.reset_verification(params[:id]) # Set status to pending and reset verifier_ngo
+        @user_particular.update(status: 'pending', verifier_ngo: nil) # Set status to pending and reset verifier_ngo
         redirect_to @user_particular # redirects to /user_particulars/:id
       else
-        flash[:error_message] = 'Edit failed. Please fix the error(s) below:'
+        flash[:error_message] = 'Edit failed.'
         redirect_to edit_user_particular_path(params[:id], user_particular: user_particular_params)
       end
     else
@@ -165,7 +165,7 @@ class UserParticularsController < ApplicationController
   end
 
   def generate_2fa
-    @user_particular = UserParticular.find(params[:id])
+    @user_particular = UserParticular.find_by(id: params[:id])
     @user_particular.generate_2fa_secret
     if @user_particular.save
       respond_to do |format|
@@ -280,9 +280,9 @@ class UserParticularsController < ApplicationController
     @back_path = user_particular_path
     @user = current_user.user_particular
     @ngo_users = if params[:search].present?
-                   NgoUser.search_by_name(params[:search])
+                  NgoUser.where('name LIKE ?', "%#{params[:search]}%")
                  else
-                   NgoUser.all_ngo_users
+                  NgoUser.all
                  end
   end
 

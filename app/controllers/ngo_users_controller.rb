@@ -5,7 +5,7 @@ class NgoUsersController < ApplicationController
 
   def show
     @back_path = ngo_users_path
-    @ngo_user = NgoUser.find_by_id(params[:id])
+    @ngo_user = NgoUser.find(params[:id])
     nil unless params[:unique_id].present?
     @ngo_users = NgoUser.all
     @bulletins = Bulletin.all.order(updated_at: :desc) # Ensures @bulletins is an array even if the query finds no records for NIL posts in bulletin board
@@ -15,19 +15,18 @@ class NgoUsersController < ApplicationController
 
   def index
     @back_path = new_user_session_path
-    # @ngo_users = NgoUser.all
     @ngo_users = if params[:search].present?
-                   NgoUser.search_by_name(params[:search])
+                   NgoUser.where('name LIKE ?', "%#{params[:search]}%")
                  else
-                   NgoUser.all_ngo_users
+                   NgoUser.all
                  end
   end
 
   def check_user
     @back_path = ngo_users_path
-    @ngo_user = NgoUser.find_by_id(params[:id])
-    @user_particular = UserParticular.find_by_unique_id_and_two_fa_passcode(params[:unique_id],
-                                                                            params[:two_fa_passcode])
+    @ngo_user = NgoUser.find(params[:id])
+    @user_particular = UserParticular.find_by(unique_id: params[:unique_id], two_fa_passcode: params[:two_fa_passcode])
+
     if @user_particular
       redirect_to verify_ngo_user_path(@ngo_user, unique_id: @user_particular.unique_id)
     else
@@ -38,18 +37,14 @@ class NgoUsersController < ApplicationController
 
   def verify
     @back_path = ngo_user_path
-    @ngo_user = NgoUser.find_by_id(params[:id])
-    @user_particular = UserParticular.find_by_unique_id(params[:unique_id])
-    # redirect_to ngo_user_path(@ngo_user, id: params[:id], commit:'Verify')
+    @ngo_user = NgoUser.find(params[:id])
+    @user_particular = UserParticular.find_by(unique_id: params[:unique_id])
   end
 
   def confirm_verify
     @back_path = ngo_user_path
-    @ngo_user = NgoUser.find_by_id(params[:id])
-    @user_particular = UserParticular.find_by_unique_id(params[:unique_id])
-    # @user_particular = UserParticular.includes(:verified_by_ngo_user).find_by(id: params[:id])
-    # redirect_to "http://localhost:3000/ngo_users/:id"
-    # @user_particular.update(status: 'verified')
+    @ngo_user = NgoUser.find(params[:id])
+    @user_particular = UserParticular.find_by(unique_id: params[:unique_id])
     @user_particular.update(status: 'verified', verifier_ngo: @ngo_user.name) # Update the status to 'verified'
 
     # update user history
@@ -70,7 +65,7 @@ class NgoUsersController < ApplicationController
 
   def inbox
     @back_path = ngo_user_path
-    @ngo_user = NgoUser.find_by_id(params[:id])
+    @ngo_user = NgoUser.find(params[:id])
     @messages = Message.all_received_messages(@ngo_user.id)
   end
 end

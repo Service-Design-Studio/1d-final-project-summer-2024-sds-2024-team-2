@@ -30,7 +30,7 @@ RSpec.describe NgoUsersController, type: :controller do
         passport_url: 'https://example.com/john_tan_passport.jpg'
         }
 
-        @user_particular = UserParticular.create_user_particular(@valid_attributes)
+        @user_particular = UserParticular.create(@valid_attributes)
 
         ngo_users_data = [
           { name: 'Test NGO 1', image_url: 'test_ngo_1.png' },
