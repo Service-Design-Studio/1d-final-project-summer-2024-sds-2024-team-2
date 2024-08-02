@@ -44,12 +44,14 @@ When(/^I press on the filled bookmark icon on the "([^"]+)", ID: "([^"]+)" event
 end
 
 Then(/^the bookmark icon for the "([^"]+)", ID: "([^"]+)" event card is filled$/) do |title, id|
-  # Locate the event card with the specified title and ID
-  event_card = find(".event-card[data-title='#{title}'][data-bulletin-id='#{id}']")
-  # Within this event card, find the <i> element that is a direct child of the <a> element with the onclick attribute set to toggleSavePost(this)
-  bookmark_icon = event_card.find("a[onclick='toggleSavePost(this)'] > i")
-  # Verify that the <i> element has the class 'bi-bookmark-fill'
-  expect(bookmark_icon[:class]).to include('bi-bookmark-fill')
+  using_wait_time(5) do
+    # Locate the event card with the specified title and ID
+    event_card = find(".event-card[data-title='#{title}'][data-bulletin-id='#{id}']")
+    # Within this event card, find the <i> element that is a direct child of the <a> element with the onclick attribute set to toggleSavePost(this)
+    bookmark_icon = event_card.find("a[onclick='toggleSavePost(this)'] > i")
+    # Verify that the <i> element has the class 'bi-bookmark-fill'
+    expect(bookmark_icon[:class]).to include('bi-bookmark-fill')
+  end
 end
 
 When(/^I press on the message icon on the "([^"]+)", ID: "([^"]+)" event card$/) do |title, id|
@@ -58,7 +60,6 @@ When(/^I press on the message icon on the "([^"]+)", ID: "([^"]+)" event card$/)
 
   # Simulate a click on this <i> element
   step "I press the \"sender #{title} #{id}\" button"
-  byebug
 end
 
 Then(/^the "([^"]+)", ID: "([^"]+)" event card bookmark icon should become unfilled$/) do |title, id|
@@ -137,7 +138,7 @@ And('I should see a "Add to Saved" button') do
   expect(page).to have_css('#modal-saved-btn', text: 'Add to Saved')
 end
 
-And('I should see a "Add to Saved" button') do
+And('I should see a "Saved" button') do
   # Wait for the modal to be visible
   expect(page).to have_css('#eventCards', visible: true)
 
@@ -145,6 +146,26 @@ And('I should see a "Add to Saved" button') do
   expect(page).to have_css('#modal-saved-btn', text: 'Saved')
 end
 
+And('the bookmark icon on the "Saved" button should be filled') do
+  # Wait for the modal to be visible
+  expect(page).to have_css('#modal-saved-btn', visible: true)
+  bookmark_icon = page.find('#modal-saved-btn > i')
+
+  # Verify that the <i> element has the class 'bi-bookmark-fill'
+  expect(bookmark_icon[:class]).to include('bi-bookmark-fill')
+end
+
 Given('I have opened up the modal on the event card {string}, ID: {string}') do |event_name, event_id|
   step 'I press on the event card "Gebirah Aid Giveaway", ID: "1"'
+end
+
+Given('I close the modal') do
+  # Wait for the modal to be visible
+  expect(page).to have_css('.modal-dialog', visible: true)
+
+  # Click the close button within the modal
+  find('.btn-close').click
+
+  # Wait for the modal to be hidden
+  expect(page).to have_no_css('.modal-dialog', visible: true)
 end

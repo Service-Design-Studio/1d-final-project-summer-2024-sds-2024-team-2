@@ -12,7 +12,7 @@ Background:
 Scenario: Messaging a NGO
     When I press on the message icon on the "Gebirah Aid Giveaway", ID: "1" event card
     Then I should see "What do you want to tell Gebirah?"
-    And I should see "Gebirah will be able see your message linked to this event card, together with your EnableID"
+    And I should see "Gebirah will be able to see your message linked to this event card, together with your EnableID"
     When I fill the message with "I would like to join this event but I will be late"
     And I press the "Send message" button
     Then I should be redirected to the "Home" page
@@ -29,13 +29,13 @@ Scenario: Send message function on the opened modal
     Given I have opened up the modal on the event card "Gebirah Aid Giveaway", ID: "1"
     When I press the "Send a message" button
     Then I should see "What do you want to tell Gebirah?"
-    And I should see "Gebirah will be able see your message linked to this event card, together with your enableID"
+    And I should see "Gebirah will be able to see your message linked to this event card, together with your EnableID"
     When I fill the message with "I would like to join this event but I will be late"
     And I press the "Send message" button
     Then I should be redirected to the "Home" page
     And I should see "Message successfully sent to Gebirah"
 
-Scenario: Adding a  saved post function on the opened modal
+Scenario: Adding a saved post function on the opened modal
     Given I have opened up the modal on the event card "Gebirah Aid Giveaway", ID: "1"
     When I press the "Add to Saved" button
     Then I should see a "Saved" button

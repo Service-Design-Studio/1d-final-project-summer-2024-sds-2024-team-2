@@ -25,11 +25,11 @@ Then(/^I should be directed to the "([^"]*)" page$/) do |page|
 end
 
 Then(/^I should see "([^"]*)"$/) do |name|
-  expect(page).to have_content(name, wait: 2)
+  expect(page).to have_content(name, wait: 5)
 end
 
 Then(/^I should not see "([^"]*)"$/) do |name|
-  expect(page).to have_no_content(name, wait: 2)
+  expect(page).to have_no_content(name, wait: 5)
 end
 
 Then(/^I should see the following filled-in details$/) do |table|

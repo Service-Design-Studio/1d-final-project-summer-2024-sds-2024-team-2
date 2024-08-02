@@ -291,12 +291,18 @@ class UserParticularsController < ApplicationController
     user_id = params[:id]
     ngo_id = params[:ngoid]
     message_content = params[:message][:content]
-
+    event_title = params[:message][:event_title]
     # Here, you can create a new message or perform other actions, e.g.,
     @message = Message.new(user_id:, ngo_users_id: ngo_id, message: message_content)
     logger.debug @message
     if @message.save
       flash[:notice] = "Message successfully sent to #{NgoUser.find(ngo_id).name}!"
+      UserHistory.create(
+        activity_title: event_title.blank? ? "Message sent to #{NgoUser.find(ngo_id).name}!" : "#{event_title}: Message sent to #{NgoUser.find(ngo_id).name}!",
+        description: "Message: #{message_content}",
+        activity_type: 'Message',
+        user: current_user
+      )
       render json: { success: true, notice: flash[:notice] }
     else
       flash[:alert] = 'Message sending failed.'
