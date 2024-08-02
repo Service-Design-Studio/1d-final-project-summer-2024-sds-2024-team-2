@@ -44,7 +44,7 @@
             </div>
           </div>
           <div class="d-flex px-1 w-100 align-items-center justify-content-between" style="font-size: 1.3em; border-top: solid 1px lightgrey">
-            <a type="button" onclick="" style="text-decoration: none;" aria-label="sender <%= bulletin.title %> <%= bulletin.id %>" data-ngoid="<%= ngo_user.id %>" data-userid="<%= @user&.id || "" %>" data-bs-toggle="modal" data-bs-target="#sendModal" data-ngoname="<%= bulletin.ngo_name %>">
+            <a type="button" onclick="" style="text-decoration: none;" aria_label="sender <%= bulletin.title %> <%= bulletin.id %>" data-ngoid="<%= ngo_user.id %>" data-userid="<%= @user&.id || "" %>" data-bs-toggle="modal" data-bs-target="#sendModal" data-ngoname="<%= bulletin.ngo_name %>">
               <i style="text-center text-decoration: none; color: black;" class="sender bi bi-send"></i>
             </a>
             <% if @on_saved_page %>
@@ -145,8 +145,6 @@
       //$('#modal-photo').attr('src', "app/assets/images/" + imageUrl);
     });
 
-    $('[aria-label^="sender"]').on('click', function() {
-      var ngoname = $('#modal-ngoname').data('ngoname');
     $('[aria_label^="sender"]').on('click', function() {
       var ngoname = $(this).data('ngoname');
       $('#sendModalSubLabel').text(ngoname +" will be able see your message linked to this event card, together with your EnableID");
