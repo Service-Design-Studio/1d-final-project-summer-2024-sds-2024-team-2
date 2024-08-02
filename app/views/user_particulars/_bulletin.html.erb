@@ -147,6 +147,8 @@
 
     $('[aria-label^="sender"]').on('click', function() {
       var ngoname = $('#modal-ngoname').data('ngoname');
+    $('[aria_label^="sender"]').on('click', function() {
+      var ngoname = $(this).data('ngoname');
       $('#sendModalSubLabel').text(ngoname +" will be able see your message linked to this event card, together with your EnableID");
       $('#sendModalLabel').text("What do you want to tell " + ngoname +"?");
       $('#sendModal').data('ngoid', $(this).data('ngoid'));
@@ -154,7 +156,7 @@
     });
 
     $('#modal-send-btn').click(function() {
-      var ngoname = $('#modal-title').text();
+      var ngoname = $('#modal-ngoname').text();
         $('#sendModalSubLabel').text(ngoname +" will be able see your message linked to this event card, together with your EnableID");
         $('#sendModalLabel').text("What do you want to tell " + ngoname +"?");
         $('#sendModal').data('ngoid', $('#eventCards').data('ngoid'));
@@ -169,11 +171,13 @@
       console.log(icon);
       // Toggle the class between bi-bookmark-fill and bi-bookmark
       if (icon.classList.contains('bi-bookmark')) {
-      icon.classList.remove('bi-bookmark');
-      icon.classList.add('bi-bookmark-fill');
+          icon.classList.remove('bi-bookmark');
+          icon.classList.add('bi-bookmark-fill');
+          button.textContent = ' Saved';
       } else {
-      icon.classList.remove('bi-bookmark-fill');
-      icon.classList.add('bi-bookmark');
+          icon.classList.remove('bi-bookmark-fill');
+          icon.classList.add('bi-bookmark');
+          button.textContent = ' Add to Saved';
       }
       var ariaLabel = "toggle "+ $('#modal-title').text() +" "+ $('#modal-id').text().match(/\d+/)[0];
       var matchingButton = document.querySelector(`a[aria_label="${ariaLabel}"]`);
