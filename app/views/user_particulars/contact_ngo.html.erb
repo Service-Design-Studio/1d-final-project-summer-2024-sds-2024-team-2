@@ -1,21 +1,4 @@
-<!--<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="<%#= form_authenticity_token %>" />
-    <title>NGO Search</title>
-    <style>
-      /* Responsive text adjustments */
-      @media (max-width: 768px) {
-        .card-title {
-          font-size: 0.9rem; /* Smaller text on smaller devices */
-        }
-      }
-    </style>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  </head>
-  <body>-->
+<!--Flash alert when message sent-->
   <%- if flash[:notice] %>
     <div class="alert alert-info text-center"><%= flash[:notice] %></div>
   <%- elsif flash[:success] %>
@@ -32,47 +15,62 @@
       <% end %>
     </div>
   <% end %>
-</div>
-    <div class="container-fluid">
-      <div class="row mb-4">
-        <div class="col-12">
-          <form id="search-form" method="get" action="<%= contact_ngo_path %>" style="display: flex; align-items: center; justify-content: space-between;">
-            <input type="text" id="search-input" name="search" class="form-control" placeholder="Search for NGOs Services..." value="<%= params[:search] %>" style="flex-grow: 1; margin-right: 10px;">
-            <button type="submit" class="btn btn-primary" style="flex-shrink: 0;">Search</button>
-          </form>
-        </div>
-      </div>
-      <div class="ngo_table row d-flex justify-content-center" id="ngo-results" style="margin-top: 20px;">
-        <% @ngo_users.each do |ngo_user| %>
-          <div class="col-auto"> <!-- Adjusted grid settings for better responsiveness -->
-            <div class="card" style="height: 500px; width: 100%; display: flex; flex-direction: column; overflow: hidden;">
-            <div style="height: 70%; width: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden;">
-                <% if ngo_user.image_url.present? %>
-                <%= image_tag ngo_user.image_url, alt: "#{ngo_user.name} image", style: 'max-height: 90%; max-width: 100%; object-fit: cover;' %>
-                <% else %>
-                <%= image_tag 'default.png', alt: "Default image", style: 'max-height: 100%; max-width: 100%; object-fit: cover;' %>
-                <% end %>
-            </div>
-            <div class="card-body" style="height: 30%; width: 100%; display: flex; align-items: center; justify-content: center; text-align: center;">
-                <h5 class="card-title" style="font-size: 1rem;"> <%= ngo_user.name %> </h5>
-            </div>
-            <div>
-                <p> Email: <%= ngo_user.email %> </p>
-                <p> Contact Name: <%= ngo_user.contact_number %> </p>
-                <p> Website: <%= ngo_user.website %> </p>
 
-                <h6>Services:</h6>
-                <ul>
-                  <% ngo_user.ngo_services.each do |service|%>
-                    <li><%= service.services %></li>
-                  <% end %>
-                </ul>
-                
-                <button type="button" class="message-btn edit-btn" data-ngoid="<%= ngo_user.id %>" data-id="<%= @user.id %>">Send a message</button> <!-- do not remove edit-btn -->
-            </div>
-            </div>
-        </div>
+<!--Flash alert when message sent-->
+<div class="parent-container">
+    <div class="service-background">
+        <!--Search bar -->
+        <form id="search-form" method="get" action="<%= contact_ngo_path %>" class="bg-dark text-white border-0" style="display: flex; align-items: center; justify-content: space-between; border-radius: 10px; margin: 10px; background-color: white; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
+            <!-- Adjusted form settings for better responsiveness -->
+            <input type="search" id="search-input" name="search" class="form-control bg-dark text-white border-0" placeholder="Search for NGO Services..." aria-label="Search" value="<%= params[:search] %>" style="flex-grow: 1; margin-right: 10px; font-size: 1em;">
+            <!-- Using similar input settings as the provided design -->
+            <span class="input-group-text border-0 text-white" style="flex-shrink: 0; background-color: transparent; font-size: 0.7rem;">
+                <button type="submit" class="btn btn-primary border-0" style="background-color:transparent;">
+                    <i class="fas fa-search"></i> <!-- Font Awesome search icon -->
+                </button>
+            </span>
+        </form>
+        <!--Search bar -->
+
+<div class="ngo-table-service">
+        <% @ngo_users.each do |ngo_user| %>
+            <div class="card-service">
+              <!-- Column 1: Image -->
+              <div class="column-service image-container-service">
+                <% if ngo_user.image_url.present? %>
+                  <%= image_tag ngo_user.image_url, alt: "#{ngo_user.name} image", class: 'fixed-border-radius' %>
+                <% else %>
+                  <%= image_tag 'default.png', alt: "Default image", class: 'fixed-border-radius' %>
+                <% end %>
+              </div>
+              <!-- Column 1: Image -->
+
+              <!-- Column 2: Card Body -->
+                <div class="column-service card-body-service">
+                  <h5 class="card-title-service"><%= ngo_user.name %></h5>
+                  <div>
+                    <p style="margin: 0;"><strong>Email: </strong><%= ngo_user.email %></p>
+                    <p style="margin: 0;"><strong>Contact Number: </strong><%= ngo_user.contact_number %></p>
+                    <p style="margin: 0;"><strong>Website: </strong><%= ngo_user.website %></p>
+                  </div>
+                  <h6 style="margin: 2px;"><strong>Services: </strong></h6>
+                  <ul>
+                    <% ngo_user.ngo_services.each do |service|%>
+                      <li><%= service.services %></li>
+                    <% end %>
+                  </ul>
+                    <div class="button-container-service">
+                      <button type="button" class="message-btn-service edit-btn" data-ngoid="<%= ngo_user.id %>" data-id="<%= @user.id %>">Send a message <i class="fas fa-paper-plane"></i></button> <!-- do not remove edit-btn --> <!-- Adjusted button settings for better responsiveness -->
+                    </div>
+                </div>
+              <!-- Column 2: Card Body -->
+              </div>
         <% end %>
+</div>
+</div>
+  </div>
+      
+
 <!-- Popup Modal for Editing -->
 <div id="editModal" class="modal" tabindex="-1" role="dialog">
 <div class="modal-dialog" role="document">
@@ -96,7 +94,7 @@
 </div>
 </div>
       </div>
-    </div>
+  </div>
 
 <script>
 
@@ -104,44 +102,44 @@ $(document).ready(function() {
     // Handling the search input with real-time AJAX updates
     $('#search-input').on('input', function() {
         $.ajax({
-        url: $('#search-form').attr('action'),
-        method: 'GET',
-        data: $('#search-form').serialize(),
-        success: function(data) {
-            var newContent = $(data).find('#ngo-results').html();
-            $('#ngo-results').html(newContent);
-            
-            // Re-bind the click event to the new edit buttons
-            bindEditButtons();
+            url: $('#search-form').attr('action'),
+            method: 'GET',
+            data: $('#search-form').serialize(),
+            success: function(data) {
+                var newContent = $(data).find('#ngo-results').html();
+                $('#ngo-results').html(newContent);
+                
+                // Re-bind the click event to the new edit buttons
+                bindEditButtons();
 
-            // Maintain the input focus and value after refresh
-            $('#search-input').focus();
-            var val = $('#search-input').val();
-            $('#search-input').val('');
-            $('#search-input').val(val);
-        }
+                // Maintain the input focus and value after refresh
+                $('#search-input').focus();
+                var val = $('#search-input').val();
+                $('#search-input').val('');
+                $('#search-input').val(val);
+            }
         });
     });
 
     // Function to bind edit button events
     function bindEditButtons() {
         $('.edit-btn').off('click').on('click', function() {
-        var userid = $(this).data('id');
-        var ngoId = $(this).data('ngoid');
+            var userid = $(this).data('id');
+            var ngoId = $(this).data('ngoid');
 
-        // Fetch existing NGO data and fill in the form fields (can use AJAX here)
-        // Placeholder for actual data fetch, here we would use ngoId to get specific data
-        //$('#ngo-name').val(''); // Reset or set to fetched data
-        $('#editModal').data('ngoid', ngoId);
-        $('#editModal').data('userid', userid);
-        $('#editModal').modal('show'); // Using Bootstrap's modal component
+            // Fetch existing NGO data and fill in the form fields (can use AJAX here)
+            // Placeholder for actual data fetch, here we would use ngoId to get specific data
+            //$('#ngo-name').val(''); // Reset or set to fetched data
+            $('#editModal').data('ngoid', ngoId);
+            $('#editModal').data('userid', userid);
+            $('#editModal').modal('show'); // Using Bootstrap's modal component
         });
     }
 
-// Initially bind the edit button events
+    // Initially bind the edit button events
     bindEditButtons();
 
-// Handling the Save button click in the modal
+    // Handling the Save button click in the modal
     $('.save-btn').click(function() {
         var ngoId = $('#editModal').data('ngoid');
         var userId = $('#editModal').data('userid');
@@ -163,7 +161,6 @@ $(document).ready(function() {
                 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') // Ensure CSRF token is sent
             },
             success: function(response) {
-                
                 $('#message-text').val('');
                 $('#editModal').modal('hide');
                 window.location.href = '/user_particulars/' + userId + '/contact_ngo';
@@ -179,6 +176,6 @@ $(document).ready(function() {
         $('#editModal').modal('hide');
     });
 });
+
+
 </script>
-<!--  </body>
-</html>-->

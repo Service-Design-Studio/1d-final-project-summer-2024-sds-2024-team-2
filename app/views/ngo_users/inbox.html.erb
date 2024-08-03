@@ -1,49 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact History Layout</title>
-    <style>
-        .container {
-            display: flex;
-            flex-direction: row; /* Align children horizontally */
-        }
-
-        .list-panel {
-            flex: 1; /* Each panel takes up half the space of the container */
-            padding: 20px;
-            overflow-y: auto; /* Enables vertical scrolling */
-            max-height: 90vh; /* Adjust the height according to your design needs */
-            background-color: #fdc6cf; /* Green background */
-            border-radius: 5px; /* Rounded corners */
-            border: 1px solid #3e8e41; /* Darker green border */
-        }
-
-        .details-panel {
-            flex: 1; /* Each panel takes up half the space of the container */
-            overflow-y: auto; /* Enables vertical scrolling */
-            padding: 20px;
-        }
-
-        .contact-history ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .contact-history li {
-            padding: 10px;
-            cursor: pointer;
-        }
-
-        .contact-history li:hover {
-            background-color: #f0f0f0;
-        }
-    </style>
-</head>
 <body>
-    <div class="container">
-        <div class="list-panel">
+    <div class="container-inbox">
+        <div class="list-panel-inbox">
             <div class="contact-history">
                 <ul>
                     <% @messages.each do |message| %>
@@ -88,4 +45,3 @@
         }
     </script>
 </body>
-</html>

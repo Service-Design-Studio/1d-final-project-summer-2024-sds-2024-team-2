@@ -9,4 +9,7 @@ Scenario: Navigating to inbox page
     Then I should be redirected to the "Inbox" page
     And I should see a list of past messages recieved
 
-
+Scenario: Viewing message details
+    Given I am on the "Inbox" page
+    When I click on the first message
+    Then I should see the details of the first message in the details panel
