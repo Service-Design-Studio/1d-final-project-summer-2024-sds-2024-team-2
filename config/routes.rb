@@ -35,6 +35,7 @@ Rails.application.routes.draw do
       post 'verify', to: 'ngo_users#verify'
       post 'confirm_verify', to: 'ngo_users#confirm_verify'
       get 'inbox', to: 'ngo_users#inbox', as: 'inbox'
+      get 'interaction_history', to: 'ngo_users#interaction_history', as: 'interaction_history'
     end
   end
 

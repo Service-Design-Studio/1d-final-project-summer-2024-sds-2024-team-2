@@ -68,4 +68,11 @@ class NgoUsersController < ApplicationController
     @ngo_user = NgoUser.find(params[:id])
     @messages = Message.all_received_messages(@ngo_user.id)
   end
+
+  def interaction_history
+    @back_path = ngo_user_path
+    @ngo_user = NgoUser.find(params[:id])
+    @interaction_history = InteractionHistory.where(ngo_user_id: @ngo_user.id)
+    render 'interaction_history'
+  end
 end
