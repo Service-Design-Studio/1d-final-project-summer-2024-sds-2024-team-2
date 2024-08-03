@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_31_133823) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_03_044647) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -69,6 +69,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_31_133823) do
     t.datetime "updated_at", null: false
     t.index ["ngo_users_id"], name: "index_messages_on_ngo_users_id"
     t.index ["user_id"], name: "index_messages_on_user_id"
+  end
+
+  create_table "ngo_services", force: :cascade do |t|
+    t.integer "ngo_user_id", null: false
+    t.text "services"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "ngo_users", force: :cascade do |t|
@@ -130,6 +137,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_31_133823) do
     t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["unique_id"], name: "index_user_particulars_on_unique_id", unique: true
     t.index ["user_id"], name: "index_user_particulars_on_user_id"
   end
 
