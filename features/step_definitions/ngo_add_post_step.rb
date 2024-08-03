@@ -23,3 +23,16 @@ Then(/^I should see event card with the following fields$/) do |table|
     end
   end
 end
+
+Then('I should see a validation message "Please fill out this field."') do
+  # Find all required fields
+  required_fields = all('input[required], textarea[required], select[required]')
+
+  # Trigger form submission
+  find('form').submit
+
+  # Check if any required field shows the validation message
+  required_fields.each do |field|
+    expect(field.native.attribute('validationMessage')).to eq('Please fill out this field.')
+  end
+end
