@@ -60,6 +60,14 @@
                 <p> Email: <%= ngo_user.email %> </p>
                 <p> Contact Name: <%= ngo_user.contact_number %> </p>
                 <p> Website: <%= ngo_user.website %> </p>
+
+                <h6>Services:</h6>
+                <ul>
+                  <% ngo_user.ngo_services.each do |service|%>
+                    <li><%= service.services %></li>
+                  <% end %>
+                </ul>
+                
                 <button type="button" class="message-btn edit-btn" data-ngoid="<%= ngo_user.id %>" data-id="<%= @user.id %>">Send a message</button> <!-- do not remove edit-btn -->
             </div>
             </div>
