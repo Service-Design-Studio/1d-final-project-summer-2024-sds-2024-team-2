@@ -8,12 +8,10 @@
     overflow-y: scroll;
   }
 </style>
+
 <div class='p-5 row d-flex justify-content-between'>
-  <div class="ml-5 col-3 p-3" style='font-size: 0.8em'>
-    <h4 class="text-center rounded mt-3">Verify the User's <strong style="color: #f1536a;">EnableID</strong></h4>
-        <%= render partial: "user_particulars/digitalid", locals: { user_particular: @user_particular } %>
-  </div>
-  <div class='col-5 p-3" style='font-size: 0.8em'>
+  <div class='col-4 p-3' style='font-size: 0.8em'>
+    <h2 class> Scroll for more information: </h2>
     <div id="app" v-scroll="onScroll">
       <div class="card_2" v-for="(card, index) in styledCards" :style="card.style" :key="index">
         <div class="card_content_2">
@@ -23,9 +21,14 @@
       </div>
     </div>
   </div>
-  <div class="col-3 formcol p-3" style='font-size: 0.8em'> <!-- Add a margin top to create space -->
-    <%= form_with url: confirm_verify_ngo_user_path(@ngo_user), method: :post,local: true, id: "verify" do %>
+  <div class="ml-6 col-3 p-3" style='font-size: 0.8em'>
+    <h4 class="text-center rounded mt-3">Verify the User's <strong style="color: #f1536a;">EnableID</strong></h4>
+    <%= render partial: "user_particulars/digitalid", locals: { user_particular: @user_particular } %>
+  </div>
+  <div class="col-3 formcol p-3" style='font-size: 0.8em'>
+    <%= form_with url: confirm_verify_ngo_user_path(@ngo_user), method: :post, local: true, id: "verify" do %>
       <input type="hidden" name="unique_id" value="<%= @user_particular.unique_id %>">
+      ...
       <h5 style='color:white;'>Please ensure that all these information is present before verifying:</h5>
       <div class="inputGroup">
         <input id="option1" name="option1" type="checkbox"/>
@@ -48,8 +51,8 @@
         <label for="option5">Phone Number</label>
       </div>
       <div class='d-flex justify-content-around gap-1 mt-auto mb-2 '>
-      <%= button_tag "Keep in View", type: 'button', class: "btn btn-primary mt-3", id: "keep-in-view-btn" %>
-      <%= submit_tag "Verify", class: "px-5 btn btn-info mt-3", id: "verify-btn", disabled: true%>
+        <%= button_tag "Keep in View", type: 'button', class: "btn btn-primary mt-3", id: "keep-in-view-btn" %>
+        <%= submit_tag "Verify", class: "px-5 btn btn-info mt-3", id: "verify-btn", disabled: true %>
       </div>
     <% end %>
   </div>
@@ -91,21 +94,21 @@
 <script>
 const cardsData = [
    {
-    title: 'Title 1',
-    description: 'Tempora quam ducimus dolor animi magni culpa neque sit distinctio ipsa quos voluptates accusantium possimus earum rerum iure',
+    title: 'Comprehensive Documentation',
+    description: 'Ensure that the user has provided all the necessary documentation on their EnableID card. Please follow the checklist on the right.',
   },
   {
-    title: 'Title 2',
-    description: 'Tempora quam ducimus dolor animi magni culpa neque sit distinctio ipsa quos voluptates accusantium possimus earum rerum iure',
+    title: 'If information provided is insufficient ',
+    description: 'You can add their EnableID documents to the keep-in-view page. ',
   },
   {
-    title: 'Title 3',
-    description: 'Tempora quam ducimus dolor animi magni culpa neque sit distinctio ipsa quos voluptates accusantium possimus earum rerum iure',
+    title: 'Access to Basic Needs',
+    description: 'Verifying a refugee allows them to receive food, water, and shelter from various NGOs, significantly improving their living conditions and overall well-being.',
   },
   // Add more titles below
   {
-    title: 'Title 4',
-    description: 'Description for Title 4',
+    title: 'Medical Aid',
+    description: 'Verified refugees can access medical services and receive necessary treatments from other NGOs such, vaccinations, and healthcare support.',
   },
   {
     title: 'Title 5',

@@ -104,11 +104,17 @@ body {
 
 .card_2 {
   height: 140px;
-  background-color: white;
+  background-color: #0eac95;
   padding: 5px;
   margin-bottom: 10px;
   font-family: Helvetica;
   box-shadow: 0px 3px 8px 0px rgba(0,0,0,0.5);
+  color: white; /* Make text white */
+  border-radius: 15px; /* Make edges rounder */
+  overflow: hidden; /* Hide overflowing content */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .card__content_2 {
@@ -116,9 +122,15 @@ body {
   position: relative;
   vertical-align: top;
   width: calc(100% - 120px);
-  height: 140px;
+  height: 150px;
   margin: 0;
+  overflow: hidden; /* Hide overflowing text */
+  text-overflow: ellipsis; /* Add ellipsis to overflowing text */
+  white-space: normal; /* Allow text wrapping */
+  word-wrap: break-word; /* Break long words to prevent overflow */
 }
+
+
 
 
 
