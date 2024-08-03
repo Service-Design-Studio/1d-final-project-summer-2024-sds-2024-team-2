@@ -1,0 +1,29 @@
+<!-- app/views/ngo_users/interaction_history.html.erb -->
+<div class='container'>
+  <div id="interaction_history" class="row d-flex justify-content-center" style="font-size:0.8em; max-height:65vh; overflow-y: auto; overflow-x: hidden;">
+    <% if @interaction_history.present? %>
+      <% @interaction_history.each do |history| %>
+        <div class="py-1 col-11 flex d-flex bg-light add-small-shadow justify-content-start align-items-center my-1 mx-3" style='border-radius: 16px;'>
+          <div class="d-flex justify-content-center align-items-center p-2 mr-3" style="background-color: #f1536a; width: 50px; height: 50px; border-radius: 50%; max-width:60px; max-height:60px;">
+            <% if history.activity_type == 'Message' %>
+              <i class="bi bi-chat-left-text-fill fs-3" style="color: white;"></i>
+            <% elsif history.activity_type == 'Account' %>
+              <i class="bi bi-file-earmark-person fs-2" style="color: white;"></i>
+            <% elsif history.activity_type == 'Event' %>
+              <i class="bi bi-calendar-event fs-3" style="color: white;"></i>
+            <% end %>
+          </div>
+          <div style="max-width: 80%;">
+            <h6 class='m-0'><%= history.activity_title %></h6>
+            <span class="text-muted"><small><%= " • #{time_ago_in_words(history.updated_at)}" %> ago</small></span>
+            <div>
+              <p class='m-0'><%= history.description %></p>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <p>No interaction history available.</p>
+    <% end %>
+  </div>
+</div>
