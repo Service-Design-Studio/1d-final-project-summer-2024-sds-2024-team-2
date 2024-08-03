@@ -118,6 +118,8 @@
     background-color: #5c5c5c; /* Optional: Change background color on hover */
 }
 
+
+
 @media (max-width: 768px) {
     .card-service {
         flex-direction: column; /* Change to column direction on small screens */
