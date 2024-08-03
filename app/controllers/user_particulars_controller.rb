@@ -280,7 +280,9 @@ class UserParticularsController < ApplicationController
     @back_path = user_particular_path
     @user = current_user.user_particular
     @ngo_users = if params[:search].present?
-                  NgoUser.where('name LIKE ?', "%#{params[:search]}%")
+                    NgoUser.joins(:ngo_services)
+                    .where('ngo_services.services LIKE ?', "%#{params[:search]}%")
+                    .distinct
                  else
                   NgoUser.all
                  end

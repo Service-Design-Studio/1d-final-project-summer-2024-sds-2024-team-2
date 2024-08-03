@@ -16,11 +16,28 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   </head>
   <body>-->
+  <%- if flash[:notice] %>
+    <div class="alert alert-info text-center"><%= flash[:notice] %></div>
+  <%- elsif flash[:success] %>
+    <div class="alert alert-success text-center"><%= flash[:success] %></div>
+  <%- elsif flash[:error_message].present? %>
+    <div class="alert alert-danger">
+      <ul><%= flash[:error_message] %></ul>
+      <% if flash[:error].present? %>
+        <ul>
+          <% flash[:error].each do |error| %>
+            <li><%= error %></li>
+          <% end %>
+        </ul>
+      <% end %>
+    </div>
+  <% end %>
+</div>
     <div class="container-fluid">
       <div class="row mb-4">
         <div class="col-12">
           <form id="search-form" method="get" action="<%= contact_ngo_path %>" style="display: flex; align-items: center; justify-content: space-between;">
-            <input type="text" id="search-input" name="search" class="form-control" placeholder="Search for NGOs..." value="<%= params[:search] %>" style="flex-grow: 1; margin-right: 10px;">
+            <input type="text" id="search-input" name="search" class="form-control" placeholder="Search for NGOs Services..." value="<%= params[:search] %>" style="flex-grow: 1; margin-right: 10px;">
             <button type="submit" class="btn btn-primary" style="flex-shrink: 0;">Search</button>
           </form>
         </div>
@@ -54,9 +71,6 @@
     <div class="modal-content">
     <div class="modal-header">
         <h5 class="modal-title">Send a Message</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-        </button>
     </div>
     <div class="modal-body">
         <form id="message-form">
@@ -141,9 +155,10 @@ $(document).ready(function() {
                 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') // Ensure CSRF token is sent
             },
             success: function(response) {
-                alert('Message sent successfully!');
+                
                 $('#message-text').val('');
                 $('#editModal').modal('hide');
+                window.location.href = '/user_particulars/' + userId + '/contact_ngo';
             },
             error: function(xhr) {
                 alert('Error sending message: ' + xhr.responseText);
