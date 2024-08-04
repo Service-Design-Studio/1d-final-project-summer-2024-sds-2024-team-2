@@ -21,8 +21,8 @@ gem 'puma', '>= 5.0'
 gem 'prawn'
 
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
+gem 'dotenv-rails'
 gem 'importmap-rails'
-
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
 gem 'turbo-rails'
 
@@ -72,15 +72,15 @@ group :test do
   gem 'capybara'
   gem 'cucumber-rails', require: false
   gem 'database_cleaner'
+  gem 'database_cleaner-active_record'
   gem 'factory_bot_rails'
   gem 'rails-controller-testing'
   gem 'selenium-webdriver'
   gem 'simplecov'
-  gem 'database_cleaner-active_record'
 end
 
 group :production do
   gem 'appengine', '~> 0.6'
-  gem 'pg', '~> 1.5.6' # for gcloud deployment
   gem 'google-cloud-storage', '~> 1.44' # for gcloud storage
+  gem 'pg', '~> 1.5.6' # for gcloud deployment
 end

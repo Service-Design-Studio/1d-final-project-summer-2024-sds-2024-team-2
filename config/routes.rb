@@ -10,7 +10,8 @@ Rails.application.routes.draw do
     registrations: 'users/registrations/registrations',
     passwords: 'users/registrations/passwords'
   }
-
+  post 'chatbot', to: 'chatbot#chat'
+  get 'chatbot', to: 'chatbot#new'
   # Custom routes for user particulars
   get 'user_particulars/confirm'
   post 'user_particulars/:id/generate_2fa', to: 'user_particulars#generate_2fa', as: 'generate_2fa'
@@ -24,7 +25,7 @@ Rails.application.routes.draw do
       get 'saved_post'
       get 'page2'
     end
-    resources :documents, only: [:new, :create, :show, :edit, :update, :destroy]
+    resources :documents, only: %i[new create show edit update destroy]
   end
 
   # Resources for NGO users with custom member routes for verification and inbox
