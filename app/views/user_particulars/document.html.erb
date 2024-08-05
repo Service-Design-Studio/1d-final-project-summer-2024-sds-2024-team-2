@@ -183,6 +183,14 @@
             <button id="browseBtn">Browse</button>
             <p>Supported files: PDF, DOC, DOCX, JPG</p>
             <input type="file" id="fileInput" multiple>
+            <input type="text" id="fileDescription" placeholder="Enter description" class="description">
+            <select id="fileType" class="document-type">
+                <option value="">Select type</option>
+                <option value="Education">Education</option>
+                <option value="Medical">Medical</option>
+                <option value="Personal Documents">Personal Documents</option>
+                <option value="Property">Property</option>
+            </select>
         </div>
         <div class="uploaded-files">
             <ul id="fileList">
@@ -197,9 +205,13 @@
         const browseBtn = document.getElementById('browseBtn');
         const fileList = document.getElementById('fileList');
         const noFilesMessage = document.getElementById('noFilesMessage');
+        const fileDescription = document.getElementById('fileDescription');
+        const fileType = document.getElementById('fileType');
 
         const supportedFormats = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg'];
         const maxFileSize = 5 * 1024 * 1024; // 5MB in bytes
+
+        const userParticularId = 1; // Replace this with the dynamic user_particular_id if needed
 
         document.addEventListener('DOMContentLoaded', fetchFiles);
 
@@ -228,10 +240,18 @@
         });
 
         function handleFiles(files) {
+            const description = fileDescription.value;
+            const type = fileType.value;
+
+            if (!description || !type) {
+                alert('Description and document type are required.');
+                return;
+            }
+
             for (const file of files) {
                 if (supportedFormats.includes(file.type)) {
                     if (file.size <= maxFileSize) {
-                        addFileToList(file);
+                        uploadFile(file, description, type);
                     } else {
                         alert('File size exceeds 5MB limit');
                     }
@@ -248,18 +268,19 @@
                     <div class="file-name">
                         ${file.name}
                     </div>
-                    <div class="file-size">${formatFileSize(file.size)}</div>
-                    <div class="delete-btn" data-id="${file.name}">🗑️</div>
+                    <div class="file-size">${formatFileSize(file.file_size)}</div>
+                    <div class="upload-date">${file.upload_date}</div>
+                    <div class="delete-btn" data-id="${file.id}">🗑️</div>
                 </div>
                 <div class="file-description">
-                    <input type="text" placeholder="Enter description" class="description" data-id="${file.name}">
+                    <input type="text" placeholder="Enter description" class="description" data-id="${file.id}" value="${file.description}">
                 </div>
                 <div class="file-type">
-                    <select class="document-type" data-id="${file.name}">
-                        <option value="Education">Education</option>
-                        <option value="Medical">Medical</option>
-                        <option value="Personal Documents">Personal Documents</option>
-                        <option value="Property">Property</option>
+                    <select class="document-type" data-id="${file.id}">
+                        <option value="Education" ${file.document_type === 'Education' ? 'selected' : ''}>Education</option>
+                        <option value="Medical" ${file.document_type === 'Medical' ? 'selected' : ''}>Medical</option>
+                        <option value="Personal Documents" ${file.document_type === 'Personal Documents' ? 'selected' : ''}>Personal Documents</option>
+                        <option value="Property" ${file.document_type === 'Property' ? 'selected' : ''}>Property</option>
                     </select>
                 </div>
             `;
@@ -267,52 +288,13 @@
                 noFilesMessage.remove();
             }
             fileList.appendChild(listItem);
-
-            const descriptionInput = listItem.querySelector('.description');
-            const documentTypeSelect = listItem.querySelector('.document-type');
-
-            descriptionInput.addEventListener('blur', () => {
-                file.description = descriptionInput.value;
-            });
-
-            documentTypeSelect.addEventListener('change', () => {
-                file.documentType = documentTypeSelect.value;
-            });
-
-            uploadFile(file);
         }
 
         function fetchFiles() {
-            fetch('/user_particulars/1/uploaded_files')
+            fetch(`/user_particulars/${userParticularId}/uploaded_files`)
                 .then(response => response.json())
                 .then(files => {
-                    files.forEach(file => {
-                        const listItem = document.createElement('li');
-                        listItem.innerHTML = `
-                            <div class="file-info">
-                                <div class="file-name">
-                                    ${file.name}
-                                </div>
-                                <div class="file-size">${formatFileSize(file.file_size)}</div>
-                                <div class="delete-btn" data-id="${file.id}">🗑️</div>
-                            </div>
-                            <div class="file-description">
-                                <input type="text" placeholder="Enter description" class="description" data-id="${file.id}" value="${file.description}">
-                            </div>
-                            <div class="file-type">
-                                <select class="document-type" data-id="${file.id}">
-                                    <option value="Education" ${file.document_type === 'Education' ? 'selected' : ''}>Education</option>
-                                    <option value="Medical" ${file.document_type === 'Medical' ? 'selected' : ''}>Medical</option>
-                                    <option value="Personal Documents" ${file.document_type === 'Personal Documents' ? 'selected' : ''}>Personal Documents</option>
-                                    <option value="Property" ${file.document_type === 'Property' ? 'selected' : ''}>Property</option>
-                                </select>
-                            </div>
-                        `;
-                        if (noFilesMessage) {
-                            noFilesMessage.remove();
-                        }
-                        fileList.appendChild(listItem);
-                    });
+                    files.forEach(file => addFileToList(file));
                 })
                 .catch(error => console.error('Error:', error));
         }
@@ -328,16 +310,16 @@
             return fileSize.toFixed(2) + ' ' + units[unitIndex];
         }
 
-        function uploadFile(file) {
+        function uploadFile(file, description, type) {
             const formData = new FormData();
             formData.append('uploaded_file[file_path]', file);
             formData.append('uploaded_file[name]', file.name);
             formData.append('uploaded_file[file_type]', file.type);
             formData.append('uploaded_file[file_size]', file.size);
-            formData.append('uploaded_file[description]', file.description || '');
-            formData.append('uploaded_file[document_type]', file.documentType || '');
+            formData.append('uploaded_file[description]', description);
+            formData.append('uploaded_file[document_type]', type);
 
-            fetch('/user_particulars/1/uploaded_files', {
+            fetch(`/user_particulars/${userParticularId}/uploaded_files`, {
                 method: 'POST',
                 headers: {
                     'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
@@ -347,7 +329,9 @@
             .then(response => response.json())
             .then(file => {
                 if (!file.success) {
-                    alert('Failed to upload file');
+                    alert(`Failed to upload file: ${file.errors.join(', ')}`);
+                } else {
+                    addFileToList(file.file);
                 }
             })
             .catch(error => console.error('Error:', error));
@@ -363,7 +347,7 @@
             const listItem = element.parentElement.parentElement;
             const fileId = element.getAttribute('data-id');
 
-            fetch(`/uploaded_files/${fileId}`, {
+            fetch(`/user_particulars/${userParticularId}/uploaded_files/${fileId}`, {
                 method: 'DELETE',
                 headers: {
                     'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
