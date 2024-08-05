@@ -1,5 +1,4 @@
-# frozen_string_literal: true
-
+# config/routes.rb
 Rails.application.routes.draw do
   root 'user_particulars#show' # set root path of web app as /user_particulars/show for now
 
@@ -22,6 +21,7 @@ Rails.application.routes.draw do
       get 'page2'
     end
     resources :documents, only: [:new, :create, :show, :edit, :update, :destroy]
+    resources :uploaded_files, only: [:index, :create, :destroy]
   end
 
   resources :ngo_users do
