@@ -540,7 +540,6 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  activestorage
   appengine (~> 0.6)
   bootsnap
   bootstrap (~> 5.0.2)
