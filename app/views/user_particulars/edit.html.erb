@@ -20,41 +20,59 @@
   <% end %>
 </div>
   <!-- user_particulars_confirm_path leads to the confirm function!-->
-  <%=form_with model: @user_particular, url: user_particular_path(@user_particular), method: :put, local: true do |form|%>
+  <%= form_with model: @user_particular, url: user_particular_path(@user_particular), method: :put, local: true do |form| %>
     <%= form.hidden_field :user_id, value: current_user.id %>
-    <div class="form-group">
-      <%= form.label :full_name, "Full Name" %><span class="text-danger">*</span>
-      <%= form.text_field :full_name, class: "form-control", required: true %>
-    </div>
-    <div class="form-group">
-      <%= form.label :phone_number, "Phone number" %><span class="text-danger">*</span>
-      <!--Yiqing your code goes here-->
-      <div class="row">
-        <div class="col" style="max-width: 125px; min-width: 125px;">
-          <%= form.select :phone_number_country_code, options_for_select(@country_code_options, @user_particular["phone_number_country_code"]), {}, { class: "form-control", required: true, id: "country_code_select" } %>
+    <div class="row">
+      <div class='col-9'>
+        <div class="form-group">
+          <%= form.label :full_name, "Full Name" %><span class="text-danger">*</span>
+          <%= form.text_field :full_name, class: "form-control", required: true %>
         </div>
-        <div class="col">
-          <%= form.telephone_field :phone_number, class: "form-control", required: true, id: "phone_number_field" %>
+        <div class="form-group">
+          <%= form.label :phone_number, "Phone number" %><span class="text-danger">*</span>
+          <div class="row">
+            <div class="col" style="max-width: 125px; min-width: 125px;">
+              <%= form.select :phone_number_country_code, options_for_select(@country_code_options, @user_particular["phone_number_country_code"]), {}, { class: "form-control", required: true, id: "country_code_select" } %>
+            </div>
+            <div class="col">
+              <%= form.telephone_field :phone_number, class: "form-control", required: true, id: "phone_number_field" %>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <%= form.label :secondary_phone_number, "Secondary phone number (optional)" %>  
+          <div class="row">
+            <div class="col" style="max-width: 125px; min-width: 125px;">
+              <%= form.select :secondary_phone_number_country_code, options_for_select([['', '']] + @country_code_options, @user_particular["secondary_phone_number_country_code"]), {}, { class: "form-control", id: "country_code_select_secondary" } %>
+            </div>
+            <div class="col">
+              <%= form.telephone_field :secondary_phone_number, class: "form-control", id: "phone_number_field_secondary" %>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <%= form.hidden_field :full_phone_number, class: "form-control", id: "full_phone_number_field", readonly: true %>
+        </div>
+        <div class="form-group">
+          <%= form.hidden_field :full_secondary_phone_number, class: "form-control", id: "full_secondary_phone_number_field", readonly: true %>
         </div>
       </div>
-    </div>
-    <div class="form-group">
-      <%= form.label :secondary_phone_number, "Secondary phone number (optional)" %>  
-      <div class="row">
-        <div class="col" style="max-width: 125px; min-width: 125px;">
-          <%= form.select :secondary_phone_number_country_code, options_for_select([['', '']] + @country_code_options, @user_particular["secondary_phone_number_country_code"]), {}, { class: "form-control", id: "country_code_select_secondary" } %>
-        </div>
-        <div class="col">
-          <%= form.telephone_field :secondary_phone_number, class: "form-control", id: "phone_number_field_secondary" %>
-        </div>
+
+      <div class='col-3 d-flex flex-column justify-content-center align-items-center px-4'>
+        <label class="m-0">Passport-Style Photo<span class="text-danger">*</span></label>
+        <label id="profilePictureLabel" for="profile_picture" class="p-1 mb-0 form-group d-flex flex-grow-1 justify-content-center align-items-center text-center text-muted" style="cursor: pointer; border: 5px dashed rgba(198, 198, 198, 0.65); height: 200px; width: 200px; overflow: hidden;">
+          <% if @user_particular.profile_picture.attached? %>
+            <img src="<%= url_for(@user_particular.profile_picture) %>" alt="Profile Picture" style="max-width: 100%; max-height: 100%; object-fit: cover;">
+          <% else %>
+            Upload a photo of yourself here
+          <% end %>
+        </label>
+        <%= form.file_field :profile_picture, id: "profile_picture", accept: 'image/jpeg,image/gif,image/png,application/pdf', class: "form-control-file", style: "display: none;" %>
+        <input type="file" accept="image/*" capture="camera" id="cameraInput" style="display: none;">
+        <button type="button" class='mt-1 py-1 btn btn-dark' onclick="startCamera()" data-bs-toggle="modal" data-bs-target="#cameraModal">Or take one right now 📸</button>
       </div>
     </div>
-    <div class="form-group">
-      <%= form.hidden_field :full_phone_number, class: "form-control", id: "full_phone_number_field", readonly: true %>
-    </div>
-    <div class="form-group">
-      <%= form.hidden_field :full_secondary_phone_number, class: "form-control", id: "full_secondary_phone_number_field", readonly: true %>
-    </div>
+
     <div class="form-group">
       <%= form.label :country_of_origin, "Country of Origin" %><span class="text-danger">*</span>
       <%= form.select :country_of_origin, options_for_select(@countries, @user_particular["country_of_origin"]), {}, { class: "form-control", required: true } %>
@@ -93,8 +111,29 @@
     </div>
     <div class="text-center">
       <%= form.submit "Update", class: "px-3 btn btn-danger" %>
-    </div>
+    </div> 
+
   <% end %>
+
+  <!-- Modal for taking a photo -->
+    <div class="modal fade" id="cameraModal" tabindex="-1" aria-labelledby="cameraModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="cameraModalLabel">Please capture a photo of yourself</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <video id="cameraFeed" style="width: 100%; height: auto;" autoplay></video>
+          </div>
+          <div class="modal-footer d-flex justify-content-center">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeModal()">Cancel</button>
+            <button type="button" class="btn btn-primary" onclick="capturePhoto()">Capture</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
 </div>
 <%# For concatenating the numbers to full number %>
 <script>
@@ -213,4 +252,107 @@
     toggleOtherField('ethnicity_select', 'ethnicity_other_field');
     toggleOtherField('gender_select', 'gender_other_field');
   });
+
+  // Handles file upload change event
+  const fileInput = document.getElementById('profile_picture');
+  fileInput.addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'cover';
+
+        const label = document.getElementById('profilePictureLabel');
+        label.innerHTML = ''; // Clear existing content
+        label.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Handles camera input change event
+  function startCamera() {
+    const video = document.getElementById('cameraFeed');
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+      })
+      .catch(err => {
+        console.error("Error accessing the camera: ", err);
+      });
+  }
+
+  function closeModal() {
+    const video = document.getElementById('cameraFeed');
+    const stream = video.srcObject;
+    const tracks = stream.getTracks();
+
+    tracks.forEach(track => {
+      track.stop();
+    });
+
+    video.srcObject = null;
+  }
+
+  function capturePhoto() {
+    const video = document.getElementById('cameraFeed');
+    const label = document.getElementById('profilePictureLabel');
+    const labelWidth = label.clientWidth;
+    const labelHeight = label.clientHeight;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = labelWidth;
+    canvas.height = labelHeight;
+    const context = canvas.getContext('2d');
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    const dataUrl = canvas.toDataURL('image/png'); //base64-encoded image representation string
+    const img = document.createElement('img');
+    img.src = dataUrl; // This one saves dataUrl into the img.src
+    img.style.width = '100%';
+    img.style.height = '100%';
+    img.style.objectFit = 'cover';
+
+    label.innerHTML = '';
+    label.appendChild(img);
+
+    // Convert base64 string to Blob and then to file
+    const blob = dataURLToBlob(dataUrl);
+    const file = new File([blob], 'profile_picture.png', { type: 'image/png' });
+
+    // Simulates user selecting a file manually
+    const fileInput = document.getElementById('profile_picture');
+    const dataTransfer = new DataTransfer(); 
+    dataTransfer.items.add(file);
+    fileInput.files = dataTransfer.files; 
+
+    // Close the modal programmatically using Bootstrap's modal methods
+    const modal = bootstrap.Modal.getInstance(document.getElementById('cameraModal'));
+    modal.hide();
+
+    closeModal();
+  }
+
+  function dataURLToBlob(dataURL) {
+    const [header, data] = dataURL.split(',');
+    const mime = header.match(/:(.*?);/)[1];
+    const binary = atob(data);
+    const array = [];
+
+    for (let i = 0; i < binary.length; i++) {
+      array.push(binary.charCodeAt(i));
+    }
+
+    return new Blob([new Uint8Array(array)], { type: mime });
+  }
+
+  // Start camera when modal is shown
+  document.getElementById('cameraModal').addEventListener('shown.bs.modal', startCamera);
+  // Stop camera when modal is hidden
+  document.getElementById('cameraModal').addEventListener('hidden.bs.modal', closeModal);
 </script>

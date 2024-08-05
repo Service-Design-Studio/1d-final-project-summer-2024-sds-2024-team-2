@@ -93,21 +93,24 @@ class UserParticularsController < ApplicationController
   end
 
   def update
-    # Validate user particulars
+    @user_particular = UserParticular.find(params[:id])
+    
     user_particular_errors = validate_user_particulars(@user_particular) || []
     dropdown_errors = validate_user_particulars_dropdown(@user_particular, params[:others]) || []
-
+  
     error_messages_arr = user_particular_errors + dropdown_errors
     flash[:error] = error_messages_arr
-
+    
+    # Validate user particulars
     if error_messages_arr.empty?
-      @user_particular = UserParticular.find_by(id: params[:id])
-
-      # Check if user particular exists and if edit was successful
-      if @user_particular && @user_particular.update(user_particular_params)
+      if @user_particular.update(user_particular_params)
+        if params[:user_particular][:profile_picture].present?
+          @user_particular.profile_picture.attach(params[:user_particular][:profile_picture])
+        end
+  
+        @user_particular.update(status: 'pending', verifier_ngo: nil)
         flash[:success] = 'Digital ID was successfully edited!'
-        @user_particular.update(status: 'pending', verifier_ngo: nil) # Set status to pending and reset verifier_ngo
-        redirect_to @user_particular # redirects to /user_particulars/:id
+        redirect_to @user_particular
       else
         flash[:error_message] = 'Edit failed.'
         redirect_to edit_user_particular_path(params[:id], user_particular: user_particular_params)
@@ -117,6 +120,7 @@ class UserParticularsController < ApplicationController
       redirect_to edit_user_particular_path(params[:id], user_particular: user_particular_params)
     end
   end
+  
 
   def history
     @back_path = root_path
