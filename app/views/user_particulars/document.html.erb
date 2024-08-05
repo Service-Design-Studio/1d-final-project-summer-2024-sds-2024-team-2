@@ -141,6 +141,19 @@
             cursor: pointer;
         }
 
+        .uploaded-files li .preview-btn {
+            margin-top: 5px;
+            text-align: right;
+            font-size: 12px;
+            color: #42a5f5;
+            cursor: pointer;
+            background-color: #42a5f5;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
         #fileInput {
             display: none;
         }
@@ -216,6 +229,7 @@
             for (const file of files) {
                 if (supportedFormats.includes(file.type)) {
                     if (file.size <= maxFileSize) {
+                        const fileUrl = URL.createObjectURL(file);
                         const listItem = document.createElement('li');
                         listItem.innerHTML = `
                             <div class="file-info">
@@ -236,6 +250,7 @@
                                     <option value="property">Property</option>
                                 </select>
                             </div>
+                            <button class="preview-btn" onclick="window.open('${fileUrl}', '_blank')">Preview</button>
                         `;
                         fileList.appendChild(listItem);
                     } else {
