@@ -7,12 +7,22 @@
     <style>
         body {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            height: 100vh;
             background-color: #f5f5f5;
             margin: 0;
             font-family: Arial, sans-serif;
+        }
+
+        .guide {
+            background-color: #ffebee;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px;
+            width: 90%;
+            max-width: 900px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
         }
 
         .upload-container {
@@ -121,6 +131,18 @@
     </style>
 </head>
 <body>
+    <div class="guide">
+        <h2>File Upload Guide</h2>
+        <p>Follow the instructions below to upload your documents:</p>
+        <ol>
+            <li>Drag and drop your files into the designated area or click the "Browse" button to select files from your computer.</li>
+            <li>Supported file formats are PDF, DOC, DOCX, and JPG.</li>
+            <li>The maximum file size allowed is 5MB.</li>
+            <li>After selecting the files, they will be automatically uploaded and listed on the right side.</li>
+            <li>You can remove any file by clicking the delete button (🗑️) next to the file name.</li>
+        </ol>
+    </div>
+
     <div class="upload-container">
         <div class="upload-box" id="uploadBox">
             <div class="icon">⬆️</div>
