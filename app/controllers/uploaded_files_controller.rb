@@ -17,8 +17,9 @@ class UploadedFilesController < ApplicationController
   end
 
   def create
-    @uploaded_file = @user_particular.uploaded_files.new(uploaded_file_params)
-    @uploaded_file.status = 'Unverified' # Set status to Unverified by default
+    Rails.logger.debug "Uploaded file params: #{uploaded_file_params.inspect}"
+    @uploaded_file = @user_particular.uploaded_files.new(uploaded_file_params.except(:status))
+    @uploaded_file.status = 'Unverified' # Set status to Unverified after initialization
 
     if @uploaded_file.save
       render json: { success: true, file: @uploaded_file }, status: :created
@@ -51,6 +52,6 @@ class UploadedFilesController < ApplicationController
   end
 
   def uploaded_file_params
-    params.require(:uploaded_file).permit(:file_path, :name, :file_type, :file_size, :description, :document_type, :status)
+    params.require(:uploaded_file).permit(:file_path, :name, :file_type, :file_size, :description, :document_type)
   end
 end

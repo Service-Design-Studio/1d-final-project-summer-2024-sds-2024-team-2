@@ -285,7 +285,6 @@
             formData.append('uploaded_file[name]', file.name);
             formData.append('uploaded_file[file_type]', file.type);
             formData.append('uploaded_file[file_size]', file.size);
-            formData.append('uploaded_file[status]', 'Unverified'); // Set status to Unverified
 
             fetch(`/user_particulars/${userParticularId}/uploaded_files`, {
                 method: 'POST',
