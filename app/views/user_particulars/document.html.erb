@@ -116,23 +116,15 @@
             margin-right: 10px;
         }
 
+        .uploaded-files li .file-size {
+            margin-left: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+
         .uploaded-files li .delete-btn {
             color: #e57373;
             cursor: pointer;
-        }
-
-        .uploaded-files li .progress {
-            width: 100px;
-            height: 5px;
-            background-color: #d9e3f0;
-            border-radius: 3px;
-            overflow: hidden;
-            margin-left: 10px;
-        }
-
-        .uploaded-files li .progress-bar {
-            height: 100%;
-            background-color: #42a5f5;
         }
 
         #fileInput {
@@ -210,6 +202,7 @@
                             <div class="file-name">
                                 <img src="file-icon.png" alt="${file.type} Icon"> ${file.name}
                             </div>
+                            <div class="file-size">${formatFileSize(file.size)}</div>
                             <div class="delete-btn" onclick="removeFile(this)">🗑️</div>
                         `;
                         fileList.appendChild(listItem);
@@ -220,6 +213,17 @@
                     alert('Unsupported file format');
                 }
             }
+        }
+
+        function formatFileSize(bytes) {
+            const units = ['bytes', 'KB', 'MB', 'GB', 'TB'];
+            let unitIndex = 0;
+            let fileSize = bytes;
+            while (fileSize >= 1024 && unitIndex < units.length - 1) {
+                fileSize /= 1024;
+                unitIndex++;
+            }
+            return fileSize.toFixed(2) + ' ' + units[unitIndex];
         }
 
         function removeFile(element) {
