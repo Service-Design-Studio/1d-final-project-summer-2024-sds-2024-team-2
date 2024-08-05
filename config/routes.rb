@@ -19,7 +19,7 @@ Rails.application.routes.draw do
       get 'page2'
     end
     resources :documents, only: [:new, :create, :show, :edit, :update, :destroy]
-    resources :uploaded_files, only: [:index, :create, :destroy]
+    resources :uploaded_files, only: [:index, :create, :destroy, :update]
   end
 
   delete 'user_particulars/:user_particular_id/uploaded_files/:id', to: 'uploaded_files#destroy', as: 'destroy_uploaded_file'

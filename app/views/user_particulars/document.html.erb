@@ -15,7 +15,6 @@
             height: 100vh;
             justify-content: center;
         }
-
         .guide {
             background-color: #ffebee;
             padding: 10px;
@@ -26,17 +25,14 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
-
         .guide h2 {
             margin-top: 0;
             font-size: 20px;
         }
-
         .guide p, .guide ol {
             margin: 5px 0;
             font-size: 14px;
         }
-
         .upload-container {
             background: #fff;
             padding: 20px;
@@ -48,7 +44,6 @@
             justify-content: space-between;
             gap: 20px;
         }
-
         .upload-box {
             width: 45%;
             text-align: center;
@@ -60,16 +55,13 @@
             box-sizing: border-box;
             position: relative;
         }
-
         .upload-box:hover {
             border-color: #42a5f5;
             color: #42a5f5;
         }
-
         .upload-box .icon {
             font-size: 40px;
         }
-
         .upload-box button {
             background-color: #42a5f5;
             color: #fff;
@@ -79,23 +71,19 @@
             cursor: pointer;
             margin-top: 20px;
         }
-
         .upload-box button:hover {
             background-color: #1e88e5;
         }
-
         .uploaded-files {
             width: 45%;
             max-height: 300px;
             overflow-y: auto;
         }
-
         .uploaded-files ul {
             list-style: none;
             padding: 0;
             margin: 0;
         }
-
         .uploaded-files li {
             display: flex;
             flex-direction: column;
@@ -103,34 +91,34 @@
             border-bottom: 1px solid #f0f0f0;
             word-wrap: break-word;
         }
-
         .uploaded-files li .file-info {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex: 1;
         }
-
         .uploaded-files li .file-name {
             display: flex;
             align-items: center;
             flex: 1;
             overflow: hidden;
         }
-
         .uploaded-files li .file-size,
         .uploaded-files li .upload-date,
         .uploaded-files li .status {
             font-size: 12px;
             color: #666;
         }
-
         .uploaded-files li .delete-btn {
             color: #e57373;
             cursor: pointer;
             margin-left: 10px;
         }
-
+        .uploaded-files li .preview-btn {
+            color: #42a5f5;
+            cursor: pointer;
+            margin-left: 10px;
+        }
         .progress-bar {
             height: 5px;
             width: 100px;
@@ -139,22 +127,18 @@
             border-radius: 2px;
             overflow: hidden;
         }
-
         .progress-bar div {
             height: 100%;
             background-color: #42a5f5;
             width: 0;
         }
-
         #fileInput {
             display: none;
         }
-
         .file-description,
         .file-type {
             margin-top: 10px;
         }
-
         .file-type select {
             width: 100%;
             padding: 5px;
@@ -183,14 +167,6 @@
             <button id="browseBtn">Browse</button>
             <p>Supported files: PDF, DOC, DOCX, JPG</p>
             <input type="file" id="fileInput" multiple>
-            <input type="text" id="fileDescription" placeholder="Enter description" class="description">
-            <select id="fileType" class="document-type">
-                <option value="">Select type</option>
-                <option value="Education">Education</option>
-                <option value="Medical">Medical</option>
-                <option value="Personal Documents">Personal Documents</option>
-                <option value="Property">Property</option>
-            </select>
         </div>
         <div class="uploaded-files">
             <ul id="fileList">
@@ -205,8 +181,6 @@
         const browseBtn = document.getElementById('browseBtn');
         const fileList = document.getElementById('fileList');
         const noFilesMessage = document.getElementById('noFilesMessage');
-        const fileDescription = document.getElementById('fileDescription');
-        const fileType = document.getElementById('fileType');
 
         const supportedFormats = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg'];
         const maxFileSize = 5 * 1024 * 1024; // 5MB in bytes
@@ -240,18 +214,10 @@
         });
 
         function handleFiles(files) {
-            const description = fileDescription.value;
-            const type = fileType.value;
-
-            if (!description || !type) {
-                alert('Description and document type are required.');
-                return;
-            }
-
             for (const file of files) {
                 if (supportedFormats.includes(file.type)) {
                     if (file.size <= maxFileSize) {
-                        uploadFile(file, description, type);
+                        uploadFile(file);
                     } else {
                         alert('File size exceeds 5MB limit');
                     }
@@ -270,6 +236,8 @@
                     </div>
                     <div class="file-size">${formatFileSize(file.file_size)}</div>
                     <div class="upload-date">${file.upload_date}</div>
+                    <div class="status">${file.status}</div>
+                    <div class="preview-btn" data-url="${file.file_url}">🔍</div>
                     <div class="delete-btn" data-id="${file.id}">🗑️</div>
                 </div>
                 <div class="file-description">
@@ -288,6 +256,7 @@
                 noFilesMessage.remove();
             }
             fileList.appendChild(listItem);
+            attachUpdateEventHandlers();
         }
 
         function fetchFiles() {
@@ -310,14 +279,13 @@
             return fileSize.toFixed(2) + ' ' + units[unitIndex];
         }
 
-        function uploadFile(file, description, type) {
+        function uploadFile(file) {
             const formData = new FormData();
             formData.append('uploaded_file[file_path]', file);
             formData.append('uploaded_file[name]', file.name);
             formData.append('uploaded_file[file_type]', file.type);
             formData.append('uploaded_file[file_size]', file.size);
-            formData.append('uploaded_file[description]', description);
-            formData.append('uploaded_file[document_type]', type);
+            formData.append('uploaded_file[status]', 'Unverified'); // Set status to Unverified
 
             fetch(`/user_particulars/${userParticularId}/uploaded_files`, {
                 method: 'POST',
@@ -329,7 +297,7 @@
             .then(response => response.json())
             .then(file => {
                 if (!file.success) {
-                    alert(`Failed to upload file: ${file.errors.join(', ')}`);
+                    alert('Failed to upload file');
                 } else {
                     addFileToList(file.file);
                 }
@@ -337,11 +305,65 @@
             .catch(error => console.error('Error:', error));
         }
 
-        fileList.addEventListener('click', (event) => {
-            if (event.target.classList.contains('delete-btn')) {
-                removeFile(event.target);
-            }
-        });
+        function attachUpdateEventHandlers() {
+            document.querySelectorAll('.description').forEach(element => {
+                element.addEventListener('blur', (event) => {
+                    updateFileDescription(event.target.dataset.id, event.target.value);
+                });
+            });
+
+            document.querySelectorAll('.document-type').forEach(element => {
+                element.addEventListener('change', (event) => {
+                    updateFileType(event.target.dataset.id, event.target.value);
+                });
+            });
+
+            document.querySelectorAll('.delete-btn').forEach(element => {
+                element.addEventListener('click', (event) => {
+                    removeFile(event.target);
+                });
+            });
+
+            document.querySelectorAll('.preview-btn').forEach(element => {
+                element.addEventListener('click', (event) => {
+                    previewFile(event.target.dataset.url);
+                });
+            });
+        }
+
+        function updateFileDescription(fileId, description) {
+            fetch(`/user_particulars/${userParticularId}/uploaded_files/${fileId}`, {
+                method: 'PATCH',
+                headers: {
+                    'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ uploaded_file: { description } })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    alert('Failed to update file description');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function updateFileType(fileId, document_type) {
+            fetch(`/user_particulars/${userParticularId}/uploaded_files/${fileId}`, {
+                method: 'PATCH',
+                headers: {
+                    'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ uploaded_file: { document_type } })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    alert('Failed to update file type');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
 
         function removeFile(element) {
             const listItem = element.parentElement.parentElement;
@@ -364,6 +386,10 @@
                 }
             })
             .catch(error => console.error('Error:', error));
+        }
+
+        function previewFile(url) {
+            window.open(url, '_blank');
         }
     </script>
 </body>
