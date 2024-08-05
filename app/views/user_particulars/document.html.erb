@@ -186,6 +186,33 @@
         <div class="uploaded-files">
             <ul id="fileList">
                 <!-- Uploaded files will appear here -->
+                <% if @uploaded_files.present? %>
+                    <% @uploaded_files.each do |file| %>
+                        <li>
+                            <div class="file-info">
+                                <div class="file-name">
+                                    <img src="file-icon.png" alt="<%= file.file_type %> Icon"> <%= file.name %>
+                                </div>
+                                <div class="file-size"><%= number_to_human_size(file.file_size) %></div>
+                                <div class="delete-btn" data-id="<%= file.id %>">🗑️</div>
+                            </div>
+                            <div class="upload-date">Uploaded on: <%= file.created_at.strftime("%d/%m/%y") %></div>
+                            <div class="status">Status: Unverified</div>
+                            <input type="text" class="description" placeholder="Enter description" value="<%= file.description %>">
+                            <div class="document-type">
+                                <select>
+                                    <option value="education" <%= 'selected' if file.document_type == 'education' %>>Education</option>
+                                    <option value="medical" <%= 'selected' if file.document_type == 'medical' %>>Medical</option>
+                                    <option value="personal" <%= 'selected' if file.document_type == 'personal' %>>Personal Documents</option>
+                                    <option value="property" <%= 'selected' if file.document_type == 'property' %>>Property</option>
+                                </select>
+                            </div>
+                            <button class="preview-btn" onclick="window.open('<%= file.file_path.url %>', '_blank')">Preview</button>
+                        </li>
+                    <% end %>
+                <% else %>
+                    <p>No files uploaded yet.</p>
+                <% end %>
             </ul>
         </div>
     </div>
@@ -224,34 +251,50 @@
         });
 
         function handleFiles(files) {
-            const uploadDate = getCurrentDate();
             for (const file of files) {
                 if (supportedFormats.includes(file.type)) {
                     if (file.size <= maxFileSize) {
-                        const fileUrl = URL.createObjectURL(file);
-                        const listItem = document.createElement('li');
-                        listItem.innerHTML = `
-                            <div class="file-info">
-                                <div class="file-name">
-                                    <img src="file-icon.png" alt="${file.type} Icon"> ${file.name}
+                        const formData = new FormData();
+                        formData.append('uploaded_file[file_path]', file);
+                        formData.append('uploaded_file[name]', file.name);
+                        formData.append('uploaded_file[file_type]', file.type);
+                        formData.append('uploaded_file[file_size]', file.size);
+
+                        fetch('<%= user_particular_uploaded_files_path(@user_particular) %>', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            },
+                            body: formData
+                        })
+                        .then(response => response.json())
+                        .then(file => {
+                            const fileUrl = file.file_path.url;
+                            const listItem = document.createElement('li');
+                            listItem.innerHTML = `
+                                <div class="file-info">
+                                    <div class="file-name">
+                                        <img src="file-icon.png" alt="${file.file_type} Icon"> ${file.name}
+                                    </div>
+                                    <div class="file-size">${formatFileSize(file.file_size)}</div>
+                                    <div class="delete-btn" data-id="${file.id}">🗑️</div>
                                 </div>
-                                <div class="file-size">${formatFileSize(file.size)}</div>
-                                <div class="delete-btn" onclick="removeFile(this)">🗑️</div>
-                            </div>
-                            <div class="upload-date">Uploaded on: ${uploadDate}</div>
-                            <div class="status">Status: Unverified</div>
-                            <input type="text" class="description" placeholder="Enter description">
-                            <div class="document-type">
-                                <select>
-                                    <option value="education">Education</option>
-                                    <option value="medical">Medical</option>
-                                    <option value="personal">Personal Documents</option>
-                                    <option value="property">Property</option>
-                                </select>
-                            </div>
-                            <button class="preview-btn" onclick="window.open('${fileUrl}', '_blank')">Preview</button>
-                        `;
-                        fileList.appendChild(listItem);
+                                <div class="upload-date">Uploaded on: ${getCurrentDate()}</div>
+                                <div class="status">Status: Unverified</div>
+                                <input type="text" class="description" placeholder="Enter description">
+                                <div class="document-type">
+                                    <select>
+                                        <option value="education">Education</option>
+                                        <option value="medical">Medical</option>
+                                        <option value="personal">Personal Documents</option>
+                                        <option value="property">Property</option>
+                                    </select>
+                                </div>
+                                <button class="preview-btn" onclick="window.open('${fileUrl}', '_blank')">Preview</button>
+                            `;
+                            fileList.appendChild(listItem);
+                        })
+                        .catch(error => console.error('Error:', error));
                     } else {
                         alert('File size exceeds 5MB limit');
                     }
@@ -282,7 +325,22 @@
 
         function removeFile(element) {
             const listItem = element.parentElement.parentElement;
-            listItem.remove();
+            const fileId = element.getAttribute('data-id');
+
+            fetch(`/user_particulars/<%= @user_particular.id %>/uploaded_files/${fileId}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    listItem.remove();
+                } else {
+                    alert('Failed to delete file');
+                }
+            })
+            .catch(error => console.error('Error:', error));
         }
     </script>
 </body>
