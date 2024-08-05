@@ -123,8 +123,6 @@ class UserParticularsController < ApplicationController
     @user_history = UserHistory.where(user_id: params[:id]).order(updated_at: :desc)
   end
 
-  private
-
   def set_user_particular
     @user_particular = current_user.user_particular
   end
@@ -257,9 +255,11 @@ class UserParticularsController < ApplicationController
   end
 
   def saved_post
+    logger.debug 'Entering Saved Posts' # Check if the bulletins are being fetched
     @back_path = root_path
     @user_particular = current_user.user_particular
     @bulletins = Bulletin.joins(:saved_posts).where(saved_posts: { user_id: current_user.id })
+    logger.debug "Bulletins: #{@bulletins}" # Check if the bulletins are being fetched
     flash[:notice] = 'There are no saved posts!' if @bulletins.empty?
     @on_saved_page = true
   end
@@ -268,11 +268,11 @@ class UserParticularsController < ApplicationController
     @back_path = user_particular_path
     @user = current_user.user_particular
     @ngo_users = if params[:search].present?
-                    NgoUser.joins(:ngo_services)
-                    .where('ngo_services.services LIKE ?', "%#{params[:search]}%")
-                    .distinct
+                   NgoUser.joins(:ngo_services)
+                          .where('ngo_services.services LIKE ?', "%#{params[:search]}%")
+                          .distinct
                  else
-                  NgoUser.all
+                   NgoUser.all
                  end
   end
 
