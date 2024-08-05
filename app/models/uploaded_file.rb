@@ -1,5 +1,5 @@
 class UploadedFile < ApplicationRecord
-  belongs_to :user
+  belongs_to :user_particular
 
-  validates :file_name, :file_path, :file_type, :file_size, presence: true
+  validates :name, :file_path, :file_type, :file_size, presence: true
 end
