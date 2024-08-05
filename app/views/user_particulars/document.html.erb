@@ -36,6 +36,7 @@
             color: #90a4ae;
             cursor: pointer;
             box-sizing: border-box;
+            position: relative;
         }
 
         .upload-box:hover {
@@ -113,54 +114,86 @@
             height: 100%;
             background-color: #42a5f5;
         }
+
+        #fileInput {
+            display: none;
+        }
     </style>
 </head>
 <body>
     <div class="upload-container">
-        <div class="upload-box">
+        <div class="upload-box" id="uploadBox">
             <div class="icon">⬆️</div>
             <p>Drag and Drop files to upload or</p>
-            <button>Browse</button>
-            <p>Supported files: AI, PSD, PDF</p>
+            <button id="browseBtn">Browse</button>
+            <p>Supported files: PDF, DOC, DOCX, JPG</p>
+            <input type="file" id="fileInput" multiple>
         </div>
         <div class="uploaded-files">
-            <ul>
-                <li>
-                    <div class="file-name">
-                        <img src="psd-icon.png" alt="PSD Icon"> final.psd
-                    </div>
-                    <div class="delete-btn">🗑️</div>
-                </li>
-                <li>
-                    <div class="file-name">
-                        <img src="pdf-icon.png" alt="PDF Icon"> brief_for_logo.pdf
-                    </div>
-                    <div class="delete-btn">🗑️</div>
-                </li>
-                <li>
-                    <div class="file-name">
-                        <img src="ai-icon.png" alt="AI Icon"> logo_presentation_in_progress.ai
-                    </div>
-                    <div class="delete-btn">🗑️</div>
-                </li>
-                <li>
-                    <div class="file-name">
-                        <img src="png-icon.png" alt="PNG Icon"> logo_mockup.png
-                    </div>
-                    <div class="progress">
-                        <div class="progress-bar" style="width: 70%;"></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="file-name">
-                        <img src="ai-icon.png" alt="AI Icon"> logo_final.ai
-                    </div>
-                    <div class="progress">
-                        <div class="progress-bar" style="width: 50%;"></div>
-                    </div>
-                </li>
+            <ul id="fileList">
+                <!-- Uploaded files will appear here -->
             </ul>
         </div>
     </div>
+
+    <script>
+        const uploadBox = document.getElementById('uploadBox');
+        const fileInput = document.getElementById('fileInput');
+        const browseBtn = document.getElementById('browseBtn');
+        const fileList = document.getElementById('fileList');
+
+        const supportedFormats = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg'];
+        const maxFileSize = 5 * 1024 * 1024; // 5MB in bytes
+
+        browseBtn.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (event) => {
+            handleFiles(event.target.files);
+        });
+
+        uploadBox.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            uploadBox.style.borderColor = '#42a5f5';
+        });
+
+        uploadBox.addEventListener('dragleave', () => {
+            uploadBox.style.borderColor = '#d9e3f0';
+        });
+
+        uploadBox.addEventListener('drop', (event) => {
+            event.preventDefault();
+            uploadBox.style.borderColor = '#d9e3f0';
+            const files = event.dataTransfer.files;
+            handleFiles(files);
+        });
+
+        function handleFiles(files) {
+            for (const file of files) {
+                if (supportedFormats.includes(file.type)) {
+                    if (file.size <= maxFileSize) {
+                        const listItem = document.createElement('li');
+                        listItem.innerHTML = `
+                            <div class="file-name">
+                                <img src="file-icon.png" alt="${file.type} Icon"> ${file.name}
+                            </div>
+                            <div class="delete-btn" onclick="removeFile(this)">🗑️</div>
+                        `;
+                        fileList.appendChild(listItem);
+                    } else {
+                        alert('File size exceeds 5MB limit');
+                    }
+                } else {
+                    alert('Unsupported file format');
+                }
+            }
+        }
+
+        function removeFile(element) {
+            const listItem = element.parentElement;
+            listItem.remove();
+        }
+    </script>
 </body>
 </html>
