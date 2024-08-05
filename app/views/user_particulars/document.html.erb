@@ -129,6 +129,12 @@
             color: #666;
         }
 
+        .uploaded-files li .description {
+            margin-top: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
         .uploaded-files li .delete-btn {
             color: #e57373;
             cursor: pointer;
@@ -216,6 +222,7 @@
                             </div>
                             <div class="upload-date">Uploaded on: ${uploadDate}</div>
                             <div class="status">Status: Unverified</div>
+                            <input type="text" class="description" placeholder="Enter description">
                         `;
                         fileList.appendChild(listItem);
                     } else {
