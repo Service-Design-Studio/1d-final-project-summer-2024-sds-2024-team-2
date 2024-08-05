@@ -18,12 +18,15 @@ class UploadedFilesController < ApplicationController
 
   def create
     Rails.logger.debug "Uploaded file params: #{uploaded_file_params.inspect}"
-    @uploaded_file = @user_particular.uploaded_files.new(uploaded_file_params.except(:status))
-    @uploaded_file.status = 'Unverified' # Set status to Unverified after initialization
+    @uploaded_file = @user_particular.uploaded_files.new(uploaded_file_params)
+    @uploaded_file.user_id = current_user.id if current_user # Ensure user_id is set
+    @uploaded_file.status ||= 'Unverified' # Ensure status is set
 
     if @uploaded_file.save
+      Rails.logger.debug "Uploaded file saved successfully: #{@uploaded_file.inspect}"
       render json: { success: true, file: @uploaded_file }, status: :created
     else
+      Rails.logger.debug "Failed to save uploaded file: #{@uploaded_file.errors.full_messages.inspect}"
       render json: { success: false, errors: @uploaded_file.errors.full_messages }, status: :unprocessable_entity
     end
   end
@@ -52,6 +55,6 @@ class UploadedFilesController < ApplicationController
   end
 
   def uploaded_file_params
-    params.require(:uploaded_file).permit(:file_path, :name, :file_type, :file_size, :description, :document_type)
+    params.require(:uploaded_file).permit(:file_path, :name, :file_type, :file_size, :description, :document_type, :status)
   end
 end

@@ -241,7 +241,7 @@
                     <div class="delete-btn" data-id="${file.id}">🗑️</div>
                 </div>
                 <div class="file-description">
-                    <input type="text" placeholder="Enter description" class="description" data-id="${file.id}" value="${file.description}">
+                    <input type="text" placeholder="Enter description" class="description" data-id="${file.id}" value="${file.description || ''}">
                 </div>
                 <div class="file-type">
                     <select class="document-type" data-id="${file.id}">
@@ -285,6 +285,7 @@
             formData.append('uploaded_file[name]', file.name);
             formData.append('uploaded_file[file_type]', file.type);
             formData.append('uploaded_file[file_size]', file.size);
+            formData.append('uploaded_file[status]', 'Unverified');
 
             fetch(`/user_particulars/${userParticularId}/uploaded_files`, {
                 method: 'POST',
