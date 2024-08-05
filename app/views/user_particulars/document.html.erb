@@ -129,7 +129,8 @@
             color: #666;
         }
 
-        .uploaded-files li .description {
+        .uploaded-files li .description,
+        .uploaded-files li .document-type {
             margin-top: 5px;
             width: 100%;
             box-sizing: border-box;
@@ -142,6 +143,10 @@
 
         #fileInput {
             display: none;
+        }
+
+        .document-type select {
+            width: 100%;
         }
     </style>
 </head>
@@ -223,6 +228,14 @@
                             <div class="upload-date">Uploaded on: ${uploadDate}</div>
                             <div class="status">Status: Unverified</div>
                             <input type="text" class="description" placeholder="Enter description">
+                            <div class="document-type">
+                                <select>
+                                    <option value="education">Education</option>
+                                    <option value="medical">Medical</option>
+                                    <option value="personal">Personal Documents</option>
+                                    <option value="property">Property</option>
+                                </select>
+                            </div>
                         `;
                         fileList.appendChild(listItem);
                     } else {
