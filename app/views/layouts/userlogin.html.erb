@@ -17,8 +17,9 @@
   </head> 
   <body class="d-flex flex-column min-vh-100" style="overflow-x:hidden;">
     <h4 class="text-center py-2" style="background-color: #f1536a; color: white; margin-bottom:0;">Account Login/Registering</h4>
-    <div style='font-size: 0.7em;'>
+    <div class="container-fluid" style='font-size: 0.7em;'>
       <!--Display messages at the top of the page-->
+      <!--
       <%- if flash[:notice] %>
         <div class="alert alert-info text-center"><%= flash[:notice] %></div>
       <%- elsif flash[:success] %>
@@ -35,6 +36,7 @@
           <% end %>
         </div>
       <% end %>
+      -->
     </div>
 
     <%= yield %>
