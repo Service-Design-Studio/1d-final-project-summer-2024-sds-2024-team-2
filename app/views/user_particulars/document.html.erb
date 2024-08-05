@@ -96,11 +96,17 @@
 
         .uploaded-files li {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
             padding: 10px 0;
             border-bottom: 1px solid #f0f0f0;
             word-wrap: break-word;
+        }
+
+        .uploaded-files li .file-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
         }
 
         .uploaded-files li .file-name {
@@ -116,8 +122,8 @@
             margin-right: 10px;
         }
 
-        .uploaded-files li .file-size {
-            margin-left: 10px;
+        .uploaded-files li .file-size,
+        .uploaded-files li .upload-date {
             font-size: 12px;
             color: #666;
         }
@@ -194,16 +200,20 @@
         });
 
         function handleFiles(files) {
+            const uploadDate = getCurrentDate();
             for (const file of files) {
                 if (supportedFormats.includes(file.type)) {
                     if (file.size <= maxFileSize) {
                         const listItem = document.createElement('li');
                         listItem.innerHTML = `
-                            <div class="file-name">
-                                <img src="file-icon.png" alt="${file.type} Icon"> ${file.name}
+                            <div class="file-info">
+                                <div class="file-name">
+                                    <img src="file-icon.png" alt="${file.type} Icon"> ${file.name}
+                                </div>
+                                <div class="file-size">${formatFileSize(file.size)}</div>
+                                <div class="delete-btn" onclick="removeFile(this)">🗑️</div>
                             </div>
-                            <div class="file-size">${formatFileSize(file.size)}</div>
-                            <div class="delete-btn" onclick="removeFile(this)">🗑️</div>
+                            <div class="upload-date">Uploaded on: ${uploadDate}</div>
                         `;
                         fileList.appendChild(listItem);
                     } else {
@@ -226,8 +236,16 @@
             return fileSize.toFixed(2) + ' ' + units[unitIndex];
         }
 
+        function getCurrentDate() {
+            const date = new Date();
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+            const year = String(date.getFullYear()).slice(-2);
+            return `${day}/${month}/${year}`;
+        }
+
         function removeFile(element) {
-            const listItem = element.parentElement;
+            const listItem = element.parentElement.parentElement;
             listItem.remove();
         }
     </script>
