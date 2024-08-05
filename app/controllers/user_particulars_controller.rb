@@ -1,3 +1,4 @@
+# app/controllers/user_particulars_controller.rb
 class UserParticularsController < ApplicationController
   include UserParticularsHelper
   before_action :authenticate_user!
@@ -9,12 +10,11 @@ class UserParticularsController < ApplicationController
     logger.debug "Flash check: #{flash[:notice]}"
     @bulletins = Bulletin.all.order(updated_at: :desc)
   end
-  # No need for content when using @user_particular from before_action
 
   def document
+    @uploaded_files = @user_particular.uploaded_files
     @back_path = root_path
   end
-  # No need for content when using @user_particular from before_action
 
   def create
     user_particular_temp = UserParticular.new(user_particular_params) # The Model object to store the hidden keyed params
@@ -23,7 +23,6 @@ class UserParticularsController < ApplicationController
     error_messages_arr = validate_user_particulars(user_particular_temp)
     flash[:error] = error_messages_arr
 
-    # Check if validation passes
     if error_messages_arr.empty?
       @user_particular = UserParticular.create(user_particular_params)
 
@@ -40,22 +39,19 @@ class UserParticularsController < ApplicationController
         )
 
         flash[:success] = 'Digital ID was successfully created!'
-        redirect_to @user_particular # redirects to /user_particulars/:id
+        redirect_to @user_particular
       else
         flash[:error_message] = 'Digital ID creation failed. Please try again.'
-        redirect_to user_particulars_confirm_path(user_particular: user_particular_params) # pass user_particular_params into params of confirm action
+        redirect_to user_particulars_confirm_path(user_particular: user_particular_params)
       end
     else
-      # Failed validation
-      # pass user_particular_params into params of confirm action
       flash[:error_message] = 'Digital ID creation failed. Please try again.'
-      redirect_to user_particulars_confirm_path(user_particular: user_particular_params) # pass user_particular_params into params of confirm action
+      redirect_to user_particulars_confirm_path(user_particular: user_particular_params)
     end
   end
 
   def new
     @back_path = root_path
-    # Fill up form with previously filled up data, if not create empty object
     @user_particular = if session[:user_particular_params].present?
                          UserParticular.new(session[:user_particular_params])
                        else
@@ -77,10 +73,8 @@ class UserParticularsController < ApplicationController
     flash[:error] = error_messages_arr
 
     if error_messages_arr.empty?
-      # Render confirm if validation passes
       render :confirm
     else
-      # Render error message(s) in form if validation fails
       flash[:error_message] = 'Please fix the error(s) below:'
       redirect_to new_user_particular_path
     end
@@ -90,11 +84,9 @@ class UserParticularsController < ApplicationController
     @back_path = root_path
     set_dropdown_options
 
-    # if user updated form with invalid parameters
     if params[:user_particular]
       @user_particular = UserParticular.new(user_particular_params)
-      @user_particular.id = params[:id] # Required for error flow
-    # user is editing the form from scratch
+      @user_particular.id = params[:id]
     else
       @user_particular = UserParticular.find_by(id: params[:id])
     end
@@ -108,7 +100,6 @@ class UserParticularsController < ApplicationController
     error_messages_arr = user_particular_errors + dropdown_errors
     flash[:error] = error_messages_arr
 
-    # Check if validation passes
     if error_messages_arr.empty?
       @user_particular = UserParticular.find_by(id: params[:id])
 
@@ -122,7 +113,6 @@ class UserParticularsController < ApplicationController
         redirect_to edit_user_particular_path(params[:id], user_particular: user_particular_params)
       end
     else
-      # Failed validation
       flash[:error_message] = 'Edit failed. Please fix the error(s) below:'
       redirect_to edit_user_particular_path(params[:id], user_particular: user_particular_params)
     end
@@ -133,7 +123,8 @@ class UserParticularsController < ApplicationController
     @user_history = UserHistory.where(user_id: params[:id]).order(updated_at: :desc)
   end
 
-  # Retrieves user particular object linked to user object
+  private
+
   def set_user_particular
     @user_particular = current_user.user_particular
   end
@@ -144,14 +135,11 @@ class UserParticularsController < ApplicationController
                                             :photo_url, :birth_certificate_url, :passport_url, :user_id,
                                             :phone_number_country_code, :secondary_phone_number_country_code,
                                             :full_phone_number, :full_secondary_phone_number, :status, :profile_picture).tap do |whitelisted|
-      # Check if ethnicity, religion, or gender is "Others" and replace with values from others hash if present
       if whitelisted[:ethnicity] == 'Others' && params[:others].present?
-        whitelisted[:ethnicity] =
-          params[:others][:ethnicity]
+        whitelisted[:ethnicity] = params[:others][:ethnicity]
       end
       if whitelisted[:religion] == 'Others' && params[:others].present?
-        whitelisted[:religion] =
-          params[:others][:religion]
+        whitelisted[:religion] = params[:others][:religion]
       end
       whitelisted[:gender] = params[:others][:gender] if whitelisted[:gender] == 'Others' && params[:others].present?
     end

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 Rails.application.routes.draw do
   get 'user_histories/create'
   # Set root path of web app
@@ -25,7 +23,8 @@ Rails.application.routes.draw do
       get 'saved_post'
       get 'page2'
     end
-    resources :documents, only: %i[new create show edit update destroy]
+    resources :documents, only: [:new, :create, :show, :edit, :update, :destroy]
+    resources :uploaded_files, only: [:index, :create, :destroy]
   end
 
   # Resources for NGO users with custom member routes for verification and inbox
