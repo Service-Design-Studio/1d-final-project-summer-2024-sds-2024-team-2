@@ -7,32 +7,58 @@
     <style>
         body {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            height: 100vh;
             background-color: #f5f5f5;
             margin: 0;
             font-family: Arial, sans-serif;
+            height: 100vh;
+            justify-content: center;
+        }
+
+        .guide {
+            background-color: #ffebee;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            width: 90%;
+            max-width: 900px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .guide h2 {
+            margin-top: 0;
+            font-size: 20px;
+        }
+
+        .guide p, .guide ol {
+            margin: 5px 0;
+            font-size: 14px;
         }
 
         .upload-container {
             background: #fff;
             padding: 20px;
             border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            width: 500px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 900px;
             display: flex;
             justify-content: space-between;
+            gap: 20px;
         }
 
         .upload-box {
-            width: 48%;
+            width: 45%;
             text-align: center;
             padding: 20px;
             border: 2px dashed #d9e3f0;
             border-radius: 10px;
             color: #90a4ae;
             cursor: pointer;
+            box-sizing: border-box;
+            position: relative;
         }
 
         .upload-box:hover {
@@ -59,99 +85,302 @@
         }
 
         .uploaded-files {
-            width: 48%;
+            width: 45%;
+            max-height: 300px;
+            overflow-y: auto;
         }
 
         .uploaded-files ul {
             list-style: none;
             padding: 0;
+            margin: 0;
         }
 
         .uploaded-files li {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
             padding: 10px 0;
             border-bottom: 1px solid #f0f0f0;
+            word-wrap: break-word;
+        }
+
+        .uploaded-files li .file-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex: 1;
         }
 
         .uploaded-files li .file-name {
             display: flex;
             align-items: center;
+            flex: 1;
+            overflow: hidden;
         }
 
-        .uploaded-files li .file-name img {
-            width: 24px;
-            height: 24px;
-            margin-right: 10px;
+        .uploaded-files li .file-size,
+        .uploaded-files li .upload-date,
+        .uploaded-files li .status {
+            font-size: 12px;
+            color: #666;
         }
 
         .uploaded-files li .delete-btn {
             color: #e57373;
             cursor: pointer;
-        }
-
-        .uploaded-files li .progress {
-            width: 100px;
-            height: 5px;
-            background-color: #d9e3f0;
-            border-radius: 3px;
-            overflow: hidden;
             margin-left: 10px;
         }
 
-        .uploaded-files li .progress-bar {
+        .progress-bar {
+            height: 5px;
+            width: 100px;
+            background-color: #f0f0f0;
+            margin-left: 10px;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-bar div {
             height: 100%;
             background-color: #42a5f5;
+            width: 0;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .file-description,
+        .file-type {
+            margin-top: 10px;
+        }
+
+        .file-type select {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #d9e3f0;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
+    <div class="guide">
+        <h2>File Upload Guide</h2>
+        <p>Follow the instructions below to upload your documents:</p>
+        <ol>
+            <li>Drag and drop your files into the designated area or click the "Browse" button to select files from your computer.</li>
+            <li>Supported file formats are PDF, DOC, DOCX, and JPG.</li>
+            <li>The maximum file size allowed is 5MB.</li>
+            <li>After selecting the files, they will be automatically uploaded and listed on the right side.</li>
+            <li>You can remove any file by clicking the delete button (🗑️) next to the file name.</li>
+        </ol>
+    </div>
+
     <div class="upload-container">
-        <div class="upload-box">
+        <div class="upload-box" id="uploadBox">
             <div class="icon">⬆️</div>
             <p>Drag and Drop files to upload or</p>
-            <button>Browse</button>
-            <p>Supported files: AI, PSD, PDF</p>
+            <button id="browseBtn">Browse</button>
+            <p>Supported files: PDF, DOC, DOCX, JPG</p>
+            <input type="file" id="fileInput" multiple>
         </div>
         <div class="uploaded-files">
-            <ul>
-                <li>
-                    <div class="file-name">
-                        <img src="psd-icon.png" alt="PSD Icon"> final.psd
-                    </div>
-                    <div class="delete-btn">🗑️</div>
-                </li>
-                <li>
-                    <div class="file-name">
-                        <img src="pdf-icon.png" alt="PDF Icon"> brief_for_logo.pdf
-                    </div>
-                    <div class="delete-btn">🗑️</div>
-                </li>
-                <li>
-                    <div class="file-name">
-                        <img src="ai-icon.png" alt="AI Icon"> logo_presentation_in_progress.ai
-                    </div>
-                    <div class="delete-btn">🗑️</div>
-                </li>
-                <li>
-                    <div class="file-name">
-                        <img src="png-icon.png" alt="PNG Icon"> logo_mockup.png
-                    </div>
-                    <div class="progress">
-                        <div class="progress-bar" style="width: 70%;"></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="file-name">
-                        <img src="ai-icon.png" alt="AI Icon"> logo_final.ai
-                    </div>
-                    <div class="progress">
-                        <div class="progress-bar" style="width: 50%;"></div>
-                    </div>
-                </li>
+            <ul id="fileList">
+                <p id="noFilesMessage">No files uploaded yet.</p>
             </ul>
         </div>
     </div>
+
+    <script>
+        const uploadBox = document.getElementById('uploadBox');
+        const fileInput = document.getElementById('fileInput');
+        const browseBtn = document.getElementById('browseBtn');
+        const fileList = document.getElementById('fileList');
+        const noFilesMessage = document.getElementById('noFilesMessage');
+
+        const supportedFormats = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg'];
+        const maxFileSize = 5 * 1024 * 1024; // 5MB in bytes
+
+        document.addEventListener('DOMContentLoaded', fetchFiles);
+
+        browseBtn.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (event) => {
+            handleFiles(event.target.files);
+        });
+
+        uploadBox.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            uploadBox.style.borderColor = '#42a5f5';
+        });
+
+        uploadBox.addEventListener('dragleave', () => {
+            uploadBox.style.borderColor = '#d9e3f0';
+        });
+
+        uploadBox.addEventListener('drop', (event) => {
+            event.preventDefault();
+            uploadBox.style.borderColor = '#d9e3f0';
+            const files = event.dataTransfer.files;
+            handleFiles(files);
+        });
+
+        function handleFiles(files) {
+            for (const file of files) {
+                if (supportedFormats.includes(file.type)) {
+                    if (file.size <= maxFileSize) {
+                        addFileToList(file);
+                    } else {
+                        alert('File size exceeds 5MB limit');
+                    }
+                } else {
+                    alert('Unsupported file format');
+                }
+            }
+        }
+
+        function addFileToList(file) {
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `
+                <div class="file-info">
+                    <div class="file-name">
+                        ${file.name}
+                    </div>
+                    <div class="file-size">${formatFileSize(file.size)}</div>
+                    <div class="delete-btn" data-id="${file.name}">🗑️</div>
+                </div>
+                <div class="file-description">
+                    <input type="text" placeholder="Enter description" class="description" data-id="${file.name}">
+                </div>
+                <div class="file-type">
+                    <select class="document-type" data-id="${file.name}">
+                        <option value="Education">Education</option>
+                        <option value="Medical">Medical</option>
+                        <option value="Personal Documents">Personal Documents</option>
+                        <option value="Property">Property</option>
+                    </select>
+                </div>
+            `;
+            if (noFilesMessage) {
+                noFilesMessage.remove();
+            }
+            fileList.appendChild(listItem);
+
+            const descriptionInput = listItem.querySelector('.description');
+            const documentTypeSelect = listItem.querySelector('.document-type');
+
+            descriptionInput.addEventListener('blur', () => {
+                file.description = descriptionInput.value;
+            });
+
+            documentTypeSelect.addEventListener('change', () => {
+                file.documentType = documentTypeSelect.value;
+            });
+
+            uploadFile(file);
+        }
+
+        function fetchFiles() {
+            fetch('/user_particulars/1/uploaded_files')
+                .then(response => response.json())
+                .then(files => {
+                    files.forEach(file => {
+                        const listItem = document.createElement('li');
+                        listItem.innerHTML = `
+                            <div class="file-info">
+                                <div class="file-name">
+                                    ${file.name}
+                                </div>
+                                <div class="file-size">${formatFileSize(file.file_size)}</div>
+                                <div class="delete-btn" data-id="${file.id}">🗑️</div>
+                            </div>
+                            <div class="file-description">
+                                <input type="text" placeholder="Enter description" class="description" data-id="${file.id}" value="${file.description}">
+                            </div>
+                            <div class="file-type">
+                                <select class="document-type" data-id="${file.id}">
+                                    <option value="Education" ${file.document_type === 'Education' ? 'selected' : ''}>Education</option>
+                                    <option value="Medical" ${file.document_type === 'Medical' ? 'selected' : ''}>Medical</option>
+                                    <option value="Personal Documents" ${file.document_type === 'Personal Documents' ? 'selected' : ''}>Personal Documents</option>
+                                    <option value="Property" ${file.document_type === 'Property' ? 'selected' : ''}>Property</option>
+                                </select>
+                            </div>
+                        `;
+                        if (noFilesMessage) {
+                            noFilesMessage.remove();
+                        }
+                        fileList.appendChild(listItem);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function formatFileSize(bytes) {
+            const units = ['bytes', 'KB', 'MB', 'GB', 'TB'];
+            let unitIndex = 0;
+            let fileSize = bytes;
+            while (fileSize >= 1024 && unitIndex < units.length - 1) {
+                fileSize /= 1024;
+                unitIndex++;
+            }
+            return fileSize.toFixed(2) + ' ' + units[unitIndex];
+        }
+
+        function uploadFile(file) {
+            const formData = new FormData();
+            formData.append('uploaded_file[file_path]', file);
+            formData.append('uploaded_file[name]', file.name);
+            formData.append('uploaded_file[file_type]', file.type);
+            formData.append('uploaded_file[file_size]', file.size);
+            formData.append('uploaded_file[description]', file.description || '');
+            formData.append('uploaded_file[document_type]', file.documentType || '');
+
+            fetch('/user_particulars/1/uploaded_files', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(file => {
+                if (!file.success) {
+                    alert('Failed to upload file');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        fileList.addEventListener('click', (event) => {
+            if (event.target.classList.contains('delete-btn')) {
+                removeFile(event.target);
+            }
+        });
+
+        function removeFile(element) {
+            const listItem = element.parentElement.parentElement;
+            const fileId = element.getAttribute('data-id');
+
+            fetch(`/uploaded_files/${fileId}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    listItem.remove();
+                    if (!fileList.querySelector('li')) {
+                        fileList.innerHTML = '<p id="noFilesMessage">No files uploaded yet.</p>';
+                    }
+                } else {
+                    alert('Failed to delete file');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
 </body>
 </html>
