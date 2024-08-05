@@ -4,26 +4,28 @@ class UploadedFilesController < ApplicationController
 
   def create
     uploaded_file = params[:uploaded_file][:file_path]
-    name = uploaded_file.original_filename
-    file_path = Rails.root.join('public', 'uploads', SecureRandom.uuid, name)  # Example path, adjust as needed
+    file_name = uploaded_file.original_filename
+    file_path = Rails.root.join('public', 'uploads', SecureRandom.uuid, file_name)
     file_type = uploaded_file.content_type
     file_size = uploaded_file.size
+    description = params[:uploaded_file][:description]
+    document_type = params[:uploaded_file][:document_type]
 
-    # Save file to storage (local or cloud)
     FileUtils.mkdir_p(File.dirname(file_path))
     File.open(file_path, 'wb') do |file|
       file.write(uploaded_file.read)
     end
 
-    # Save file metadata to database
-    @user_particular.uploaded_files.create!(
-      name: name,
+    @user_particular.uploaded_files.create(
+      name: file_name,
       file_path: file_path.to_s,
       file_type: file_type,
-      file_size: file_size
+      file_size: file_size,
+      description: description,
+      document_type: document_type
     )
 
-    render json: { success: true, file: { name: name, path: file_path.to_s, type: file_type, size: file_size } }, status: :created
+    render json: { success: true, file: { name: file_name, path: file_path.to_s, type: file_type, size: file_size, description: description, document_type: document_type } }, status: :created
   end
 
   def index
@@ -41,6 +43,6 @@ class UploadedFilesController < ApplicationController
   private
 
   def set_user_particular
-    @user_particular = current_user.user_particular
+    @user_particular = UserParticular.find(params[:user_particular_id])
   end
 end

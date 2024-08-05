@@ -98,16 +98,10 @@
 
         .uploaded-files li {
             display: flex;
-            align-items: center;
+            flex-direction: column;
             padding: 10px 0;
             border-bottom: 1px solid #f0f0f0;
             word-wrap: break-word;
-        }
-
-        .uploaded-files li img {
-            width: 24px;
-            height: 24px;
-            margin-right: 10px;
         }
 
         .uploaded-files li .file-info {
@@ -154,6 +148,18 @@
 
         #fileInput {
             display: none;
+        }
+
+        .file-description,
+        .file-type {
+            margin-top: 10px;
+        }
+
+        .file-type select {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #d9e3f0;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -225,28 +231,7 @@
             for (const file of files) {
                 if (supportedFormats.includes(file.type)) {
                     if (file.size <= maxFileSize) {
-                        const formData = new FormData();
-                        formData.append('uploaded_file[file_path]', file);
-                        formData.append('uploaded_file[name]', file.name);
-                        formData.append('uploaded_file[file_type]', file.type);
-                        formData.append('uploaded_file[file_size]', file.size);
-
-                        fetch('/user_particulars/1/uploaded_files', {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                            },
-                            body: formData
-                        })
-                        .then(response => response.json())
-                        .then(file => {
-                            if (file.success) {
-                                addFileToList(file.file);
-                            } else {
-                                alert('Failed to upload file');
-                            }
-                        })
-                        .catch(error => console.error('Error:', error));
+                        addFileToList(file);
                     } else {
                         alert('File size exceeds 5MB limit');
                     }
@@ -259,26 +244,75 @@
         function addFileToList(file) {
             const listItem = document.createElement('li');
             listItem.innerHTML = `
-                <img src="file-icon.png" alt="${file.type} Icon">
                 <div class="file-info">
                     <div class="file-name">
                         ${file.name}
                     </div>
                     <div class="file-size">${formatFileSize(file.size)}</div>
-                    <div class="delete-btn" data-id="${file.id}">🗑️</div>
+                    <div class="delete-btn" data-id="${file.name}">🗑️</div>
+                </div>
+                <div class="file-description">
+                    <input type="text" placeholder="Enter description" class="description" data-id="${file.name}">
+                </div>
+                <div class="file-type">
+                    <select class="document-type" data-id="${file.name}">
+                        <option value="Education">Education</option>
+                        <option value="Medical">Medical</option>
+                        <option value="Personal Documents">Personal Documents</option>
+                        <option value="Property">Property</option>
+                    </select>
                 </div>
             `;
             if (noFilesMessage) {
                 noFilesMessage.remove();
             }
             fileList.appendChild(listItem);
+
+            const descriptionInput = listItem.querySelector('.description');
+            const documentTypeSelect = listItem.querySelector('.document-type');
+
+            descriptionInput.addEventListener('blur', () => {
+                file.description = descriptionInput.value;
+            });
+
+            documentTypeSelect.addEventListener('change', () => {
+                file.documentType = documentTypeSelect.value;
+            });
+
+            uploadFile(file);
         }
 
         function fetchFiles() {
             fetch('/user_particulars/1/uploaded_files')
                 .then(response => response.json())
                 .then(files => {
-                    files.forEach(file => addFileToList(file));
+                    files.forEach(file => {
+                        const listItem = document.createElement('li');
+                        listItem.innerHTML = `
+                            <div class="file-info">
+                                <div class="file-name">
+                                    ${file.name}
+                                </div>
+                                <div class="file-size">${formatFileSize(file.file_size)}</div>
+                                <div class="delete-btn" data-id="${file.id}">🗑️</div>
+                            </div>
+                            <div class="file-description">
+                                <input type="text" placeholder="Enter description" class="description" data-id="${file.id}" value="${file.description}">
+                            </div>
+                            <div class="file-type">
+                                <select class="document-type" data-id="${file.id}">
+                                    <option value="Education" ${file.document_type === 'Education' ? 'selected' : ''}>Education</option>
+                                    <option value="Medical" ${file.document_type === 'Medical' ? 'selected' : ''}>Medical</option>
+                                    <option value="Personal Documents" ${file.document_type === 'Personal Documents' ? 'selected' : ''}>Personal Documents</option>
+                                    <option value="Property" ${file.document_type === 'Property' ? 'selected' : ''}>Property</option>
+                                </select>
+                            </div>
+                        `;
+                        if (noFilesMessage) {
+                            noFilesMessage.remove();
+                        }
+                        fileList.appendChild(listItem);
+                    });
                 })
                 .catch(error => console.error('Error:', error));
         }
@@ -294,6 +328,31 @@
             return fileSize.toFixed(2) + ' ' + units[unitIndex];
         }
 
+        function uploadFile(file) {
+            const formData = new FormData();
+            formData.append('uploaded_file[file_path]', file);
+            formData.append('uploaded_file[name]', file.name);
+            formData.append('uploaded_file[file_type]', file.type);
+            formData.append('uploaded_file[file_size]', file.size);
+            formData.append('uploaded_file[description]', file.description || '');
+            formData.append('uploaded_file[document_type]', file.documentType || '');
+
+            fetch('/user_particulars/1/uploaded_files', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(file => {
+                if (!file.success) {
+                    alert('Failed to upload file');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
         fileList.addEventListener('click', (event) => {
             if (event.target.classList.contains('delete-btn')) {
                 removeFile(event.target);
@@ -304,7 +363,7 @@
             const listItem = element.parentElement.parentElement;
             const fileId = element.getAttribute('data-id');
 
-            fetch(`/user_particulars/1/uploaded_files/${fileId}`, {
+            fetch(`/uploaded_files/${fileId}`, {
                 method: 'DELETE',
                 headers: {
                     'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
