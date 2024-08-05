@@ -5,7 +5,8 @@ class UploadedFilesController < ApplicationController
     @uploaded_file = @user_particular.uploaded_files.new(uploaded_file_params)
 
     if @uploaded_file.save
-      render json: @uploaded_file, status: :created
+      @uploaded_file.file_path.attach(params[:uploaded_file][:file_path])
+      render json: @uploaded_file.as_json.merge({ file_path_url: @uploaded_file.file_path_url }), status: :created
     else
       render json: @uploaded_file.errors, status: :unprocessable_entity
     end
