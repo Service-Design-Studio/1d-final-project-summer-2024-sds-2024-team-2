@@ -20,7 +20,7 @@
             background-color: #ffebee;
             padding: 10px;
             border-radius: 10px;
-            margin: 10px;
+            margin-bottom: 20px;
             width: 90%;
             max-width: 900px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -180,23 +180,7 @@
         </div>
         <div class="uploaded-files">
             <ul id="fileList">
-                <% if @uploaded_files.present? %>
-                    <% @uploaded_files.each do |file| %>
-                        <li>
-                            <img src="file-icon.png" alt="<%= file.file_type %> Icon">
-                            <div class="file-info">
-                                <div class="file-name">
-                                    <%= file.name %>
-                                </div>
-                                <div class="file-size"><%= number_to_human_size(file.file_size) %></div>
-                                <div class="progress-bar"><div style="width: <%= file.progress %>%"></div></div>
-                                <div class="delete-btn" data-id="<%= file.id %>">🗑️</div>
-                            </div>
-                        </li>
-                    <% end %>
-                <% else %>
-                    <p id="noFilesMessage">No files uploaded yet.</p>
-                <% end %>
+                <p id="noFilesMessage">No files uploaded yet.</p>
             </ul>
         </div>
     </div>

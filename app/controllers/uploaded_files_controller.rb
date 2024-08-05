@@ -1,7 +1,8 @@
 # app/controllers/uploaded_files_controller.rb
 class UploadedFilesController < ApplicationController
+  before_action :set_user_particular
+
   def create
-    @user_particular = UserParticular.find(params[:user_particular_id])
     @uploaded_file = @user_particular.uploaded_files.new(uploaded_file_params)
 
     if @uploaded_file.save
@@ -19,6 +20,12 @@ class UploadedFilesController < ApplicationController
   end
 
   private
+
+  def set_user_particular
+    @user_particular = UserParticular.find(params[:user_particular_id])
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: "UserParticular not found" }, status: :not_found
+  end
 
   def uploaded_file_params
     params.require(:uploaded_file).permit(:file_path, :name, :file_type, :file_size)

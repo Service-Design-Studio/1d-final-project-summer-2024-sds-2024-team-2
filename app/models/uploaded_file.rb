@@ -1,5 +1,5 @@
 class UploadedFile < ApplicationRecord
-  belongs_to :user_particular
+  belongs_to :user
   has_one_attached :file_path
 
   validates :name, presence: true

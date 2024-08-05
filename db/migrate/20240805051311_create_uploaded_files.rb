@@ -4,7 +4,7 @@ class CreateUploadedFiles < ActiveRecord::Migration[7.0]
       t.string :name
       t.string :file_type
       t.integer :file_size
-      t.references :user_particular, null: false, foreign_key: true
+      t.references :user, null: false, foreign_key: true
 
       t.timestamps
     end
