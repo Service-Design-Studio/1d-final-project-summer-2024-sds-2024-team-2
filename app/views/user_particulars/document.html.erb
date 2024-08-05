@@ -7,6 +7,8 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
         }
         .guide {
             background-color: #f8d7da;
@@ -33,16 +35,18 @@
         }
         .upload-container {
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             align-items: flex-start;
             padding: 20px;
         }
-        .upload-box {
+        .upload-box, .uploaded-files {
             width: 48%;
             padding: 20px;
             border: 2px dashed #d9e3f0;
             border-radius: 4px;
             text-align: center;
+            margin-bottom: 20px;
         }
         .upload-box .icon {
             font-size: 50px;
@@ -50,9 +54,6 @@
         }
         .upload-box p {
             margin: 10px 0;
-        }
-        .uploaded-files {
-            width: 48%;
         }
         .uploaded-files ul {
             list-style-type: none;
@@ -64,8 +65,7 @@
             padding: 10px;
             border-radius: 4px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
         }
         .uploaded-files .file-info {
             display: flex;
@@ -75,10 +75,7 @@
         .uploaded-files .file-type {
             margin-top: 10px;
         }
-        .uploaded-files .file-description input {
-            width: 100%;
-            padding: 5px;
-        }
+        .uploaded-files .file-description input,
         .uploaded-files .file-type select {
             width: 100%;
             padding: 5px;
@@ -89,7 +86,13 @@
         }
         .preview-btn, .delete-btn {
             cursor: pointer;
-            margin-left: 10px;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .upload-box, .uploaded-files {
+                width: 100%;
+            }
         }
     </style>
 </head>
