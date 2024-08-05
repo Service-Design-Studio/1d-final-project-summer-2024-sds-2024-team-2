@@ -18,7 +18,13 @@ class UploadedFilesController < ApplicationController
     @uploaded_file.user_id = current_user.id
 
     if @uploaded_file.save
-      render json: { success: true, file: @uploaded_file.as_json.merge({ file_url: url_for(@uploaded_file.file_path) }) }, status: :created
+      if params[:uploaded_file][:file_path].present?
+        @uploaded_file.file_path.attach(params[:uploaded_file][:file_path])
+        render json: { success: true, file: @uploaded_file.as_json.merge({ file_url: url_for(@uploaded_file.file_path) }) }, status: :created
+      else
+        @uploaded_file.destroy
+        render json: { success: false, errors: ["File path is missing"] }, status: :unprocessable_entity
+      end
     else
       render json: { success: false, errors: @uploaded_file.errors.full_messages }, status: :unprocessable_entity
     end

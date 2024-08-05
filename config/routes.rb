@@ -22,7 +22,11 @@ Rails.application.routes.draw do
     resources :uploaded_files, only: [:index, :create, :destroy, :update]
   end
 
-  delete 'user_particulars/:user_particular_id/uploaded_files/:id', to: 'uploaded_files#destroy', as: 'destroy_uploaded_file'
+  resources :uploaded_files, only: [:index, :create, :destroy, :update] do
+    member do
+      delete :destroy, to: 'uploaded_files#destroy'
+    end
+  end
 
   resources :ngo_users do
     member do
