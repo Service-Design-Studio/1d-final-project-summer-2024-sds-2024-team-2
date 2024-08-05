@@ -195,6 +195,8 @@
         const supportedFormats = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg'];
         const maxFileSize = 5 * 1024 * 1024; // 5MB in bytes
 
+        document.addEventListener('DOMContentLoaded', fetchFiles);
+
         browseBtn.addEventListener('click', () => {
             fileInput.click();
         });
@@ -229,7 +231,7 @@
                         formData.append('uploaded_file[file_type]', file.type);
                         formData.append('uploaded_file[file_size]', file.size);
 
-                        fetch('<%= user_particular_uploaded_files_path(@user_particular) %>', {
+                        fetch('/user_particulars/1/uploaded_files', {
                             method: 'POST',
                             headers: {
                                 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
@@ -238,24 +240,11 @@
                         })
                         .then(response => response.json())
                         .then(file => {
-                            const fileUrl = file.file_path_url;
-                            const listItem = document.createElement('li');
-                            listItem.innerHTML = `
-                                <img src="file-icon.png" alt="${file.file_type} Icon">
-                                <div class="file-info">
-                                    <div class="file-name">
-                                        ${file.name}
-                                    </div>
-                                    <div class="file-size">${formatFileSize(file.file_size)}</div>
-                                    <div class="progress-bar"><div style="width: 0%"></div></div>
-                                    <div class="delete-btn" data-id="${file.id}">🗑️</div>
-                                </div>
-                            `;
-                            if (noFilesMessage) {
-                                noFilesMessage.remove();
+                            if (file.success) {
+                                addFileToList(file.file);
+                            } else {
+                                alert('Failed to upload file');
                             }
-                            fileList.appendChild(listItem);
-                            updateProgress(listItem, 0); // Initialize progress
                         })
                         .catch(error => console.error('Error:', error));
                     } else {
@@ -265,6 +254,33 @@
                     alert('Unsupported file format');
                 }
             }
+        }
+
+        function addFileToList(file) {
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `
+                <img src="file-icon.png" alt="${file.type} Icon">
+                <div class="file-info">
+                    <div class="file-name">
+                        ${file.name}
+                    </div>
+                    <div class="file-size">${formatFileSize(file.size)}</div>
+                    <div class="delete-btn" data-id="${file.id}">🗑️</div>
+                </div>
+            `;
+            if (noFilesMessage) {
+                noFilesMessage.remove();
+            }
+            fileList.appendChild(listItem);
+        }
+
+        function fetchFiles() {
+            fetch('/user_particulars/1/uploaded_files')
+                .then(response => response.json())
+                .then(files => {
+                    files.forEach(file => addFileToList(file));
+                })
+                .catch(error => console.error('Error:', error));
         }
 
         function formatFileSize(bytes) {
@@ -278,16 +294,17 @@
             return fileSize.toFixed(2) + ' ' + units[unitIndex];
         }
 
-        function updateProgress(listItem, progress) {
-            const progressBar = listItem.querySelector('.progress-bar div');
-            progressBar.style.width = progress + '%';
-        }
+        fileList.addEventListener('click', (event) => {
+            if (event.target.classList.contains('delete-btn')) {
+                removeFile(event.target);
+            }
+        });
 
         function removeFile(element) {
             const listItem = element.parentElement.parentElement;
             const fileId = element.getAttribute('data-id');
 
-            fetch(`/user_particulars/<%= @user_particular.id %>/uploaded_files/${fileId}`, {
+            fetch(`/user_particulars/1/uploaded_files/${fileId}`, {
                 method: 'DELETE',
                 headers: {
                     'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')

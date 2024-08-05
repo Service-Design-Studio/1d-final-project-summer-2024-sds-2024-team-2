@@ -1,11 +1,11 @@
-class CreateUploadedFiles < ActiveRecord::Migration[7.0]
+class CreateUploadedFiles < ActiveRecord::Migration[6.0]
   def change
     create_table :uploaded_files do |t|
-      t.string :name
-      t.string :file_type
-      t.integer :file_size
       t.references :user, null: false, foreign_key: true
-
+      t.string :file_name, null: false
+      t.string :file_path, null: false
+      t.string :file_type, null: false
+      t.integer :file_size, null: false
       t.timestamps
     end
   end

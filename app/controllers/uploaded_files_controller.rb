@@ -1,33 +1,46 @@
-# app/controllers/uploaded_files_controller.rb
 class UploadedFilesController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_user_particular
 
   def create
-    @uploaded_file = @user_particular.uploaded_files.new(uploaded_file_params)
+    uploaded_file = params[:uploaded_file][:file_path]
+    file_name = uploaded_file.original_filename
+    file_path = Rails.root.join('public', 'uploads', SecureRandom.uuid, file_name)  # Example path, adjust as needed
+    file_type = uploaded_file.content_type
+    file_size = uploaded_file.size
 
-    if @uploaded_file.save
-      @uploaded_file.file_path.attach(params[:uploaded_file][:file_path])
-      render json: @uploaded_file.as_json.merge({ file_path_url: @uploaded_file.file_path_url }), status: :created
-    else
-      render json: @uploaded_file.errors, status: :unprocessable_entity
+    # Save file to storage (local or cloud)
+    FileUtils.mkdir_p(File.dirname(file_path))
+    File.open(file_path, 'wb') do |file|
+      file.write(uploaded_file.read)
     end
+
+    # Save file metadata to database
+    @user_particular.uploaded_files.create(
+      file_name: file_name,
+      file_path: file_path.to_s,
+      file_type: file_type,
+      file_size: file_size
+    )
+
+    render json: { success: true, file: { name: file_name, path: file_path.to_s, type: file_type, size: file_size } }, status: :created
+  end
+
+  def index
+    files = @user_particular.uploaded_files
+    render json: files
   end
 
   def destroy
-    @uploaded_file = UploadedFile.find(params[:id])
-    @uploaded_file.destroy
-    head :no_content
+    file = @user_particular.uploaded_files.find(params[:id])
+    File.delete(file.file_path) if File.exist?(file.file_path)
+    file.destroy
+    render json: { success: true }
   end
 
   private
 
   def set_user_particular
-    @user_particular = UserParticular.find(params[:user_particular_id])
-  rescue ActiveRecord::RecordNotFound
-    render json: { error: "UserParticular not found" }, status: :not_found
-  end
-
-  def uploaded_file_params
-    params.require(:uploaded_file).permit(:file_path, :name, :file_type, :file_size)
+    @user_particular = current_user.user_particulars.find(params[:user_particular_id])
   end
 end

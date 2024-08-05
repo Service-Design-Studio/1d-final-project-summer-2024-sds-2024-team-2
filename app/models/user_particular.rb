@@ -3,7 +3,7 @@ class UserParticular < ApplicationRecord
   belongs_to :user
   has_one_attached :profile_picture
   has_many :documents, dependent: :destroy
-  has_many :uploaded_files, dependent: :destroy # Add this line to establish the association
+  has_many :uploaded_files, dependent: :destroy # Ensure the association is established
 
   before_create :assign_unique_id
   before_create :generate_2fa_secret
@@ -13,11 +13,11 @@ class UserParticular < ApplicationRecord
   end
 
   def self.find_by_id(id)
-    UserParticular.find_by(id:)
+    UserParticular.find_by(id: id)
   end
 
   def self.find_by_unique_id(unique_id)
-    UserParticular.find_by(unique_id:)
+    UserParticular.find_by(unique_id: unique_id)
   end
 
   def self.find_by_unique_id_and_two_fa_passcode(unique_id, two_fa_passcode)
@@ -33,9 +33,11 @@ class UserParticular < ApplicationRecord
   end
 
   def self.reset_verification(id)
-    user_particular = UserParticular.find_by(id:)
+    user_particular = UserParticular.find_by(id: id)
     user_particular.update(status: 'pending', verifier_ngo: nil)
   end
+
+  private
 
   def assign_unique_id
     loop do
