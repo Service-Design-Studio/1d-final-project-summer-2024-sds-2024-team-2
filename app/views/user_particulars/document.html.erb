@@ -123,7 +123,8 @@
         }
 
         .uploaded-files li .file-size,
-        .uploaded-files li .upload-date {
+        .uploaded-files li .upload-date,
+        .uploaded-files li .status {
             font-size: 12px;
             color: #666;
         }
@@ -214,6 +215,7 @@
                                 <div class="delete-btn" onclick="removeFile(this)">🗑️</div>
                             </div>
                             <div class="upload-date">Uploaded on: ${uploadDate}</div>
+                            <div class="status">Status: Unverified</div>
                         `;
                         fileList.appendChild(listItem);
                     } else {
