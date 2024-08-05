@@ -5,15 +5,20 @@ class UploadedFilesController < ApplicationController
   def index
     @uploaded_files = @user_particular.uploaded_files
     render json: @uploaded_files
+  rescue => e
+    logger.error "Error in index action: #{e.message}"
+    render json: { success: false, errors: ["Failed to load uploaded files"] }, status: :internal_server_error
   end
 
   def create
     @uploaded_file = @user_particular.uploaded_files.build(uploaded_file_params)
     @uploaded_file.status = 'Unverified' if @uploaded_file.status.blank?
+    @uploaded_file.document_type = 'Education'
+    @uploaded_file.description = 'Enter your description'
     @uploaded_file.user_id = current_user.id
 
     if @uploaded_file.save
-      render json: { success: true, file: @uploaded_file.as_json.merge({ file_url: @uploaded_file.file_url }) }, status: :created
+      render json: { success: true, file: @uploaded_file.as_json.merge({ file_url: url_for(@uploaded_file.file_path) }) }, status: :created
     else
       render json: { success: false, errors: @uploaded_file.errors.full_messages }, status: :unprocessable_entity
     end
@@ -22,25 +27,13 @@ class UploadedFilesController < ApplicationController
     render json: { success: false, errors: ["Failed to upload file"] }, status: :internal_server_error
   end
 
-  def destroy
-    @uploaded_file = @user_particular.uploaded_files.find(params[:id])
-    @uploaded_file.destroy
-    head :no_content
-  end
-
-  def update
-    @uploaded_file = @user_particular.uploaded_files.find(params[:id])
-    if @uploaded_file.update(uploaded_file_params)
-      render json: { success: true, file: @uploaded_file }
-    else
-      render json: { success: false, errors: @uploaded_file.errors.full_messages }, status: :unprocessable_entity
-    end
-  end
-
   private
 
   def set_user_particular
     @user_particular = UserParticular.find(params[:user_particular_id])
+  rescue ActiveRecord::RecordNotFound => e
+    logger.error "UserParticular not found: #{e.message}"
+    render json: { success: false, errors: ["UserParticular not found"] }, status: :not_found
   end
 
   def uploaded_file_params
