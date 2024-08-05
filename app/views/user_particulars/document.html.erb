@@ -12,10 +12,21 @@
             background-color: #f8d7da;
             color: #721c24;
             border-color: #f5c6cb;
-            padding: 20px;
+            padding: 10px;
             margin-bottom: 20px;
             border: 1px solid transparent;
             border-radius: 4px;
+        }
+        .guide h2 {
+            margin-top: 0;
+            font-size: 18px;
+        }
+        .guide ol {
+            padding-left: 20px;
+            margin-bottom: 0;
+        }
+        .guide li {
+            margin-bottom: 5px;
         }
         .upload-container {
             display: flex;
@@ -80,9 +91,9 @@
     </style>
 </head>
 <body>
+    <button onclick="history.back()">Back</button>
     <div class="guide">
         <h2>File Upload Guide</h2>
-        <p>Follow the instructions below to upload your documents:</p>
         <ol>
             <li>Drag and drop your files into the designated area or click the "Browse" button to select files from your computer.</li>
             <li>Supported file formats are PDF, DOC, DOCX, and JPG.</li>
