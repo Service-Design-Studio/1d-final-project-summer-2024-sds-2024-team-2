@@ -2,9 +2,14 @@
 class UserParticularsController < ApplicationController
   include UserParticularsHelper
   before_action :authenticate_user!
-  before_action :set_user_particular, only: [:show, :document, :edit, :update, :history]
+  before_action :set_user_particular, only: %i[show document edit update history]
   before_action :set_ngo_users
   before_action :set_saved_posts
+  before_action :set_bulletins_all
+
+  def set_bulletins_all
+    @bulletins = Bulletin.all
+  end
 
   def show
     logger.debug "Flash check: #{flash[:notice]}"
@@ -94,20 +99,20 @@ class UserParticularsController < ApplicationController
 
   def update
     @user_particular = UserParticular.find(params[:id])
-    
+
     user_particular_errors = validate_user_particulars(@user_particular) || []
     dropdown_errors = validate_user_particulars_dropdown(@user_particular, params[:others]) || []
-  
+
     error_messages_arr = user_particular_errors + dropdown_errors
     flash[:error] = error_messages_arr
-    
+
     # Validate user particulars
     if error_messages_arr.empty?
       if @user_particular.update(user_particular_params)
         if params[:user_particular][:profile_picture].present?
           @user_particular.profile_picture.attach(params[:user_particular][:profile_picture])
         end
-  
+
         @user_particular.update(status: 'pending', verifier_ngo: nil)
         flash[:success] = 'Digital ID was successfully edited!'
         redirect_to @user_particular
@@ -120,7 +125,6 @@ class UserParticularsController < ApplicationController
       redirect_to edit_user_particular_path(params[:id], user_particular: user_particular_params)
     end
   end
-  
 
   def history
     @back_path = root_path
