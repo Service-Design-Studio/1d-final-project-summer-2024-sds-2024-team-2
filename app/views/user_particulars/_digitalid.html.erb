@@ -26,12 +26,12 @@
       <div class="photo-1 px-2">
         <% if @user_particular %>
           <% if @user_particular.profile_picture.attached? %>
-            <%= image_tag @user_particular.profile_picture, alt: "User's profile picture", class: 'img-fluid', style: 'border: 2px solid black; max-width: 80px; max-height: 80px;' %>
+            <%= image_tag @user_particular.profile_picture, alt: "User's profile picture", class: 'img-fluid', style: 'width: 90px; height: 110px;' %>
           <% else %>
-            <%= image_tag 'default.png', alt: "Default image", class: 'img-fluid', style: 'border: 2px solid black; max-width: 80px; max-height: 80px;' %>
+            <%= image_tag 'default.png', alt: "Default image", class: 'img-fluid', style:'width: 90px; height: 110px;' %>
           <% end %>
         <% else %>
-          <%= image_tag 'default.png', alt: "Default image", class: 'img-fluid', style: 'border: 2px solid black; max-width: 80px; max-height: 80px;' %>
+          <%= image_tag 'default.png', alt: "Default image", class: 'img-fluid', style:'width: 90px; height: 110px;' %>
         <% end %>
       </div>
       <!--table for name and UID-->
