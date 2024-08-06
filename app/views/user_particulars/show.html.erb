@@ -35,7 +35,7 @@
       <div class="contaianer-fluid pri-container add-small-shadow mb-3 py-3 px-2 d-flex w-100 flex-column flex-wrap">
         <div class="row d-flex justify-content-evenly g-2">
           <%if @user_particular%>
-            <%= link_to new_user_particular_document_path(@user), id: 'documents-button', class: "customhome-button p-2 col-5", style: 'text-decoration: none; height: auto; min-height:40px;' do %>
+            <%= link_to user_document_path(@user_particular), id: 'documents-button', class: "customhome-button p-2 col-5", style: 'text-decoration: none; height: auto; min-height:40px;' do %>
               <i class="fas fa-file-alt fs-5" style='min-width:20px;'></i> Documents
             <% end %>
           <% end %>
