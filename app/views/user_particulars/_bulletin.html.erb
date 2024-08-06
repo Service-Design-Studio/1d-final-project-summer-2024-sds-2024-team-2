@@ -1,5 +1,5 @@
-<div id="bulletin" class="mb-3 d-flex flex-column pri-container m-0 add-small-shadow p-3 pb-3" style='font-size: 0.7rem; width:100%;'>
-  <div class="d-flex mb-4">
+<div id="bulletin" class="w-100 mb-3 d-flex flex-column pri-container m-0 add-small-shadow p-3 pb-3" style='font-size: 0.7rem; width:100%; min-width:100%;'>
+  <div class="d-flex mb-4 w-100">
     <div class="flex-column flex w-100">
       <h6 class='text-center'>Bulletin Board</h6>
       <div class="input-group w-100 bg-dark search-bar p-1" style='border-radius: 40px;'>
@@ -19,7 +19,7 @@
     <% end %>
   </div>
   <div class="container-fluid mx-0 overflow-auto flex" style="font-size: 0.7rem;">
-    <div class="row justify-content-evenly" style='max-height: 100%;' id="event-cards-container">
+    <div class="row justify-content-evenly w-100" style='max-height: 100%;' id="event-cards-container">
       <% @bulletins.each do |bulletin| %>
         <% saved = @saved_posts&.include?(bulletin.id) %>
         <% ngo_user = @ngo_users.find { |user| user.name.casecmp?(bulletin.ngo_name) } || OpenStruct.new(id: 'N/A', image_url: 'default.png', name: 'Unknown') %>
@@ -63,6 +63,11 @@
               <% end %>
             <% end %>
           </div>
+        </div>
+      <% end %>
+      <% if @bulletins.empty? %>
+        <div class="alert alert-info text-center" role="alert">
+          No bulletin posts available!
         </div>
       <% end %>
     </div>
@@ -119,14 +124,28 @@
   $(document).ready(function() {
     $('#search-input').on('input', function() {
       var searchQuery = $(this).val().toLowerCase();
+      var anyVisible = false;
       $('.event-card').each(function() {
-        var title = $(this).data('title');
-        var description = $(this).data('description');
-        var ngoName = $(this).data('ngoname');
+        var title = $(this).data('title').toLowerCase();
+        var description = $(this).data('description').toLowerCase();
+        var ngoName = $(this).data('ngoname').toLowerCase();
         if (title.includes(searchQuery) || description.includes(searchQuery) || ngoName.includes(searchQuery)) {
           $(this).show();
+          anyVisible = true;
         } else {
           $(this).hide();
+        }
+        if (!anyVisible) {
+            $('#no-results-message').remove(); // Remove any existing message
+            $('#bulletin').append(`
+              <div class='row'>
+                <div id="no-results-message" class="col-12 m-auto alert alert-info text-center" style='width:680px;' role="alert">
+                    No bulletin posts available!
+                </div>
+              </div>
+            `);
+        } else {
+            $('#no-results-message').remove(); // Remove the message if there are visible cards
         }
       });
     });
