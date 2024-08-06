@@ -146,6 +146,7 @@ $(document).ready(function() {
         var ngoId = $('#editModal').data('ngoid');
         var userId = $('#editModal').data('userid');
         var messageContent = $('#message-text').val();
+        console.log("User id is: " + userId);
         
         if (!messageContent.trim()) {
             alert('Please enter a message before sending.');

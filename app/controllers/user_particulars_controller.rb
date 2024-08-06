@@ -276,7 +276,7 @@ class UserParticularsController < ApplicationController
 
   def contact_ngo
     @back_path = user_particular_path
-    @user = current_user.user_particular
+    # @user = current_user.user_particular # Revert to using current user instead, if not message created here won't be displayed
     @ngo_users = if params[:search].present?
                    NgoUser.joins(:ngo_services)
                           .where('ngo_services.services LIKE ?', "%#{params[:search]}%")
