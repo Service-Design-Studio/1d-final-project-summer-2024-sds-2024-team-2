@@ -39,18 +39,41 @@
       </div>
       <%= yield %>
     </div>
-    <main class="flex-fill"></main>
-    <footer class="footer mt-auto bg-dark text-white-50 p-2", style="max-height:70px; font-size: 0.7em;">
-      <div class="container p-0 text-center">
-        <small>&copy; EnableID 2024</small>
-        <br>
-        <a href="#" class="text-white">Contact us</a> | 
-        <a href="#" class="text-white">Share feedback</a> | 
-        <a href="#" class="text-white">Read FAQs</a> | 
-        <a href="#" class="text-white">Report vulnerability</a> | 
-        <a href="#" class="text-white">Privacy statement</a> | 
-        <a href="#" class="text-white">Terms of use</a> | 
-      </div>
-    </footer>
+
+    <!-- Chatbot button -->
+    <div class="chat-button d-block d-lg-none d-flex justify-content-center align-items-center" id="chatButton"><i class="fs-5 bi bi-chat"></i></div>
+    <div class="bulletin-button d-block d-lg-none d-flex justify-content-center align-items-center" id="bulletinButton"><i class="fs-5 bi bi-calendar-week"></i></div>
+
+    <!-- Chatbot display -->
+    <div class="chat-display m-0 px-0 flex-column overflow-hidden" style='max-height:100vh;' id="chatDisplay">
+        <div class='chat-header d-flex justify-content-between'>
+          <span class="close-button" id="closeButtonChat">&times;</span>
+          <span>Chat with Freddy</span>
+          <span></span>
+        </div>
+        <div id='gemini-chat' class="overflow-auto chat-container flex-grow-1 d-flex flex-column">
+          <div class="chat-box mb-0 flex-grow-1 d-flex flex-column overflow-auto max-height-100" id="chat-box"></div>
+        </div>
+        <div>
+          <form id="chat-form" class="p-2 d-flex chat-input-area">
+              <textarea id="user-input" class='flex-grow-1' placeholder="Type your message here..." rows='1'></textarea>
+              <button type="submit" id="sendButton" class='align-self-end'><i style="max-height:1.3em; max-width:1.3em;" class="bi bi-send"></i></button>
+          </form>
+        </div>
+    </div>
+
+
+    <div class="bulletin-display m-0 px-0 flex-column overflow-hidden" style='max-height:100vh;' id="bulletinDisplay">
+        <div class='chat-header d-flex justify-content-between'>
+          <span class="close-button" id="closeButtonBulletin">&times;</span>
+          <span>Bulletin</span>
+          <span></span>
+        </div>
+        <div class="p-3 mx-0 d-flex justify-content-center">
+          <%= render 'bulletin' %>
+        </div>
+            <!-- Add your chat interface here -->
+    </div>
+
   </body>
 </html>
