@@ -1,15 +1,16 @@
 Feature: Messaging a NGO
 
 Background:
-    Given I am already on the NGO "Gebirah" page 
-    And user1 send a message "Hi, I need help regarding Education, can you contact me at your as soon as possible, preferably by email" to Gebirah
+    Given I am now logged in to the user particulars home page
 
-Scenario: Navigating to inbox page
-    When I press on the "Inbox" button
-    Then I should be redirected to the "Inbox" page
-    And I should see a list of past messages recieved
+Scenario: Navigating to search service page
+    When I press on the "Search Services" button
+    Then I should be directed to the "Contact NGO" page
 
-Scenario: Viewing message details
-    Given I am on the "Inbox" page
-    When I click on the first message
-    Then I should see the details of the first message in the details panel
+Scenario: Send a message to NGO
+    Given I am already on the Contact NGO page
+    When I click on the send message button
+    And I fill in the message form with "Hi, I need help regarding Education, can you contact me at your as soon as possible, preferably by email"
+    And I submit the message form
+    Then I should see a flash message "Message successfully sent to Gebirah!"
+    

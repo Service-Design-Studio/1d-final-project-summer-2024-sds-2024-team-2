@@ -18,6 +18,8 @@ Then(/^I should be directed to the "([^"]*)" page$/) do |page|
   expected_path = case page
                   when "Upload Document"
                     new_user_particular_document_path(@user_particular)
+                  when "Contact NGO"
+                    contact_ngo_path(@user_particular)
                   else
                     path_to(page)
                   end

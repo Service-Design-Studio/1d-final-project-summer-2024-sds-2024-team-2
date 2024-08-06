@@ -23,4 +23,9 @@ class User < ApplicationRecord
     where(conditions).where(['lower(username) = :value OR lower(email) = :value OR phone_number = :value',
                              { value: login }]).first
   end
+
+  def send_message(user, ngo, message)
+    @new_message = Message.new(user_id: user , ngo_users_id: ngo, message: message)
+    @new_message.save
+  end
 end
