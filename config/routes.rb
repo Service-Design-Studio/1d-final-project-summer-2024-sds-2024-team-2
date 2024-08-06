@@ -24,7 +24,13 @@ Rails.application.routes.draw do
       get 'page2'
     end
     resources :documents, only: [:new, :create, :show, :edit, :update, :destroy]
-    resources :uploaded_files, only: [:index, :create, :destroy]
+    resources :uploaded_files, only: [:index, :create, :destroy, :update]
+  end
+
+  resources :uploaded_files, only: [:index, :create, :destroy, :update] do
+    member do
+      delete :destroy, to: 'uploaded_files#destroy'
+    end
   end
 
   # Resources for NGO users with custom member routes for verification and inbox

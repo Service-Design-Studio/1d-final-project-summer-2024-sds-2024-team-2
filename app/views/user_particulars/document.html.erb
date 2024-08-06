@@ -6,167 +6,102 @@
     <title>File Upload UI</title>
     <style>
         body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: #f5f5f5;
-            margin: 0;
             font-family: Arial, sans-serif;
-            height: 100vh;
-            justify-content: center;
+            margin: 0;
+            padding: 0;
         }
-
         .guide {
-            background-color: #ffebee;
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
             padding: 10px;
-            border-radius: 10px;
             margin-bottom: 20px;
-            width: 90%;
-            max-width: 900px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid transparent;
+            border-radius: 4px;
             text-align: center;
         }
-
         .guide h2 {
             margin-top: 0;
-            font-size: 20px;
+            font-size: 18px;
         }
-
-        .guide p, .guide ol {
-            margin: 5px 0;
-            font-size: 14px;
-        }
-
-        .upload-container {
-            background: #fff;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 90%;
-            max-width: 900px;
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
-        }
-
-        .upload-box {
-            width: 45%;
+        .guide ol {
+            padding-left: 0;
+            margin-bottom: 0;
             text-align: center;
+            display: inline-block;
+            list-style-position: inside;
+        }
+        .guide li {
+            margin-bottom: 5px;
+            text-align: left;
+        }
+        .upload-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 20px;
+        }
+        .upload-box, .uploaded-files {
+            width: 48%;
             padding: 20px;
             border: 2px dashed #d9e3f0;
-            border-radius: 10px;
-            color: #90a4ae;
-            cursor: pointer;
-            box-sizing: border-box;
-            position: relative;
+            border-radius: 4px;
+            text-align: center;
+            margin-bottom: 20px;
         }
-
-        .upload-box:hover {
-            border-color: #42a5f5;
-            color: #42a5f5;
-        }
-
         .upload-box .icon {
-            font-size: 40px;
+            font-size: 50px;
+            margin-bottom: 20px;
         }
-
-        .upload-box button {
-            background-color: #42a5f5;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;
+        .upload-box p {
+            margin: 10px 0;
         }
-
-        .upload-box button:hover {
-            background-color: #1e88e5;
-        }
-
-        .uploaded-files {
-            width: 45%;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
         .uploaded-files ul {
-            list-style: none;
+            list-style-type: none;
             padding: 0;
-            margin: 0;
         }
-
         .uploaded-files li {
+            background-color: #f1f1f1;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 4px;
             display: flex;
             flex-direction: column;
-            padding: 10px 0;
-            border-bottom: 1px solid #f0f0f0;
-            word-wrap: break-word;
         }
-
-        .uploaded-files li .file-info {
+        .uploaded-files .file-info {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex: 1;
+            flex-direction: column;
         }
-
-        .uploaded-files li .file-name {
+        .uploaded-files .file-description,
+        .uploaded-files .file-type {
+            margin-top: 10px;
+        }
+        .uploaded-files .file-description input,
+        .uploaded-files .file-type select {
+            width: 100%;
+            padding: 5px;
+        }
+        .file-info {
             display: flex;
-            align-items: center;
-            flex: 1;
-            overflow: hidden;
+            flex-direction: column;
         }
-
-        .uploaded-files li .file-size,
-        .uploaded-files li .upload-date,
-        .uploaded-files li .status {
-            font-size: 12px;
-            color: #666;
-        }
-
-        .uploaded-files li .delete-btn {
-            color: #e57373;
+        .preview-btn, .delete-btn {
             cursor: pointer;
-            margin-left: 10px;
-        }
-
-        .progress-bar {
-            height: 5px;
-            width: 100px;
-            background-color: #f0f0f0;
-            margin-left: 10px;
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .progress-bar div {
-            height: 100%;
-            background-color: #42a5f5;
-            width: 0;
-        }
-
-        #fileInput {
-            display: none;
-        }
-
-        .file-description,
-        .file-type {
             margin-top: 10px;
         }
 
-        .file-type select {
-            width: 100%;
-            padding: 5px;
-            border: 1px solid #d9e3f0;
-            border-radius: 5px;
+        @media (max-width: 768px) {
+            .upload-box, .uploaded-files {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
+    <button onclick="history.back()">Back</button>
     <div class="guide">
         <h2>File Upload Guide</h2>
-        <p>Follow the instructions below to upload your documents:</p>
         <ol>
             <li>Drag and drop your files into the designated area or click the "Browse" button to select files from your computer.</li>
             <li>Supported file formats are PDF, DOC, DOCX, and JPG.</li>
@@ -182,7 +117,7 @@
             <p>Drag and Drop files to upload or</p>
             <button id="browseBtn">Browse</button>
             <p>Supported files: PDF, DOC, DOCX, JPG</p>
-            <input type="file" id="fileInput" multiple>
+            <input type="file" id="fileInput" multiple style="display: none;">
         </div>
         <div class="uploaded-files">
             <ul id="fileList">
@@ -200,6 +135,8 @@
 
         const supportedFormats = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg'];
         const maxFileSize = 5 * 1024 * 1024; // 5MB in bytes
+
+        const userParticularId = 1; // Replace this with the dynamic user_particular_id if needed
 
         document.addEventListener('DOMContentLoaded', fetchFiles);
 
@@ -231,7 +168,7 @@
             for (const file of files) {
                 if (supportedFormats.includes(file.type)) {
                     if (file.size <= maxFileSize) {
-                        addFileToList(file);
+                        uploadFile(file);
                     } else {
                         alert('File size exceeds 5MB limit');
                     }
@@ -248,18 +185,21 @@
                     <div class="file-name">
                         ${file.name}
                     </div>
-                    <div class="file-size">${formatFileSize(file.size)}</div>
-                    <div class="delete-btn" data-id="${file.name}">🗑️</div>
+                    <div class="file-size">${formatFileSize(file.file_size)}</div>
+                    <div class="upload-date">${file.upload_date}</div>
+                    <div class="status">${file.status}</div>
+                    <div class="preview-btn" data-url="${file.file_url}">🔍</div>
+                    <div class="delete-btn" data-id="${file.id}">🗑️</div>
                 </div>
                 <div class="file-description">
-                    <input type="text" placeholder="Enter description" class="description" data-id="${file.name}">
+                    <input type="text" placeholder="Enter your description" class="description" data-id="${file.id}" value="${file.description || 'Enter your description'}">
                 </div>
                 <div class="file-type">
-                    <select class="document-type" data-id="${file.name}">
-                        <option value="Education">Education</option>
-                        <option value="Medical">Medical</option>
-                        <option value="Personal Documents">Personal Documents</option>
-                        <option value="Property">Property</option>
+                    <select class="document-type" data-id="${file.id}">
+                        <option value="Education" ${file.document_type === 'Education' ? 'selected' : ''}>Education</option>
+                        <option value="Medical" ${file.document_type === 'Medical' ? 'selected' : ''}>Medical</option>
+                        <option value="Personal Documents" ${file.document_type === 'Personal Documents' ? 'selected' : ''}>Personal Documents</option>
+                        <option value="Property" ${file.document_type === 'Property' ? 'selected' : ''}>Property</option>
                     </select>
                 </div>
             `;
@@ -267,52 +207,14 @@
                 noFilesMessage.remove();
             }
             fileList.appendChild(listItem);
-
-            const descriptionInput = listItem.querySelector('.description');
-            const documentTypeSelect = listItem.querySelector('.document-type');
-
-            descriptionInput.addEventListener('blur', () => {
-                file.description = descriptionInput.value;
-            });
-
-            documentTypeSelect.addEventListener('change', () => {
-                file.documentType = documentTypeSelect.value;
-            });
-
-            uploadFile(file);
+            attachUpdateEventHandlers();
         }
 
         function fetchFiles() {
-            fetch('/user_particulars/1/uploaded_files')
+            fetch(`/user_particulars/${userParticularId}/uploaded_files`)
                 .then(response => response.json())
                 .then(files => {
-                    files.forEach(file => {
-                        const listItem = document.createElement('li');
-                        listItem.innerHTML = `
-                            <div class="file-info">
-                                <div class="file-name">
-                                    ${file.name}
-                                </div>
-                                <div class="file-size">${formatFileSize(file.file_size)}</div>
-                                <div class="delete-btn" data-id="${file.id}">🗑️</div>
-                            </div>
-                            <div class="file-description">
-                                <input type="text" placeholder="Enter description" class="description" data-id="${file.id}" value="${file.description}">
-                            </div>
-                            <div class="file-type">
-                                <select class="document-type" data-id="${file.id}">
-                                    <option value="Education" ${file.document_type === 'Education' ? 'selected' : ''}>Education</option>
-                                    <option value="Medical" ${file.document_type === 'Medical' ? 'selected' : ''}>Medical</option>
-                                    <option value="Personal Documents" ${file.document_type === 'Personal Documents' ? 'selected' : ''}>Personal Documents</option>
-                                    <option value="Property" ${file.document_type === 'Property' ? 'selected' : ''}>Property</option>
-                                </select>
-                            </div>
-                        `;
-                        if (noFilesMessage) {
-                            noFilesMessage.remove();
-                        }
-                        fileList.appendChild(listItem);
-                    });
+                    files.forEach(file => addFileToList(file));
                 })
                 .catch(error => console.error('Error:', error));
         }
@@ -334,10 +236,11 @@
             formData.append('uploaded_file[name]', file.name);
             formData.append('uploaded_file[file_type]', file.type);
             formData.append('uploaded_file[file_size]', file.size);
-            formData.append('uploaded_file[description]', file.description || '');
-            formData.append('uploaded_file[document_type]', file.documentType || '');
+            formData.append('uploaded_file[status]', 'Unverified');
+            formData.append('uploaded_file[document_type]', 'Education');
+            formData.append('uploaded_file[description]', 'Enter your description');
 
-            fetch('/user_particulars/1/uploaded_files', {
+            fetch(`/user_particulars/${userParticularId}/uploaded_files`, {
                 method: 'POST',
                 headers: {
                     'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
@@ -348,22 +251,78 @@
             .then(file => {
                 if (!file.success) {
                     alert('Failed to upload file');
+                } else {
+                    addFileToList(file.file);
                 }
             })
             .catch(error => console.error('Error:', error));
         }
 
-        fileList.addEventListener('click', (event) => {
-            if (event.target.classList.contains('delete-btn')) {
-                removeFile(event.target);
-            }
-        });
+        function attachUpdateEventHandlers() {
+            document.querySelectorAll('.description').forEach(element => {
+                element.addEventListener('blur', (event) => {
+                    updateFileDescription(event.target.dataset.id, event.target.value);
+                });
+            });
+
+            document.querySelectorAll('.document-type').forEach(element => {
+                element.addEventListener('change', (event) => {
+                    updateFileType(event.target.dataset.id, event.target.value);
+                });
+            });
+
+            document.querySelectorAll('.delete-btn').forEach(element => {
+                element.addEventListener('click', (event) => {
+                    removeFile(event.target);
+                });
+            });
+
+            document.querySelectorAll('.preview-btn').forEach(element => {
+                element.addEventListener('click', (event) => {
+                    previewFile(event.target.dataset.url);
+                });
+            });
+        }
+
+        function updateFileDescription(fileId, description) {
+            fetch(`/user_particulars/${userParticularId}/uploaded_files/${fileId}`, {
+                method: 'PATCH',
+                headers: {
+                    'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ uploaded_file: { description } })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    alert('Failed to update file description');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function updateFileType(fileId, document_type) {
+            fetch(`/user_particulars/${userParticularId}/uploaded_files/${fileId}`, {
+                method: 'PATCH',
+                headers: {
+                    'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ uploaded_file: { document_type } })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    alert('Failed to update file type');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
 
         function removeFile(element) {
             const listItem = element.parentElement.parentElement;
             const fileId = element.getAttribute('data-id');
 
-            fetch(`/uploaded_files/${fileId}`, {
+            fetch(`/user_particulars/${userParticularId}/uploaded_files/${fileId}`, {
                 method: 'DELETE',
                 headers: {
                     'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
@@ -380,6 +339,10 @@
                 }
             })
             .catch(error => console.error('Error:', error));
+        }
+
+        function previewFile(url) {
+            window.open(url, '_blank');
         }
     </script>
 </body>

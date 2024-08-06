@@ -24,6 +24,16 @@
     <%= csp_meta_tag %>
     <!-- Application JS -->
     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+    <%= javascript_include_tag "chatbulletin", "data-turbo-track": "reload", defer: true %>
+
+    <style>
+      body {
+        background-color: #f8f9fb;
+        background-image: url('<%= asset_path('background.svg') %>');
+        background-size: cover;
+        background-position: center;
+      }
+    </style>
   </head>
   <body class="d-flex flex-column min-vh-100 bg-light" style="overflow-x:hidden;">
     <div class="container-fluid flex-grow-1 justify-content-center p-0">
@@ -40,5 +50,32 @@
       </div>
       <%= yield %>
     </div>
+
+    <!-- Chatbot -->
+    <div class="chat-button d-block d-lg-none d-flex justify-content-center align-items-center" id="chatButton"><i class="fs-5 bi bi-chat"></i></div>
+
+    <div class="chat-display" id="chatDisplay">
+        <span class="close-button" id="closeButton">&times;</span>
+        <div class="chat-header">Chat with Freddy</div>
+        <div id='gemini-chat' class="chat-container">
+          <h3 class="text-center">Chatbot</h3>
+          <div class="chat-box d-flex flex-column" id="chat-box"></div>
+          <form id="chat-form">
+            <div class="form-group">
+              <input type="text" class="form-control" id="user-input" placeholder="Type your message here...">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Send</button>
+          </form>
+        </div>
+    </div>
+
+    <div class="bulletin-button d-block d-lg-none d-flex justify-content-center align-items-center" id="BulletinButton"><i class="fs-5 bi bi-calendar-week"></i></div>
+
+    <div class="chat-display" id="BulletinButton">
+        <span class="close-button" id="closeButton">&times;</span>
+        <div class="chat-header">Chat with Freddy</div>
+        <!-- Add your chat interface here -->
+    </div>
+
   </body>
 </html>

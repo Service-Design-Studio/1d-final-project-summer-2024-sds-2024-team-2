@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   def layout_by_resource
     if controller_name == 'ngo_users'
       'ngo'
-    # render application layout if user signed in, if not render userlogin layout  
+    # render application layout if user signed in, if not render userlogin layout
     else
       user_signed_in? ? 'application' : 'userlogin'
     end

@@ -1,0 +1,97 @@
+/* Chat button styles */
+.chat-button {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #f1536a;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 1000;
+}
+.bulletin-button {
+  position: fixed;
+  bottom: 4rem;
+  right: 1rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #f1536a;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 1000;
+}
+/* Fullscreen chat display styles */
+.chat-display {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  display: none;
+  flex-direction: column;
+  z-index: 1001;
+}
+
+/* Close button styles */
+.close-button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Chat header styles */
+.chat-header {
+  text-align: center;
+  font-size: 24px;
+  padding: 1rem;
+  border-bottom: 1px solid #ddd;
+}
+
+#gemini-chat {
+  .chat-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+  }
+
+  .chat-box {
+    height: 400px;
+    overflow-y: scroll;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+    background: #f9f9f9;
+  }
+
+  .chat-message {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 80%;
+  }
+
+  .chat-message.user {
+    text-align: right;
+    background-color: #007bff;
+    color: white;
+    align-self: flex-end;
+  }
+
+  .chat-message.bot {
+    text-align: left;
+    background-color: #f1f1f1;
+    color: black;
+    align-self: flex-start;
+  }
+}
