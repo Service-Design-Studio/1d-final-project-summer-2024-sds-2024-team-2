@@ -1,3 +1,5 @@
+# features/step_definitions/common_steps.rb
+
 Given(/^I am on the "([^"]*)" page$/) do |page|
   visit path_to(page)
 end
@@ -17,21 +19,20 @@ end
 Then(/^I should be directed to the "([^"]*)" page$/) do |page|
   expected_path = case page
                   when "Upload Document"
-                    new_user_particular_document_path(@user_particular)
-                  when "Contact NGO"
-                    contact_ngo_path(@user_particular)
+                    new_user_particular_document_path(@user.id) # Ensure the user ID is correctly referenced
+                  # Add other mappings here if needed
                   else
-                    path_to(page)
+                    path_to(page) # Default to path_to method for other pages
                   end
   expect(current_path).to eq(expected_path)
 end
 
 Then(/^I should see "([^"]*)"$/) do |name|
-  expect(page).to have_content(name, wait: 5)
+  expect(page).to have_content(name, wait: 2)
 end
 
 Then(/^I should not see "([^"]*)"$/) do |name|
-  expect(page).to have_no_content(name, wait: 5)
+  expect(page).to have_no_content(name, wait: 2)
 end
 
 Then(/^I should see the following filled-in details$/) do |table|
@@ -51,10 +52,6 @@ end
 
 Then(/^I should be redirected to the "([^"]*)" page$/) do |page_name|
   expect(current_path).to eq(path_to(page_name))
-end
-
-When(/^I fill in the following fields$/) do |table|
-  fill_in_form(table)
 end
 
 # Additional helper methods
@@ -87,10 +84,10 @@ end
 
 # Maps page names to their corresponding paths
 def path_to(page_name)
-  user_id = if defined?(@user_particular) && @user_particular.present?
-              @user_particular.id
+  user_id = if has_selector?('#EnableID_usertitle')
+              find('#EnableID_usertitle')['data-user-id']
             else
-              UserParticular.last.id # Fallback to the most recent UserParticular if @user_particular is not set
+              @user&.id || '' # Fallback to using @user.id
             end
   case page_name.downcase
   when 'home'

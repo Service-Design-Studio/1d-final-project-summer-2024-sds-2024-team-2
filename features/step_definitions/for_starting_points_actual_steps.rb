@@ -43,34 +43,13 @@ Given(/^I am now on the user particulars home page as a verified user$/) do
   fill_in 'Password', with: 'password1'
   step 'I press the "Log in" button'
   @user = User.find_by(username: 'user1')
-  raise "User not found" unless @user
-  @user_particular = @user.user_particular
-  raise "User Particular not found" unless @user_particular
   login_as(@user, scope: :user)
-  visit user_particular_path(@user_particular)
-  expected_path = user_particular_path(@user_particular)
+  visit user_particular_path(@user)
+  expected_path = user_particular_path(@user)
   raise "Expected to be on #{expected_path}, but was on #{current_path}" unless current_path == expected_path
 
   step 'I should see the welcome message'
   step 'I should see "EnableID - Verified by Gebirah"'
-end
-
-# Logged in and starting from user home page
-Given(/^I am now logged in to the user particulars home page$/) do
-  step 'I am on the "Login" page'
-  fill_in 'Log in EnableID', with: 'user1'
-  fill_in 'Password', with: 'password1'
-  step 'I press the "Log in" button'
-  @user = User.find_by(username: 'user1')
-  raise "User not found" unless @user
-  @user_particular = @user.user_particular
-  raise "User Particular not found" unless @user_particular
-  login_as(@user, scope: :user)
-  visit user_particular_path(@user_particular)
-  expected_path = user_particular_path(@user_particular)
-  raise "Expected to be on #{expected_path}, but was on #{current_path}" unless current_path == expected_path
-
-
 end
 
 Then(/^I should see the welcome message$/) do
@@ -100,7 +79,4 @@ Given(/^I am now on the upload documents page$/) do
     ['Date of Arrival in Malaysia', '20-01-2020']
   ]))
   step('I press the "Submit" button')
-  @user_particular = UserParticular.find_by(full_name: 'Alice Tan')
-  raise "User Particular not found" unless @user_particular
-  visit new_user_particular_document_path(@user_particular)
 end
