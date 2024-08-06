@@ -9,7 +9,7 @@ class ChatbotController < ApplicationController
 
   def initialize
     super() # Call the parent class's initialize method
-    instruction_text = File.read(Rails.root.join('config', 'freddy_instruction.txt'))
+    instruction_text = File.read(Rails.root.join('app', 'assets', 'config', 'freddy_instructions.text'))
     @system_instruction = {
       'parts' => {
         'text' => instruction_text
