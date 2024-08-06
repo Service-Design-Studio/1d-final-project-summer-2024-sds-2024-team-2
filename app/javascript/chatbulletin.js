@@ -1,23 +1,15 @@
 $(document).ready(function () {
-  document
-    .getElementById("bulletinButton")
-    .addEventListener("click", function () {
-      var bulletinDisplay = document.getElementById("bulletinDisplay");
-      if (
-        bulletinDisplay.style.display === "none" ||
-        bulletinDisplay.style.display === ""
-      ) {
-        bulletinDisplay.style.display = "flex";
-      } else {
-        bulletinDisplay.style.display = "none";
-      }
-    });
   // JavaScript to toggle chat display
-  document.querySelectorAll(".chatButton").forEach(function (button) {
-    button.addEventListener("click", function () {
+  document.getElementById("smallchatbutton").addEventListener("click", function () {
+    document.getElementById("chatDisplay").style.display = "flex";
+  });
+
+  document
+    .getElementById("bigchatbutton")
+    .addEventListener("click", function () {
       document.getElementById("chatDisplay").style.display = "flex";
     });
-  });
+
 
   // Define the function to handle the close button click
   function handleCloseButtonClick() {
