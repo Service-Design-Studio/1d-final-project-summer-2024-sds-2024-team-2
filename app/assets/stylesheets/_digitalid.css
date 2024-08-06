@@ -4,7 +4,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 100%;
   min-width: 300px;
-  max-width: 500px;
+  max-width: 460px;
   background: linear-gradient(
     to right,
     #ff8989,
@@ -19,6 +19,8 @@
   text-align: center;
   font-weight: bold;
   width: 100%;
+  font-size: 1.5em;
+  font-family: "Arial";
 }
 
 .verification-icon {
@@ -50,6 +52,7 @@
 
 .details-1 {
   padding: 4px;
+  padding-top: 30px;
 }
 
 .details-1 p {
