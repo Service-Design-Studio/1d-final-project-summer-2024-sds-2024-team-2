@@ -17,6 +17,8 @@ Rails.application.routes.draw do
   get 'user_particulars/:id/contact_ngo', to: 'user_particulars#contact_ngo', as: 'contact_ngo'
   post 'user_particulars/:id/:ngoid/message', to: 'user_particulars#message', as: 'user_message'
   post 'user_particulars/:id/send_message/:ngoid', to: 'user_particulars#send_message', as: 'send_message'
+  get 'user_particulars/:id/document', to: 'user_particulars#document', as: 'user_document'
+  
   # Resources for user particulars, with nested documents resources
   resources :user_particulars do
     member do
@@ -24,13 +26,7 @@ Rails.application.routes.draw do
       get 'page2'
     end
     resources :documents, only: [:new, :create, :show, :edit, :update, :destroy]
-    resources :uploaded_files, only: [:index, :create, :destroy, :update]
-  end
-
-  resources :uploaded_files, only: [:index, :create, :destroy, :update] do
-    member do
-      delete :destroy, to: 'uploaded_files#destroy'
-    end
+    resources :uploaded_files, only: [:index, :create, :destroy]
   end
 
   # Resources for NGO users with custom member routes for verification and inbox
