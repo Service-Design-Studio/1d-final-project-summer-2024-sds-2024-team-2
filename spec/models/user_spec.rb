@@ -1,6 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
+  before(:all) do
+    @user = User.find_or_create_by!(username: 'newuser') do |user|
+      user.email = 'newuser@mail.com'
+      user.password = 'password'
+      user.phone_number = '91234567'
+    end
+  end
+
   # Rollback transaction after each test case
   around(:each) do |example|
     ActiveRecord::Base.transaction do
@@ -78,22 +86,25 @@ RSpec.describe User, type: :model do
   end
 
   describe '.find_for_database_authentication' do
-    let!(:user) { User.create!(username: 'dbuser', email: 'db@user.com', phone_number: '11111111', password: 'testpassword', password_confirmation: 'testpassword') }
-
     it 'finds user by username' do
-      expect(User.find_for_database_authentication(login: 'dbuser')).to eq(user)
+      expect(User.find_for_database_authentication(login: 'newuser')).to eq(@user)
     end
 
     it 'finds user by email' do
-      expect(User.find_for_database_authentication(login: 'db@user.com')).to eq(user)
+      expect(User.find_for_database_authentication(login: 'newuser@mail.com')).to eq(@user)
     end
 
     it 'finds user by phone number' do
-      expect(User.find_for_database_authentication(login: '11111111')).to eq(user)
+      expect(User.find_for_database_authentication(login: '91234567')).to eq(@user)
     end
 
     it 'returns nil if no user is found' do
-      expect(User.find_for_database_authentication(login: 'nonexistent')).to be_nil
+      expect(User.find_for_database_authentication(login: 'invalid')).to be_nil
     end
+  end
+
+  describe '.send_message' do
+    
+    
   end
 end
