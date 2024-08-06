@@ -116,7 +116,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_06_020231) do
   create_table "uploaded_files", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "file_name", null: false
-    t.string "file_path", null: false
     t.string "file_type", null: false
     t.integer "file_size", null: false
     t.datetime "created_at", null: false
@@ -164,6 +163,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_06_020231) do
     t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["unique_id"], name: "index_user_particulars_on_unique_id", unique: true
     t.index ["user_id"], name: "index_user_particulars_on_user_id"
   end
 
