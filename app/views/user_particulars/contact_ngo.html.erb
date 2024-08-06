@@ -1,0 +1,184 @@
+<!--Flash alert when message sent-->
+<%- if flash[:notice] %>
+  <div class="alert alert-info text-center"><%= flash[:notice] %></div>
+<%- elsif flash[:success] %>
+  <div class="alert alert-success text-center"><%= flash[:success] %></div>
+<%- elsif flash[:error_message].present? %>
+  <div class="alert alert-danger">
+    <ul><%= flash[:error_message] %></ul>
+    <% if flash[:error].present? %>
+      <ul>
+        <% flash[:error].each do |error| %>
+          <li><%= error %></li>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+<% end %>
+
+<div class='row d-flex justify-content-center my-3'>
+<div class="col-12 col-lg-10 d-flex justify-content-center align-items-center">
+<div class="mb-3 d-flex flex-column pri-container m-0 add-small-shadow p-3 pb-3" style='font-size: 0.7rem;'>
+  <div class="mb-4 w-100">
+    <div class="flex-column w-100 d-flex justify-content-center align-items-center">
+      <h4 class='text-center'>Malaysia NGO services</h4>
+      <form id="search-form" method="get" action="<%= contact_ngo_path %>" class="col-10 bg-dark text-white border-0" style="display: flex; align-items: center; justify-content: space-between; border-radius: 10px; margin: 10px; background-color: white; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
+          <!-- Adjusted form settings for better responsiveness -->
+          <input type="search" id="search-input" name="search" class="form-control bg-dark text-white border-0" placeholder="Search for NGO Services..." aria-label="Search" value="<%= params[:search] %>" style="flex-grow: 1; margin-right: 10px; font-size: 1em;">
+          <!-- Using similar input settings as the provided design -->
+          <span class="input-group-text border-0 text-white" style="flex-shrink: 0; background-color: transparent; font-size: 0.7rem;">
+              <button type="submit" class="btn btn-primary border-0" style="background-color:transparent;">
+                  <i class="fas fa-search"></i> <!-- Font Awesome search icon -->
+              </button>
+          </span>
+      </form>
+    </div>
+  </div>
+  <div class="container-fluid mx-0 overflow-auto flex" style="font-size: 0.7rem;">
+    <div class="row gap-1 justify-content-evenly w-100" style='font-size:1em; max-height: 100%;' id="event-cards-container">
+      <% @ngo_users.each do |ngo_user| %>
+        <div class="h-100 px-3 col-6 col-sm-6 col-md-4 col-lg-3 mb-1 card-service p-0" style='min-width:250px;'>
+          <!-- Column 1: Image -->
+          <div class='row d-flex'>
+            <% if ngo_user.image_url.present? %>
+              <%= image_tag ngo_user.image_url, alt: "#{ngo_user.name} image", class: 'col-1 fixed-border-radius align-self-start' %>
+            <% else %>
+              <%= image_tag 'default.png', alt: "Default image", class: 'col-1 fixed-border-radius align-self-start' %>
+            <% end %>
+            <div class="col-10">
+              <h5 class="card-title-service"><%= ngo_user.name %></h5>
+              <div>
+                <p style="margin: 0;"><strong>Email: </strong><%= ngo_user.email %></p>
+                <p style="margin: 0;"><strong>Contact Number: </strong><%= ngo_user.contact_number %></p>
+                <p style="margin: 0;"><strong>Website: </strong><%= ngo_user.website %></p>
+              </div>
+              <h6 style="margin: 2px;"><strong>Services: </strong></h6>
+              <ul>
+                <% ngo_user.ngo_services.each do |service|%>
+                  <li><%= service.services %></li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+          <!-- Column 2: Card Body -->
+          <div class="row d-flex justify-content-center m-2 mt-auto">
+            <button type="button" id = 'button-message' class="message-btn-service edit-btn col-8" data-ngoid="<%= ngo_user.id %>" data-id="<%= @user.id %>">Send a message <i class="fas fa-paper-plane"></i></button> <!-- do not remove edit-btn --> <!-- Adjusted button settings for better responsiveness -->
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+      
+<!-- Popup Modal for Editing -->
+<div id="editModal" class="modal" tabindex="-1" role="dialog">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+    <div class="modal-header">
+    <h5 class="modal-title">Send a Message</h5>
+
+    </div>
+    <div class="modal-body">
+        <form id="message-form">
+            <div class="form-group">
+            <p style="color: #808080; margin-top: 5px; font-size: 14px;">The NGO will be able to see your message, together with your EnableID information</p>
+                <label for="message-text">Message:</label>
+                <textarea class="form-control" id="message-text" name="message" rows="4" placeholder="Type your message here..." required></textarea>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary save-btn">Send message</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    </div>
+    </div>
+</div>
+</div>
+      </div>
+  </div>
+
+<script>
+
+$(document).ready(function() {
+    // Handling the search input with real-time AJAX updates
+    $('#search-input').on('input', function() {
+        $.ajax({
+            url: $('#search-form').attr('action'),
+            method: 'GET',
+            data: $('#search-form').serialize(),
+            success: function(data) {
+                var newContent = $(data).find('#ngo-results').html();
+                $('#ngo-results').html(newContent);
+                
+                // Re-bind the click event to the new edit buttons
+                bindEditButtons();
+
+                // Maintain the input focus and value after refresh
+                $('#search-input').focus();
+                var val = $('#search-input').val();
+                $('#search-input').val('');
+                $('#search-input').val(val);
+            }
+        });
+    });
+
+    // Function to bind edit button events
+    function bindEditButtons() {
+        $('.edit-btn').off('click').on('click', function() {
+            var userid = $(this).data('id');
+            var ngoId = $(this).data('ngoid');
+
+            // Fetch existing NGO data and fill in the form fields (can use AJAX here)
+            // Placeholder for actual data fetch, here we would use ngoId to get specific data
+            //$('#ngo-name').val(''); // Reset or set to fetched data
+            $('#editModal').data('ngoid', ngoId);
+            $('#editModal').data('userid', userid);
+            $('#editModal').modal('show'); // Using Bootstrap's modal component
+        });
+    }
+
+    // Initially bind the edit button events
+    bindEditButtons();
+
+    // Handling the Save button click in the modal
+    $('.save-btn').click(function() {
+        var ngoId = $('#editModal').data('ngoid');
+        var userId = $('#editModal').data('userid');
+        var messageContent = $('#message-text').val();
+        
+        if (!messageContent.trim()) {
+            alert('Please enter a message before sending.');
+            $('#message-text').focus();
+            return;  // Stop the function if no message is entered
+        }
+
+        $.ajax({
+            url: '/user_particulars/' + userId + '/' + ngoId + '/message',  // Adjust the URL as necessary
+            type: 'POST',
+            data: {
+                message: { content: messageContent }
+            },
+            headers: {
+                'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') // Ensure CSRF token is sent
+            },
+            success: function(response) {
+                $('#message-text').val('');
+                $('#editModal').modal('hide');
+                window.location.href = '/user_particulars/' + userId + '/contact_ngo';
+            },
+            error: function(xhr) {
+                alert('Error sending message: ' + xhr.responseText);
+            }
+        });
+    });
+
+    $('.btn-secondary, .close').click(function() {
+        $('#message-text').val('');
+        $('#editModal').modal('hide');
+    });
+});
+
+
+</script>

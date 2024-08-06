@@ -1,0 +1,134 @@
+/* Chat button styles */
+.small-chat-button {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #f1536a;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.big-chat-button {
+  position: fixed;
+  bottom: 0;
+  right: 10rem;
+  width: auto;
+  height: auto;
+  border-radius: 10px 10px 0 0;
+  background-color: #f1536a;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 1000;
+  text-wrap: none;
+}
+
+.bulletin-button {
+  position: fixed;
+  bottom: 4rem;
+  right: 1rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #f1536a;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 1000;
+}
+/* Fullscreen chat display styles */
+.chat-display {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  display: none;
+  z-index: 1001;
+  border-color: #1b212c;
+  border-style: solid;
+  border: 5px 5px 5px 5px;
+}
+
+.bulletin-display {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  display: none;
+  z-index: 1001;
+}
+
+/* Close button styles */
+.close-button {
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Chat header styles */
+.chat-header {
+  text-align: center;
+  font-size: 24px;
+  padding: 0.5rem;
+  padding-right: 1rem;
+  border-bottom: 1px solid #ddd;
+}
+
+#gemini-chat {
+  .chat-box {
+    padding: 1rem;
+  }
+  .chat-message {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 80%;
+    word-wrap: break-word;
+  }
+  .chat-message.user {
+    text-align: right;
+    background-color: #f1536a;
+    color: white;
+    align-self: flex-end;
+  }
+
+  .chat-message.bot {
+    text-align: left;
+    background-color: #f1f1f1;
+    color: black;
+    align-self: flex-start;
+  }
+}
+#chat-form {
+  /* Chat input area styles */
+  .chat-input-area {
+    z-index: 1000;
+  }
+
+  textarea {
+    padding: 0.5rem;
+    border: 1px solid black;
+    border-radius: 20px;
+    margin-right: 0.5rem;
+    max-height: 150px;
+    overflow-y: auto;
+  }
+
+  button {
+    background-color: #f1536a;
+    border: none;
+    border-radius: 50%;
+    color: white;
+    padding: 0.5rem 0.75rem;
+    font-size: 18px;
+    cursor: pointer;
+  }
+}

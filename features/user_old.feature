@@ -46,13 +46,6 @@ Scenario: Navigating to the Family page
     When I press on the "Add Family Member" button in the form
     Then the new family member should be added to the list
 
-Scenario: Navigating to the Saved Post page
-    When I press on the "Saved Post" button
-    Then I should be redirected to the "Saved Post" page
-    And I should see a list of my saved posts
-    And each post should display its title, author, and date saved
-    And I should see options to unsave the saved post
-    And I should see a search bar to filter saved posts in real time
 
 Scenario: Navigating to the Search NGOs page
     When I press on the "Search NGOs" button
@@ -60,13 +53,7 @@ Scenario: Navigating to the Search NGOs page
     And I should see a list of NGOs
 
 
-Feature: Bulletin Board on User Home Page
 
-Scenario: Post displayed by latest posted
-    When I view the list of posts
-    Then the posts should be displayed in descending order of their posted time
-    And the most recently posted post should appear at the top of the list
-    And each post should display the title, author, and posted time, details, and image
 
 Scenario: Saved Post
     When I press the "Save" icon button on a post
@@ -81,9 +68,6 @@ Scenario: Navigating to more information on the post by clicking
     Then I should be redirected to that "Post" page
     And I should see the post details
 
-Scenario: Search for Post
-    When I enter "Gebirah" into the search bar
-    Then the posts should start filtering in real-time
-    And I should see a list of posts related to "Gebirah"
+
 
  

@@ -1,0 +1,92 @@
+.container-inbox {
+    display: flex;
+    flex-direction: row;
+}
+
+.list-panel-inbox {
+    flex: 1; /* Each panel takes up half the space of the container */
+    padding: 10px;
+    border-radius: 5px; /* Rounded corners */
+
+}
+
+.details-panel {
+    flex: 2; /* Each panel takes up half the space of the container */
+    padding: 10px;
+    background-color: #cff9f9; 
+    border-radius: 30px;
+    overflow: auto; /* Enables vertical scrolling */
+    margin:10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    height: 80vh;
+}
+
+
+.contact-history ul {
+    list-style: none;
+    padding: 20px;
+    background-color: #cff9f9; 
+    border-radius: 30px;
+    height: 80vh; /* Adjust the height according to your design needs */
+    overflow: auto; /* Enables vertical scrolling */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+}
+
+.contact-history li {
+    padding: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add drop shadow */
+    border-radius: 10px; /* Rounded corners */
+    margin: 10px;
+    background-color: #ffffff;
+}
+
+.contact-history li:hover {
+    background-color: #f0f0f0;
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.message-header h4 {
+    margin: 0;
+}
+
+.message-header .date {
+    margin: 0;
+    padding:0;
+}
+.header-fixed {
+    position: sticky;
+    top: 0;
+    background-color: #cff9f9; /* or any other background color */
+    text-align: center; /* Optional: Center the content */
+}
+
+.details-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Space between the two containers */
+}
+
+.details-section {
+    background-color: white;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
+    justify-content: center;
+    justify-items: center;  
+}
+
+.message-section {
+    background-color: white;
+    margin-top: 10px;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
+    height: 40vh; /* Adjust the height according to your design needs */
+}

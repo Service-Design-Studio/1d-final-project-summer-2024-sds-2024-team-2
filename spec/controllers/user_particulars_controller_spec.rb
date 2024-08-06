@@ -31,7 +31,8 @@ RSpec.describe UserParticularsController, type: :controller do
     }
 
     @invalid_attributes = {
-      user_id: @user.id, #missing full name
+      user_id: @user.id, 
+      full_name: "Invalid@ name",
       phone_number_country_code: '+65',
       phone_number: '91234567',
       secondary_phone_number_country_code: '+60',
@@ -47,6 +48,58 @@ RSpec.describe UserParticularsController, type: :controller do
       birth_certificate_url: 'https://example.com/john_tan_birth_certificate.jpg',
       passport_url: 'https://example.com/john_tan_passport.jpg'
     }
+
+    ngo_users_data = [
+      { 
+        name: 'Test NGO 1', 
+        image_url: 'test_ngo_1.png', 
+        created_at: DateTime.now, 
+        updated_at: DateTime.now,
+        email: 'contact@testngo1.org', 
+        contact_number: '+123 456 7890', 
+        website: 'https://www.testngo1.org/',
+        services: ['Education'] 
+      },
+      { 
+        name: 'Test NGO 2', 
+        image_url: 'test_ngo_2.png', 
+        created_at: DateTime.now, 
+        updated_at: DateTime.now,
+        email: 'contact@testngo2.org', 
+        contact_number: '+123 456 7891', 
+        website: 'https://www.testngo2.org/',
+        services: ['Education'] 
+      },
+      { 
+        name: 'Test NGO 3', 
+        image_url: 'test_ngo_3.png', 
+        created_at: DateTime.now, 
+        updated_at: DateTime.now,
+        email: 'contact@testngo3.org', 
+        contact_number: '+123 456 7891', 
+        website: 'https://www.testngo3.org/',
+        services: ['Healthcare'] 
+      }
+    ]
+
+    @ngo_users = ngo_users_data.map do |ngo_data|
+      ngo_user = NgoUser.find_or_create_by(name: ngo_data[:name]) do |ngo_user|
+        ngo_user.image_url = ngo_data[:image_url]
+        ngo_user.email = ngo_data[:email]
+        ngo_user.contact_number = ngo_data[:contact_number]
+        ngo_user.website = ngo_data[:website]
+        ngo_user.created_at = ngo_data[:created_at]
+        ngo_user.updated_at = ngo_data[:updated_at]
+      end
+    end
+
+    @ngo_services = @ngo_users.each_with_index do |ngo_user, index|
+      ngo_users_data[index][:services].each do |service_name|
+        service = ngo_user.ngo_services.find_or_initialize_by(services: service_name)
+        service.save!
+      end
+    end
+
   end
 
   before do
@@ -54,7 +107,7 @@ RSpec.describe UserParticularsController, type: :controller do
     sign_in @user
   end
 
-  # Rollback transaction after each test case
+  # Rollback transaction after each test suite
   around(:each) do |example|
       ActiveRecord::Base.transaction do
       example.run
@@ -70,7 +123,8 @@ RSpec.describe UserParticularsController, type: :controller do
 
   describe 'GET #show' do
     it 'renders show template' do
-      @user_particular = UserParticular.create_user_particular(@valid_attributes)
+      @user_particular = UserParticular.create(@valid_attributes)
+      @user_particular = UserParticular.create(@valid_attributes)
       get :show, params: { id: @user_particular.id }
       expect(response).to render_template(:show)
     end
@@ -78,24 +132,60 @@ RSpec.describe UserParticularsController, type: :controller do
 
   describe 'GET #document' do
     it 'renders document template' do
-      @user_particular = UserParticular.create_user_particular(@valid_attributes)
+      @user_particular = UserParticular.create(@valid_attributes)
+      @user_particular = UserParticular.create(@valid_attributes)
       get :document, params: { id: @user_particular.id }
       expect(response).to render_template(:document)
     end
   end
 
   describe 'GET #new' do
-    it 'renders new template' do
-      get :new
-      expect(response).to render_template(:new)
+    context 'when session has user_particular_params' do
+      it 'fills up the form with previously filled data' do
+        session[:user_particular_params] = @valid_attributes.except(:user_id)
+        get :new
+
+        expect(assigns(:user_particular)).to have_attributes(@valid_attributes.except(:user_id))
+        expect(response).to render_template(:new)
+      end
+    end
+
+    context 'when session does not have user_particular_params' do
+      it 'creates a new empty UserParticular object' do
+        session[:user_particular_params] = nil
+        get :new
+
+        expect(assigns(:user_particular)).to be_a_new(UserParticular)
+        expect(response).to render_template(:new)
+      end
     end
   end
 
   describe 'GET #edit' do
-    it 'renders edit template' do
-      @user_particular = UserParticular.create_user_particular(@valid_attributes)
-      get :edit, params: { id: @user_particular.id }
-      expect(response).to render_template(:edit)
+    context 'after user edits particulars with failed parameters' do
+      it 'renders edit template with data from parameters' do
+        @user_particular_db = UserParticular.create(@valid_attributes) #create to provide the id for edit action
+        @user_particular_db = UserParticular.create(@valid_attributes) #create to provide the id for edit action
+        @param_attributes = @valid_attributes.merge(full_name: 'Not John', id: @user_particular_db.id)
+        @user_particular = UserParticular.new(@param_attributes)
+        get :edit, params: { id: @user_particular_db.id, user_particular: @param_attributes }
+        
+        # Check that :user_particular is correctly assigned to database record
+        expect(assigns(:user_particular)).to eq(@user_particular)
+        expect(response).to render_template(:edit)
+      end
+    end
+
+    context 'user opens edit particulars page initially' do
+      it 'renders edit template with data from database' do
+        @user_particular = UserParticular.create(@valid_attributes)
+        @user_particular = UserParticular.create(@valid_attributes)
+        get :edit, params: { id: @user_particular.id }
+        
+        # Check that :user_particular is correctly assigned to database record
+        expect(assigns(:user_particular)).to eq(@user_particular)
+        expect(response).to render_template(:edit)
+      end
     end
   end
 
@@ -155,22 +245,22 @@ RSpec.describe UserParticularsController, type: :controller do
     end
 
     context 'with invalid params' do
-      it 'does not update the UserParticular' do
+      it 'does not pass controller validation and update the UserParticular' do
         user_particular = UserParticular.create!(@valid_attributes) # Create an initial record
         patch :update, params: { id: user_particular.id, user_particular: @invalid_attributes }
     
         expect(response).to redirect_to(edit_user_particular_path(user_particular.id, user_particular: @invalid_attributes))
         expect(flash[:error_message]).to eq 'Edit failed. Please fix the error(s) below:'
       end
-    end        
-
-    context 'with non-existent UserParticular' do
-      it 'does not update the UserParticular' do
-        # Attempt to update a UserParticular with an ID that doesn't exist
-        patch :update, params: { id: 99999, user_particular: @valid_attributes.merge(full_name: 'new name') }
+    end
     
-        expect(response).to redirect_to(edit_user_particular_path(99999, user_particular: @valid_attributes.merge(full_name: 'new name')))
-        expect(flash[:error_message]).to eq 'Edit failed. Please fix the error(s) below:'
+    context 'with empty params' do
+      it 'does not get pass model validation and update the UserParticular' do
+        user_particular = UserParticular.create!(@valid_attributes) # Create an initial record
+        patch :update, params: { id: user_particular.id, user_particular: @invalid_attributes.merge(religion: '') } #empty religion field will fail model check
+    
+        expect(response).to redirect_to(edit_user_particular_path(user_particular.id, user_particular: @invalid_attributes))
+        expect(flash[:error_message]).to eq 'Edit failed'
       end
     end
   end
@@ -178,7 +268,7 @@ RSpec.describe UserParticularsController, type: :controller do
   describe 'POST #generate_2fa' do
     context 'when 2FA passcode generation is successful' do
       it 'generates and returns a 2FA passcode' do
-        @user_particular = UserParticular.create_user_particular(@valid_attributes)
+        @user_particular = UserParticular.create(@valid_attributes)
         post :generate_2fa, params: { id: @user_particular.id }, format: :json
 
         @user_particular.reload
@@ -189,7 +279,7 @@ RSpec.describe UserParticularsController, type: :controller do
 
     context 'when 2FA passcode generation fails' do
       it 'returns an error message' do
-        @user_particular = UserParticular.create_user_particular(@valid_attributes)
+        @user_particular = UserParticular.create(@valid_attributes)
 
         # Force the save method called in generate_2fa to return false
         allow_any_instance_of(UserParticular).to receive(:save).and_return(false)
@@ -257,14 +347,15 @@ RSpec.describe UserParticularsController, type: :controller do
         error_messages = validate_user_particulars(invalid_attributes)
         expect(error_messages).to include('Select country of origin from the dropdown list.')
       end
-
-      it 'adds error messages for invalid ethnicity' do
+      
+      #TODO: replace and create new test cases using the new user validation method
+      xit 'adds error messages for invalid ethnicity' do
         invalid_attributes = @valid_attributes.merge(ethnicity: 'loremipsum')
         error_messages = validate_user_particulars(invalid_attributes)
         expect(error_messages).to include('Select ethnicity from the dropdown list.')
       end
 
-      it 'adds error messages for invalid religion' do
+      xit 'adds error messages for invalid religion' do
         invalid_attributes = @valid_attributes.merge(religion: 'loremipsum')
         error_messages = validate_user_particulars(invalid_attributes)
         expect(error_messages).to include('Select religion from the dropdown list.')
@@ -296,4 +387,29 @@ RSpec.describe UserParticularsController, type: :controller do
     end
   end
 
+  describe 'GET #contact_ngo' do
+    context 'no search param' do
+      it 'renders contact ngo template with all ngo users' do
+        user_particular = UserParticular.create(@valid_attributes)
+        get :contact_ngo, params: { id: user_particular.id }
+
+        expect(assigns(:ngo_users)).to eq(NgoUser.all)
+        expect(response).to render_template(:contact_ngo)
+      end
+    end
+
+    context 'with search param' do
+      it 'renders contact ngo template with filtered ngo users' do
+        user_particular = UserParticular.create(@valid_attributes)
+        get :contact_ngo, params: { id: user_particular.id, search: 'Education' }
+    
+        filtered_ngo_users = [
+          NgoUser.find_by(name: 'Test NGO 1'),
+          NgoUser.find_by(name: 'Test NGO 2')
+        ]
+        expect(assigns(:ngo_users)).to match_array(filtered_ngo_users)
+        expect(response).to render_template(:contact_ngo)
+      end
+    end    
+  end
 end

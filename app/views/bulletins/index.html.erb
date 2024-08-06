@@ -15,7 +15,7 @@
   </div>
   <div class="row overflow-auto" style='max-height: 65vh;' id="event-cards-container">
     <% @bulletins.each do |bulletin| %>
-      <div class="col-md-3 mb-4 event-container justify-content-center align-items-center" data-title="<%= bulletin.title.downcase %>" data-description="<%= bulletin.description.downcase %>" data-ngo-name="<%= bulletin.ngo_name.downcase %>">
+      <div class="col-md-3 mb-4 event-container justify-content-center align-items-center" id="individual-cards" data-title="<%= bulletin.title.downcase %>" data-description="<%= bulletin.description.downcase %>" data-ngo-name="<%= bulletin.ngo_name.downcase %>">
         <div class="card event-card add-small-shadow">
           <% ngo_user = @ngo_users.find { |user| user.name == bulletin.ngo_name } %>
           <% if ngo_user&.image_url.present? %>

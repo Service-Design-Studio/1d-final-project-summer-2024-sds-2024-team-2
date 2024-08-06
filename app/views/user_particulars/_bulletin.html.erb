@@ -1,58 +1,121 @@
-<div id="bulletin" class="d-flex flex-column pri-container m-0 add-small-shadow p-3 pb-3" style='width:100%; max-height: 75vh;'>
-  <div class="d-flex mb-4">
+<div id="bulletin" class="w-100 mb-3 d-flex flex-column pri-container m-0 add-small-shadow p-3 pb-3" style='font-size: 0.7rem; width:100%; min-width:100%;'>
+  <div class="d-flex mb-4 w-100">
     <div class="flex-column flex w-100">
-      <h5 class='text-center'>Bulletin Board</h5>
+      <h6 class='text-center'>Bulletin Board</h6>
       <div class="input-group w-100 bg-dark search-bar p-1" style='border-radius: 40px;'>
-        <span class="input-group-text border-0 text-white" style="font-size: 0.7em; background-color:transparent;">
+        <span class="input-group-text border-0 text-white" style="font-size: 0.7rem; background-color:transparent;">
           <i class="fas fa-bars"></i>
         </span>
         <input type="search" class="form-control bg-dark text-white border-0" id="search-input" placeholder="Search Post" aria-label="Search" aria-describedby="search-addon" style="font-size: 1em;"/>
-        <span class="input-group-text border-0 text-white" style="font-size: 0.7em; background-color:transparent;">
+        <span class="input-group-text border-0 text-white" style="font-size: 0.7rem; background-color:transparent;">
           <i class="fas fa-search"></i>
         </span>
       </div>
     </div>
     <% if @ngo_page %>
-      <button type="button" class="customhome-button" data-toggle="modal" data-target="#addBulletinModal" style="background-color: #0eac95; color: white;" >
+      <button type="button" class="customhome-button d-flex align-items-center justify-content-center" data-toggle="modal" data-target="#addBulletinModal" style="background-color: #0eac95; color: black; font-size: 12px; height: 50px; margin-top: 20px; " >
         Add Bulletin Post
       </button>
     <% end %>
   </div>
-  <div class="d-flex flex-column flex-grow-1 overflow-auto" style="overflow-x: hidden;">
-    <div class="d-flex flex-wrap gap-2 overflow-auto" style='max-height: 100%;' id="event-cards-container">
+  <div class="container-fluid mx-0 overflow-auto flex" style="font-size: 0.7rem;">
+    <div class="row justify-content-evenly w-100" style='max-height: 100%;' id="event-cards-container">
       <% @bulletins.each do |bulletin| %>
-        <span class="event-card justify-content-center align-items-center" style="width:170px;" data-title="<%= bulletin.title.downcase %>" data-description="<%= bulletin.description.downcase %>" data-ngo-name="<%= bulletin.ngo_name.downcase %>">
-          <div class="card d-flex add-small-shadow justify-content-center" style="font-size: 0.7em; height:100%;">
-            <div class='d-flex w-100 align-items-center justify-content-center' style='min-width: 100px; height: 90px'>
-              <% ngo_user = @ngo_users.find { |user| user.name == bulletin.ngo_name } %>
-              <% if ngo_user&.image_url.present? %>
-                <%= image_tag ngo_user.image_url, alt: "#{ngo_user.name} image", style: 'max-width: 100%; max-height: 100%; object-fit: contain;' %>
-              <% else %>
-                <%= image_tag 'default.png', alt: "Event image", style: 'max-width: 100%; max-height: 100%; object-fit: contain;' %>
-              <% end %>
-            </div>
-            <div class="card-body p-2" >
-              <ul class="list-unstyled">
-                <div class='d-flex justify-content-between'>
-                  <div>
-                    <h6 class="card-title" style="font-size: 1.2em;"><%= bulletin.title %></h6>
-                    <li>Date: <%= bulletin.date ? bulletin.date.strftime("%d %B %Y") : "Date not available" %></li>
-                  </div>
-                  <%= link_to '#', onclick: 'toggleSavePost(this)', style: 'text-decoration: none;' do %>
-                    <i style='text-decoration: none; color: black;' class="bi bi-bookmark fs-2"></i>
-                  <% end %>
-                </div>
-                <li>Location: <%= bulletin.location %></li>
-                <p class='truncate-multiline'>Information: <%= bulletin.description %></p>
-              </ul>
-              <div class="mt-3 d-flex justify-content-between align-items-center" style="font-size: 0.9em;">
-                <small class="text-muted"><%= bulletin.ngo_name %></small>
-                <small class="text-muted"><%= time_ago_in_words(bulletin.created_at) %> ago</small>
+        <% saved = @saved_posts&.include?(bulletin.id) %>
+        <% ngo_user = @ngo_users.find { |user| user.name.casecmp?(bulletin.ngo_name) } || OpenStruct.new(id: 'N/A', image_url: 'default.png', name: 'Unknown') %>
+        <div class="col-6 col-sm-6 col-md-4 col-lg-3 mb-1 event-card card p-0" style="min-width:125px; max-width: 220px;" data-ngoid="<%= ngo_user.id %>" data-bulletin-id="<%= bulletin.id %>" data-ngoname="<%= bulletin.ngo_name %>" data-title="<%= bulletin.title %>" data-description="<%= bulletin.description %>" data-date="<%= bulletin.date ? bulletin.date.strftime("%d %B %Y") : "Date not available" %>" data-location="<%= bulletin.location %>" data-image-url="<%= ngo_user&.image_url.present? ? ngo_user.image_url : 'default.png' %>" data-user-id="<%= ngo_user&.id %>">
+          <div class="px-1 d-flex flex-column w-100 h-100" data-bs-toggle="modal" data-bs-target="#eventCards">
+            <div class="d-flex flex-grow-1 w-100 align-items-center justify-content-center">
+              <div class="bulletin-photo">
+                <% if bulletin.photo.present? && File.exist?(Rails.root.join('public', 'uploads', bulletin.photo)) %>
+                  <%= image_tag "/uploads/#{bulletin.photo}", alt: "Bulletin photo", class: "img-fluid", style: 'max-width: 100px; max-height: 100px; object-fit: contain;' %>
+                <% elsif ngo_user&.image_url.present? %>
+                  <%= image_tag ngo_user.image_url, alt: "#{ngo_user.name} image", class: "img-fluid", style: 'max-width: 100px; max-height: 100px; object-fit: contain;' %>
+                <% else %>
+                  <%= image_tag 'default.png', alt: "Event image", class: "img-fluid", style: 'max-width: 100px; max-height: 100px; object-fit: contain;' %>
+                <% end %>
               </div>
             </div>
+            <ul class="list-unstyled pl-1">
+              <li class="card-title h6"><%= bulletin.title %></li>
+              <li>Date: <%= bulletin.date ? bulletin.date.strftime("%d %B %Y") : "Date not available" %></li>
+              <li>Location: <%= bulletin.location %></li>
+              <li class="truncate-small-multiline">Information: <%= bulletin.description %></li>
+            </ul>
+            <div class="mt-auto d-flex px-1 w-100 align-items-center justify-content-between">
+              <small class="text-muted truncate-small-multiline"><%= bulletin.ngo_name %></small>
+              <small class="text-nowrap text-end text-muted pr-1"><%= time_ago_in_words(bulletin.created_at) %> ago</small>
+            </div>
           </div>
-        </span>
+          <div class="d-flex px-1 w-100 align-items-center justify-content-between" style="font-size: 1.3em; border-top: solid 1px lightgrey">
+            <a type="button" onclick="" style="text-decoration: none;" aria_label="sender <%= bulletin.title %> <%= bulletin.id %>" data-ngoid="<%= ngo_user.id %>" data-userid="<%= @user&.id || "" %>" data-bs-toggle="modal" data-bs-target="#sendModal" data-ngoname="<%= bulletin.ngo_name %>">
+              <i style="text-center text-decoration: none; color: black;" class="sender bi bi-send"></i>
+            </a>
+            <% if @on_saved_page %>
+              <%= link_to '#', onclick: 'deleteSavePost(this)', data: { bulletin_id: bulletin.id, user_id: @user.id }, style: 'text-decoration: none;', aria_label: "toggle #{bulletin.title} #{bulletin.id}"  do %>
+                <i style='text-center text-decoration: none; color: orange;' id='bookmark-icon' class="bookmarker bi bi-bookmark-fill"></i>
+              <% end %>
+            <% else %>
+              <% if @user %>
+                <%= link_to '#', onclick: 'toggleSavePost(this)', data: { bulletin_id: bulletin.id, user_id: @user.id }, style: 'text-decoration: none;', aria_label: "toggle #{bulletin.title} #{bulletin.id}" do %>
+                  <i style='text-center text-decoration: none; color: orange;' id='bookmark-icon' class="bookmarker bi <%= saved ? 'bi-bookmark-fill' : 'bi-bookmark' %>"></i>
+                <% end %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
       <% end %>
+      <% if @bulletins.empty? %>
+        <div class="alert alert-info text-center" role="alert">
+          No bulletin posts available!
+        </div>
+      <% end %>
+    </div>
+  </div>
+  <!-- Event Details Modal -->
+  <div class="modal fade" id="eventCards" data-ngoid="" data-userid="<%= @user&.id || "" %>" tabindex="-1" aria-labelledby="eventCardsLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal-title">Modal title</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- <img id="modal-photo" src="" alt="Event Photo" style="width: 100%; height: auto;"> -->
+          <p id="modal-ngoname"></p>
+          <p id="modal-description"></p>
+          <p id="modal-date"></p>
+          <p id="modal-location"></p>
+          <p id="modal-id"></p>
+        </div>
+        <div class="modal-footer d-flex justify-content-evenly">
+            <button id="modal-send-btn" type="button" class="btn-primary px-3 customhome-button" data-bs-toggle="modal" data-bs-target="#sendModal"><span class='mr-2'>Send a message </span><i style="text-center text-decoration: none; color: black;" class="m-0 sender bi bi-send fs-5"></i></button>
+            <button id="modal-saved-btn" type="button" class="btn-dark px-3 customhome-button"><span id='btn-span-text' class='mr-2'>Add to Saved </span><i style='color: orange;' class="m-0 bi fs-5"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Send a Message to NGO modal -->
+<div class="modal fade" id="sendModal" tabindex="-1" role="dialog" aria-labelledby="sendModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="send-modal-title" id="sendModalLabel"></h5>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">Message:</label>
+            <textarea class="form-control" id="message-text"></textarea>
+            <small class="fst-italic" id="sendModalSubLabel"></small>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="user_send_message_btn">Send message</button>
+      </div>
     </div>
   </div>
 </div>
@@ -61,29 +124,208 @@
   $(document).ready(function() {
     $('#search-input').on('input', function() {
       var searchQuery = $(this).val().toLowerCase();
+      var anyVisible = false;
       $('.event-card').each(function() {
-        var title = $(this).data('title');
-        var description = $(this).data('description');
-        var ngoName = $(this).data('ngo-name');
+        var title = $(this).data('title').toLowerCase();
+        var description = $(this).data('description').toLowerCase();
+        var ngoName = $(this).data('ngoname').toLowerCase();
         if (title.includes(searchQuery) || description.includes(searchQuery) || ngoName.includes(searchQuery)) {
           $(this).show();
+          anyVisible = true;
         } else {
           $(this).hide();
         }
+        if (!anyVisible) {
+            $('#no-results-message').remove(); // Remove any existing message
+            $('#bulletin').append(`
+              <div class='row'>
+                <div id="no-results-message" class="col-12 m-auto alert alert-info text-center" style='width:680px;' role="alert">
+                    No bulletin posts available!
+                </div>
+              </div>
+            `);
+        } else {
+            $('#no-results-message').remove(); // Remove the message if there are visible cards
+        }
       });
     });
-  });
-</script>
-<script>
-  function toggleSavePost(element) {
-    // Toggle the 'saved' class or perform an action
-    element.querySelector('i').classList.toggle('bi-bookmark-fill');
-    element.querySelector('i').classList.toggle('bi-bookmark');
 
-    // Optionally, you can make an AJAX call to save the post on the server
-    // Example:
-    // fetch('/save_post', { method: 'POST', body: JSON.stringify({ post_id: 123 }) })
-    //   .then(response => response.json())
-    //   .then(data => console.log(data));
-  }
+    $('.event-card').on('click', function() {
+      const bookmarkIcon = $(this).find('#bookmark-icon');
+      const modalSavedButtonIcon = $('#modal-saved-btn').find('i');
+      const modalSavedButton = $('#modal-saved-btn').find('span');
+      var title = $(this).data('title');
+      var description = $(this).data('description');
+      var date = $(this).data('date');
+      var location = $(this).data('location');
+      var ngoname = $(this).data('ngoname');
+      var id = $(this).data('bulletin-id');
+      //var imageUrl = $(this).data('image-url');
+      $('#modal-ngoname').text(ngoname);
+      $('#modal-title').text(title);
+      $('#modal-description').text("Description: " + description);
+      $('#modal-date').text("Date: " + date);
+      $('#modal-location').text("Location: " + location);
+      $('#modal-id').text("Event ID: " + id);
+      $('#eventCards').data('ngoid', $(this).data('ngoid'));
+      console.log("ModalBtnSavedIcon: " + modalSavedButtonIcon);
+      console.log("ModalBtnSavedIcon Class List: " + modalSavedButtonIcon.classList);
+      console.log(bookmarkIcon);
+      if (bookmarkIcon.hasClass('bi-bookmark-fill')) {
+        console.log("the bookmark is supposed to be filled!");
+        modalSavedButtonIcon.addClass('bi-bookmark-fill').removeClass('bi-bookmark');
+        modalSavedButton.text('Saved');
+      } else {
+        console.log("the bookmark is supposed to be NOT filled!");
+        modalSavedButtonIcon.addClass('bi-bookmark').removeClass('bi-bookmark-fill');
+        modalSavedButton.text('Add to Saved');
+      }
+      //$('#modal-photo').attr('src', "app/assets/images/" + imageUrl);
+    });
+
+    $('[aria_label^="sender"]').on('click', function() {
+      var ngoname = $(this).data('ngoname');
+      $('#sendModalSubLabel').text(ngoname +" will be able to see your message linked to this event card, together with your EnableID");
+      $('#sendModalLabel').text("What do you want to tell " + ngoname +"?");
+      $('#sendModal').data('ngoid', $(this).data('ngoid'));
+      $('#sendModal').data('userid', $(this).data('userid'));
+      $('#sendModal').data('event', $('#modal-title').text()); 
+    });
+
+    $('#modal-send-btn').click(function() {
+      var ngoname = $('#modal-ngoname').text();
+        $('#sendModalSubLabel').text(ngoname +" will be able to see your message linked to this event card, together with your EnableID");
+        $('#sendModalLabel').text("What do you want to tell " + ngoname +"?");
+        $('#sendModal').data('ngoid', $('#eventCards').data('ngoid'));
+        $('#sendModal').data('userid', $('#eventCards').data('userid'));
+        $('#sendModal').data('event', $('#modal-title').text()); 
+    });
+
+    $('#modal-saved-btn').click(function() {
+    // Find the <i> element within the button
+      var button = this;
+      console.log(button);
+      var icon = button.querySelector('i');
+      console.log(icon);
+      var spanText = button.querySelector('#btn-span-text');
+      // Toggle the class between bi-bookmark-fill and bi-bookmark
+      if (icon.classList.contains('bi-bookmark')) {
+          icon.classList.remove('bi-bookmark');
+          icon.classList.add('bi-bookmark-fill');
+          spanText.textContent = 'Saved';
+      } else {
+          icon.classList.remove('bi-bookmark-fill');
+          icon.classList.add('bi-bookmark');
+          spanText.textContent = 'Add to Saved';
+      }
+      var ariaLabel = "toggle "+ $('#modal-title').text() +" "+ $('#modal-id').text().match(/\d+/)[0];
+      var matchingButton = document.querySelector(`a[aria_label="${ariaLabel}"]`);
+      console.log(`a[aria_label="${ariaLabel}"]`);
+      console.log(matchingButton);
+      // Call the toggleSavePost function
+      toggleSavePost(matchingButton);
+    });
+
+    deleteSavePost = function(element) {
+      const bulletinId = element.dataset.bulletinId;
+      const userId = element.dataset.userId;
+
+      fetch(`/saved_posts/${userId}?bulletinId=${bulletinId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ user_id: userId })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          element.querySelector('i').classList.remove('bi-bookmark-fill');
+          element.querySelector('i').classList.add('bi-bookmark');
+          $(element).closest('.event-card').remove();
+          window.location.reload();
+        } else {
+          console.error('Error:', data.error);
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    }
+
+    toggleSavePost = function(element) {
+      var icon = element.querySelector('i');
+      var bulletinId = element.dataset.bulletinId;
+      var userId = element.dataset.userId;
+      const csrfTokenMetaTag = document.querySelector('meta[name="csrf-token"]');
+        if (csrfTokenMetaTag) {
+        const csrfToken = csrfTokenMetaTag.getAttribute('content');
+        // Proceed with your logic using csrfToken
+        } else {
+        console.error('CSRF token meta tag not found');
+        }
+
+      // Toggle the 'saved' class or perform an action
+      icon.classList.toggle('bi-bookmark-fill');
+      icon.classList.toggle('bi-bookmark');
+
+      // Make an AJAX request to toggle the saved state
+      fetch(`/saved_posts?bulletin_id=${bulletinId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (!data.success) {
+          // Revert the icon toggle if the request failed
+          icon.classList.toggle('bi-bookmark-fill');
+          icon.classList.toggle('bi-bookmark');
+          alert('Failed to toggle save state');
+        }
+      })
+      .catch(error => {
+        // Revert the icon toggle if there was an error
+        icon.classList.toggle('bi-bookmark-fill');
+        icon.classList.toggle('bi-bookmark');
+        alert('An error occurred');
+      });
+    };
+
+    $('#user_send_message_btn').click(function() {
+        var ngoId = $('#sendModal').data('ngoid');
+        var userId = $('#sendModal').data('userid');
+        var ngoEvent = $('#sendModal').data('event');
+        var messageContent = $('#message-text').val();
+
+        if (!messageContent.trim()) {
+            alert('Please enter a message before sending.');
+            $('#message-text').focus();
+            return;  // Stop the function if no message is entered
+        }
+
+        $.ajax({
+            url: '/user_particulars/' + userId + '/' + ngoId + '/message',  // Adjust the URL as necessary
+            type: 'POST',
+            data: {
+              message: {
+                content: messageContent,
+                event_title: ngoEvent
+                }
+            },
+            headers: {
+                'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') // Ensure CSRF token is sent
+            },
+            success: function(response) {
+                $('#message-text').val('');
+                $('#sendModal').modal('hide');
+                location.reload();
+            },
+            error: function(xhr) {
+                alert('Error sending message: ' + xhr.responseText);
+            }
+        });
+    });
+  });
 </script>

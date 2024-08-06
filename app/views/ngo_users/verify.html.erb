@@ -7,13 +7,29 @@
     height: 500px; /* Adjust this value based on your needs */
     overflow-y: scroll;
   }
+
+  body {
+    background-color: #fffff;  
+    background-image: url('<%= asset_path('showbg.svg') %>');
+    background-size: cover;
+    background-position: center;
+  }
+
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+
 </style>
+
 <div class='p-5 row d-flex justify-content-between'>
-  <div class="ml-5 col-3 p-3" style='font-size: 0.8em'>
-    <h4 class="text-center rounded mt-3">Verify the User's <strong style="color: #f1536a;">EnableID</strong></h4>
-        <%= render partial: "user_particulars/digitalid", locals: { user_particular: @user_particular } %>
-  </div>
-  <div class='col-5 p-3" style='font-size: 0.8em'>
+  <div class='col-4 p-3' style='font-size: 0.8em'>
+    <h2 class> Scroll for more information: </h2>
     <div id="app" v-scroll="onScroll">
       <div class="card_2" v-for="(card, index) in styledCards" :style="card.style" :key="index">
         <div class="card_content_2">
@@ -23,10 +39,15 @@
       </div>
     </div>
   </div>
-  <div class="col-3 formcol p-3" style='font-size: 0.8em'> <!-- Add a margin top to create space -->
-    <%= form_with url: confirm_verify_ngo_user_path(@ngo_user), method: :post,local: true, id: "verify" do %>
+  <div class="ml-6 col-3 p-3" style='font-size: 0.8em'>
+    <h4 class="text-center rounded mt-3">Verify the User's <strong style="color: #f1536a;">EnableID</strong></h4>
+    <%= render partial: "user_particulars/digitalid", locals: { user_particular: @user_particular } %>
+  </div>
+  <div class="col-3 formcol p-3" style='font-size: 0.8em'>
+    <%= form_with url: confirm_verify_ngo_user_path(@ngo_user), method: :post, local: true, id: "verify" do %>
       <input type="hidden" name="unique_id" value="<%= @user_particular.unique_id %>">
-      <h5 style='color:white;'>Please ensure that all these information is present before verifying:</h5>
+      ...
+      <h5 style='color:Black;'>Please ensure that all these information is present before verifying:</h5>
       <div class="inputGroup">
         <input id="option1" name="option1" type="checkbox"/>
         <label for="option1">Full name</label>
@@ -48,8 +69,7 @@
         <label for="option5">Phone Number</label>
       </div>
       <div class='d-flex justify-content-around gap-1 mt-auto mb-2 '>
-      <%= button_tag "Keep in View", type: 'button', class: "btn btn-primary mt-3", id: "keep-in-view-btn" %>
-      <%= submit_tag "Verify", class: "px-5 btn btn-info mt-3", id: "verify-btn", disabled: true%>
+        <%= submit_tag "Verify", class: "px-5 btn btn-info mt-3", id: "verify-btn", disabled: true %>
       </div>
     <% end %>
   </div>
@@ -91,25 +111,25 @@
 <script>
 const cardsData = [
    {
-    title: 'Title 1',
-    description: 'Tempora quam ducimus dolor animi magni culpa neque sit distinctio ipsa quos voluptates accusantium possimus earum rerum iure',
+    title: 'Access to services:',
+    description: 'Verification can help undocumented individuals gain access to essential services such as healthcare, education, and social services.',
   },
   {
-    title: 'Title 2',
-    description: 'Tempora quam ducimus dolor animi magni culpa neque sit distinctio ipsa quos voluptates accusantium possimus earum rerum iure',
+    title: 'Emergency Assistance:',
+    description: 'They can receive timely help during emergencies, as NGOs and other organizations can quickly verify their identity and needs.',
   },
   {
-    title: 'Title 3',
-    description: 'Tempora quam ducimus dolor animi magni culpa neque sit distinctio ipsa quos voluptates accusantium possimus earum rerum iure',
+    title: 'Access to Basic Needs:',
+    description: 'Verifying a refugee allows them to receive food, water, and shelter from various NGOs, significantly improving their living conditions and overall well-being.',
   },
   // Add more titles below
   {
-    title: 'Title 4',
-    description: 'Description for Title 4',
+    title: 'Personal Information:',
+    description: 'Verify that the personal details (such as name, date of birth, and other identifying information) on the EnableID match the information provided by the individual.',
   },
   {
-    title: 'Title 5',
-    description: 'Description for Title 5',
+    title: 'Data Integrity:',
+    description: 'Confirm that the data on the EnableID has not been tampered with. This includes checking for any signs of alteration or corruption in the digital records.',
   }
   // You can continue adding more titles and descriptions in the same format
   
@@ -179,3 +199,7 @@ new Vue({
   }
 })
 </script>
+
+
+
+

@@ -15,10 +15,10 @@
       margin: 0;
     }
     body {
-      display: flex;
-      flex-direction: column;
-      background: url('<%= asset_path('NGOfingerprint.svg') %>') no-repeat center center;
+      background-color: #fffff;  
+      background-image: url('<%= asset_path('showbg.svg') %>');
       background-size: cover;
+      background-position: center;
     }
     .content {
       flex: 1;
@@ -27,13 +27,16 @@
       align-items: flex-start;
       position: relative;
     }
+      
     .overlay {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.5);
+    }
+    
     }
   </style>
 </head>
@@ -70,16 +73,16 @@
                   <%= link_to '#', class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;', data: { toggle: "modal", target: "#checkUserModal" } do %>
                     <i class="fas fa-user ml-2"></i> Verify User
                   <% end %>
-                  <%= link_to ngo_user_path, class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
+                  <%= link_to inbox_ngo_user_path, class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
                     <i class="fas fa-inbox ml-2"></i> Inbox
                   <% end %>
                 </div>
                 <div class="row d-flex justify-content-center gap-2">
-                  <%= link_to ngo_user_path, class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
+                  <%= link_to interaction_history_ngo_user_path(@ngo_user), class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
                     <i class="fas fa-history ml-2"></i> Interaction History
                   <% end %>
-                  <%= link_to ngo_user_path, class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
-                    <i class="fas fa-calendar ml-2"></i> Events
+                  <%= link_to ngo_user_path, class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;', id: "my-events-button" do %>
+                    <i class="fas fa-calendar ml-2"></i> My Events
                   <% end %>
                 </div>
               </div>
@@ -140,24 +143,31 @@
         </button>
       </div>
       <div class="modal-body">
-        <%= form_for :bulletin, url: bulletins_path, method: :post do |f| %>
+        <%= form_for :bulletin, url: bulletins_path, method: :post, html: { multipart: true } do |f| %>
           <%= f.hidden_field :user_id, value: @ngo_user.id %>
           <div class="form-group">
-            <%= f.label :title %>
-            <%= f.text_field :title, class: 'form-control' %>
+            <%= f.label :title %><span class="text-danger">*</span>
+            <%= f.text_field :title, class: 'form-control', required: true  %>
           </div>
           <div class="form-group">
-            <%= f.label :description %>
-            <%= f.text_area :description, class: 'form-control' %>
+            <%= f.label :description %><span class="text-danger">*</span>
+            <%= f.text_area :description, class: 'form-control', required: true  %>
           </div>
           <div class="form-group">
-            <%= f.label :date %>
-            <%= f.date_field :date, class: 'form-control' %>
+            <%= f.label :date %><span class="text-danger">*</span>
+            <%= f.date_field :date, class: 'form-control', required: true  %>
           </div>
           <div class="form-group">
-            <%= f.label :location %>
-            <%= f.text_field :location, class: 'form-control' %>
+            <%= f.label :location %><span class="text-danger">*</span>
+            <%= f.text_field :location, class: 'form-control', required: true  %>
           </div>
+
+          <div class="form-group">
+            <%= f.label :photo, "Upload a Photo" %>
+            <label id="photoLabel" for="photoInput" class="p-1 mb-0 form-group d-flex flex-grow-1 justify-content-center align-items-center text-center text-muted" style="cursor: pointer; border: 5px dashed rgba(198, 198, 198, 0.65);">Upload a photo here</label>
+            <%= f.file_field :photo, id: "photoInput", accept: 'image/jpeg,image/png', class: "form-control-file", style: "display: none;" %>
+          </div>
+
           <div class="form-group">
             <%= f.hidden_field :ngo_name, value: @ngo_user.name %>
           </div>
@@ -167,15 +177,34 @@
             <% end %>
             <%= f.submit "Add Post", class: 'btn btn-primary' %>
           </div>
-          
         <% end %>
       </div>
     </div>
   </div>
 </div>
-
   <!-- End of check user modal -->
+  <script>
+    // Handles file upload change event
+    const fileInput = document.getElementById('photoInput');
+    fileInput.addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const img = document.createElement('img');
+          img.src = e.target.result;
+          img.style.width = '100%';
+          img.style.height = '100%';
+          img.style.objectFit = 'cover';
 
+          const label = document.getElementById('photoLabel');
+          label.innerHTML = ''; // Clear existing content
+          label.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  </script>
   <!-- jQuery and Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
@@ -195,5 +224,23 @@
       }
     });
   </script>
+  <!--My Events feature which hides ngo_user id event cards that dont match-->
+  <script>
+    $(document).ready(function() {
+      $('#my-events-button').on('click', function(event) {
+        event.preventDefault(); // Prevent the default action
+        var currentUserId = '<%= @ngo_user.id %>'; 
+        $('.event-card').each(function() {
+          var userId = $(this).data('user-id');
+          if (userId == currentUserId) {
+            $(this).show();
+          } else {
+            $(this).hide();
+          }
+        });
+      });
+    });
+  </script>
 </body>
 </html>
+

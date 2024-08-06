@@ -1,6 +1,9 @@
 class User < ApplicationRecord
-  has_one :user_particular
-  has_one :user_history
+  has_one :user_particular, dependent: :destroy
+  has_one :user_history, dependent: :destroy
+  has_many :messages, class_name: 'Message', dependent: :destroy
+  has_many :saved_posts, dependent: :destroy
+  has_many :documents, dependent: :destroy
 
   attr_accessor :login
 
@@ -19,5 +22,10 @@ class User < ApplicationRecord
     login = conditions.delete(:login).downcase
     where(conditions).where(['lower(username) = :value OR lower(email) = :value OR phone_number = :value',
                              { value: login }]).first
+  end
+
+  def send_message(user, ngo, message)
+    @new_message = Message.new(user_id: user , ngo_users_id: ngo, message: message)
+    @new_message.save
   end
 end

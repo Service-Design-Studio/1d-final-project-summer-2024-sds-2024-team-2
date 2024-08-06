@@ -54,14 +54,13 @@ Scenario: Left blank fields in fill in particulars
     | Date of Birth             |    |
     | Date of Arrival in Malaysia | 01-07-2012 |
     And I press the "Submit" button
-    Then I should stay on the "Fill in Particulars” page
+    Then I should stay on the "Fill In Particulars" page
 
 Scenario: Left secondary phone number blank in fill in particulars
     Given I fill in the following fields
     | Field                     | Value        |
     | Full Name                 | Alice Tan    |
     | Phone number              | 99999999     |
-    | Secondary phone number    |     |
     | Country of Origin         | Malaysia     |
     | Ethnicity                 | Rohingya     |
     | Religion                  | Islam        |

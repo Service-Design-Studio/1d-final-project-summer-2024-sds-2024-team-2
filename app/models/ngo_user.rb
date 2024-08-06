@@ -1,13 +1,5 @@
 class NgoUser < ApplicationRecord
-  def self.find_by_id(id)
-    NgoUser.find_by(id: id)
-  end
+  has_many :messages, class_name: 'Message'
+  has_many :ngo_services, dependent: :destroy
 
-  def self.search_by_name(name)
-    NgoUser.where('name LIKE ?', "%#{name}%")
-  end
-
-  def self.all_ngo_users
-    NgoUser.all
-  end
 end

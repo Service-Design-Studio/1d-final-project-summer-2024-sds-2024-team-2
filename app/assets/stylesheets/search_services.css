@@ -1,0 +1,42 @@
+.card-service {
+    border-radius: 10px;
+    background-color: white;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.fixed-border-radius {
+    border-radius: 10px; /* Set your desired fixed border radius here */
+    height: 100px;
+    width: 100px;
+    object-fit: contain;
+}
+
+.card-title-service {
+    align-self: flex-start;
+    font-weight: bold;
+    overflow-wrap: break-word; /* Ensures that the text wraps to the next line */
+}
+
+.border-radius {
+    border-radius: 10px; /* Set your desired fixed border radius here */
+    /* border: 1px solid #ccc; */
+    height: 100px;
+    width: 100px;
+    object-fit: contain;
+}
+
+
+.message-btn-service {
+    padding: 10px 20px; /* Optional: Add padding for the button */
+    background-color: #343a40;; /* Optional: Set your desired background color */
+    color: white; /* Optional: Set your desired text color */
+    border: none; /* Optional: Remove border */
+    border-radius: 5px; /* Optional: Add border radius */
+    cursor: pointer; /* Optional: Change cursor to pointer */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.message-btn-service:hover {
+    background-color: #5c5c5c; /* Optional: Change background color on hover */
+}

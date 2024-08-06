@@ -63,24 +63,24 @@
         <%= form.label :ethnicity, "Ethnicity" %><span class="text-danger">*</span>
         <%= form.select :ethnicity, options_for_select(@ethnicities, @user_particular["ethnicity"]), {}, { class: "form-control", required: true, id: "ethnicity_select" } %>
         <!-- Hidden Text Field for Ethnicity -->
-        <div id="ethnicity_other_field" style="display: none;">
-          <input name="others[ethnicity]" type="text" class="form-control" placeholder="Specify other ethnicity">
+        <div>
+          <input id="ethnicity_other_field" name="others[ethnicity]" type="text" class="form-control" placeholder="Specify other ethnicity" style="display: none;">
         </div>
       </div>
       <div class="form-group">
         <%= form.label :religion, "Religion" %><span class="text-danger">*</span>
         <%= form.select :religion, options_for_select(@religions, @user_particular["religion"]), {}, { class: "form-control", required: true, id: "religion_select" } %>
         <!-- Hidden Religion Other Field -->
-        <div id="religion_other_field" style="display: none;">
-          <input name="others[religion]" type="text" class="form-control" placeholder="Specify other ethnicity">
+        <div>
+          <input id="religion_other_field" name="others[religion]" type="text" class="form-control" placeholder="Specify other religion" style="display: none;">
         </div>
       </div>
       <div class="form-group">
         <%= form.label :gender, "Gender" %><span class="text-danger">*</span>
         <%= form.select :gender, options_for_select(['Male', 'Female', 'Others'], @user_particular["gender"]), {}, { class: "form-control", required: true, id: "gender_select" } %>
         <!-- Hidden Text Field for Gender -->
-        <div id="gender_other_field" style="display: none;">
-          <input name="others[gender]" type="text" class="form-control" placeholder="Specify other ethnicity">
+        <div>
+          <input id="gender_other_field" name="others[gender]" type="text" class="form-control" placeholder="Specify other gender" style="display: none;">
         </div>
       </div>
       <div class="form-group">
@@ -162,17 +162,18 @@
       // Initial update for both phone number fields
       updateAllFullPhoneNumbers();
     });
-
-    // Others options
-      // Function to toggle visibility of input fields
+    
+    // Function to toggle visibility of input Others fields
     function toggleOtherField(selectElementId, otherFieldId) {
       const selectElement = document.getElementById(selectElementId);
       const otherField = document.getElementById(otherFieldId);
+      
       selectElement.addEventListener('change', function() {
         if (this.value === 'Others') {
           otherField.style.display = 'block';
         } else {
           otherField.style.display = 'none';
+          otherField.value = '';
         }
       });
     }

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chatbot</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .chat-container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+    }
+    .chat-box {
+      height: 400px;
+      overflow-y: scroll;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 20px;
+      background: #f9f9f9;
+    }
+    .chat-message {
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 10px;
+      max-width: 80%;
+    }
+    .chat-message.user {
+      text-align: right;
+      background-color: #007bff;
+      color: white;
+      align-self: flex-end;
+    }
+    .chat-message.bot {
+      text-align: left;
+      background-color: #f1f1f1;
+      color: black;
+      align-self: flex-start;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id='gemini-chat' class="chat-container">
+      <h3 class="text-center">Chatbot</h3>
+      <div class="chat-box d-flex flex-column" id="chat-box"></div>
+      <form id="chat-form">
+        <div class="form-group">
+          <input type="text" class="form-control" id="user-input" placeholder="Type your message here...">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Send</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#chat-form').on('submit', function(e) {
+        e.preventDefault();
+        const userInput = $('#user-input').val();
+        if (userInput.trim() === '') return;
+
+        appendMessage('user', 'You', userInput);
+        $('#user-input').val('');
+        const thinkingMessage = $('<div class="chat-message bot text-muted">Bot: ...thinking</div>');
+        $('#chat-box').append(thinkingMessage);
+
+        $.ajax({
+          url: '<%= chatbot_path %>',
+          method: 'POST',
+          data: { message: userInput },
+          success: function(response) {
+            thinkingMessage.remove();
+            appendMessage('bot', 'Bot', response.reply);
+          },
+          error: function() {
+            thinkingMessage.remove();
+            appendMessage('bot', 'Bot', 'Error, please try again.');
+          }
+        });
+      });
+
+      function appendMessage(role, name, text) {
+        const chatBox = $('#chat-box');
+        const messageHtml = `<div class="chat-message ${role}"><strong>${name}:</strong> ${text}</div>`;
+        chatBox.append(messageHtml);
+        chatBox.scrollTop(chatBox[0].scrollHeight);
+      }
+    });
+  </script>
+</body>
+</html>

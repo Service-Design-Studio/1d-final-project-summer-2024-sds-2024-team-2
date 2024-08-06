@@ -3,6 +3,7 @@
   <head>
     <title>EnableID</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="csrf-token" content="<%= form_authenticity_token %>">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
@@ -27,24 +28,14 @@
               <h4 class="m-0 text-nowrap" style="background-color: #0eac95; color: white; margin-bottom:0;"><%= @ngo_user&.name || "NGO" %></h4>
           <% end %>
         </div>
+        <div class="col-1 d-flex justify-content-end align-items-center">
+          <%= button_to "Sign out", destroy_user_session_path, method: 'delete', class: "text-nowrap btn btn-light" %>
+        </div>
         <div class="col-auto"></div> <!-- Empty column to balance the layout -->
       </div>
     </div>
 
       <%= yield %>
-
-    <footer class="footer mt-auto bg-dark text-white-50 p-2", style="max-height:70px; font-size: 0.7em;">
-        <div class="container p-0 text-center">
-        <small>&copy; EnableID 2024</small>
-        <br>
-        <a href="#" class="text-white">Contact us</a> | 
-        <a href="#" class="text-white">Share feedback</a> | 
-        <a href="#" class="text-white">Read FAQs</a> | 
-        <a href="#" class="text-white">Report vulnerability</a> | 
-        <a href="#" class="text-white">Privacy statement</a> | 
-        <a href="#" class="text-white">Terms of use</a> | 
-        </div>
-    </footer>
   
   </body>
 

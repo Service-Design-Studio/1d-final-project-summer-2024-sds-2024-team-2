@@ -4,23 +4,23 @@
 # instead of editing this one. Cucumber will automatically load all features/**/*.rb
 # files.
 
+require 'database_cleaner/active_record'
 require 'capybara/cucumber'
 require 'selenium/webdriver'
 require 'warden'
 require 'devise'
 require 'simplecov'
-SimpleCov.start
+require 'cucumber/rails'
 
+SimpleCov.start
 World(Warden::Test::Helpers)
 Warden.test_mode!
 After { Warden.test_reset! } # devise inherits from warden, putting this here enables login_as methods in steps file
-
-# Previous content of test helper now starts here
-
-require 'cucumber/rails'
-Capybara.default_driver = :selenium_chrome_headless
+Capybara.default_max_wait_time = 5
+Capybara.default_driver = :selenium_chrome
 Capybara.server_port = 3002
 Capybara.app_host = 'http://127.0.0.1:3002'
+
 # By default, any exception happening in your Rails application will bubble up
 # to Cucumber so that your scenario will fail. This is a different from how
 # your application behaves in the production environment, where an error page will
@@ -40,10 +40,22 @@ ActionController::Base.allow_rescue = false
 
 # Remove/comment out the lines below if your app doesn't have a database.
 # For some databases (like MongoDB and CouchDB) you may need to use :truncation instead.
-begin
-  DatabaseCleaner.strategy = :transaction
-rescue NameError
-  raise 'You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it.'
+# Configure DatabaseCleaner to use transactions
+DatabaseCleaner.strategy = :transaction
+
+# Start the transaction before each scenario
+Before do
+  DatabaseCleaner.start
+end
+
+# Rollback the transaction after each scenario
+After do
+  DatabaseCleaner.clean
+end
+
+# Ensure that the database is cleaned before the entire test suite runs
+Before('@clean') do
+  DatabaseCleaner.clean_with(:transaction)
 end
 
 # You may also want to configure DatabaseCleaner to use different strategies for certain features and scenarios.
@@ -65,3 +77,5 @@ end
 # The :transaction strategy is faster, but might give you threading problems.
 # See https://github.com/cucumber/cucumber-rails/blob/master/features/choose_javascript_database_strategy.feature
 Cucumber::Rails::Database.javascript_strategy = :truncation
+
+# Debugging: Save and open page if CSRF token is not found

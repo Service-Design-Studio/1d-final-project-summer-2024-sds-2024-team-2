@@ -42,6 +42,12 @@
   height: auto;
 }
 
+.photo-1 img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* This will ensure the image covers the area without being squeezed */
+}
+
 .profile-image {
   width: 50px;
   height: 50px;
@@ -50,7 +56,9 @@
 
 .details-1 {
   padding: 4px;
+  padding-top: 30px;
 }
+
 
 .details-1 p {
   margin: 2px 0;

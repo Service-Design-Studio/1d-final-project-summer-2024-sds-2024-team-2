@@ -1,0 +1,95 @@
+<body>
+<h1 style="text-align:center; margin-top:10px;">Inbox</h1> 
+
+    <div class="container-inbox">
+
+        <div class="list-panel-inbox">
+
+                <div class="contact-history">
+                <!--left side-->
+                    <ul>
+                    <h2 class="header-fixed">Messages</h2>
+                    <% if @messages.empty? %>
+                        <h4 style="display: flex; justify-content: center; align-items: center; height: 100%; text-align: center; color:#767676">No messages recieved</h4>
+                    <% else %>
+                        <% @messages.each do |message| %>
+                            <li onclick="showDetails(this)" 
+                                data-full-name="<%= message.full_name %>"
+                                data-id-number ="<%= message.unique_id %>"
+                                data-contact_number ="<%= message.phone_number_country_code %> <%= message.phone_number %>"
+                                data-email ="<%= message.email %>"
+                                data-message ="<%= message.message %>">
+                                <div class="text-content" style="height: 80px; overflow: auto; margin:0;">
+                                    <div class="message-header">
+                                        <h5><%= message.full_name %></h5>
+                                    </div>
+                                    <p class="date" style="margin:0;">
+                                            <%= Time.zone.parse(message.createdAt).in_time_zone('Asia/Singapore').strftime("%B %d, %Y %H:%M") %>
+                                    </p>
+                                    <p style="margin:0;"><%= message.message.split(' ').take(6).join(' ') %> <%= '...' if message.message.split(' ').size > 6 %></p>
+                                </div>
+                            </li>
+                        <% end %>
+                    <% end %>
+                        
+                    </ul>
+                </div>
+                
+        </div>
+        <!--right side-->
+        <div class="details-panel">
+            <h2 style="text-align:center;">Message Details</h2>
+            <h4 style="display: flex; justify-content: center; align-items: center; height: 80%; text-align: center; color:#767676" id="default-message">Click on a message to display message here</h4>
+            
+            <div class="details-container" style="display: none;">
+                <div class="details-section" style="overflow: auto;">
+                    <p id="name" style="display: none;">Name: Not selected</p>
+                    <p id="idNumber" style="display: none;">ID Number: Not selected</p>
+                    <p id="contactNo" style="display: none;">Contact Number: Not selected</p>
+                    <p id="email" style="display: none;">Email: Not selected</p>
+                </div>
+                <div class="message-section" style="overflow: auto;">
+                    <p id="message" style="display: none;">Message: Not selected</p>
+                </div>
+            </div>
+        </div>
+
+    <script>
+    function showDetails(element) {
+    // Remove the active class from all list items
+    var items = document.querySelectorAll('li');
+    items.forEach(function(item) {
+        item.classList.remove('active-message');
+    });
+
+    // Add the active class to the clicked element
+    element.classList.add('active-message');
+
+    // Get the data attributes
+    var fullName = element.getAttribute('data-full-name');
+    var idNumber = element.getAttribute('data-id-number');
+    var contactNumber = element.getAttribute('data-contact_number');
+    var email = element.getAttribute('data-email');
+    var message = element.getAttribute('data-message');
+
+    // Hide the default message
+    document.getElementById('default-message').style.display = 'none';
+
+    // Show the details container
+    document.querySelector('.details-container').style.display = 'block';
+
+    // Show and update the details panel
+    document.getElementById('name').style.display = 'block';
+    document.getElementById('idNumber').style.display = 'block';
+    document.getElementById('contactNo').style.display = 'block';
+    document.getElementById('email').style.display = 'block';
+    document.getElementById('message').style.display = 'block';
+
+    document.getElementById('name').innerHTML = '<strong>Name:</strong> ' + fullName;
+    document.getElementById('idNumber').innerHTML = '<strong>ID Number:</strong> ' + idNumber;
+    document.getElementById('contactNo').innerHTML = '<strong>Contact Number:</strong> ' + contactNumber;
+    document.getElementById('email').innerHTML = '<strong>Email:</strong> ' + email;
+    document.getElementById('message').innerHTML = '<strong>Message:</strong><br>' + message;
+}
+    </script>
+</body>

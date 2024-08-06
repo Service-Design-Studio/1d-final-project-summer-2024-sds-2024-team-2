@@ -4,11 +4,11 @@
 }
 
 .ngo-page .pri-container {
-  background-color: #cff9f9 !important;
+  background-color: #9cd1c9 !important;
 }
 
 .ngo-page .formcol {
-  background-color: #0eac95 !important;
+  background-color: #6bb39b !important;
   border-radius: 30px !important;
 }
 
@@ -27,4 +27,43 @@
   max-height: 3em; /* Adjust based on your line-height and number of lines */
   line-height: 1.5em;
   margin-bottom: 0;
+}
+
+.truncate-small-multiline {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  max-height: 3em; /* Adjust based on your line-height and number of lines */
+  line-height: 1.5em;
+  margin-bottom: 0;
+  max-width: 30ch;
+}
+
+
+.event-card {
+  transition: box-shadow 0.3s ease;
+}
+
+.event-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.message-btn{
+  background-color: #ffb9b9;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  padding: 10px 20px;
+  width: 120px;
+  text-align: center;
+  font-size: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* styles.css */
+.interaction-history-page .interaction-icon {
+  background-color: #6bb39b !important; /* Change the color to green */
 }

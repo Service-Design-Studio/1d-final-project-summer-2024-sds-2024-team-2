@@ -17,10 +17,14 @@ gem 'faker'
 gem 'sprockets-rails'
 # Use the Puma web server [https://github.com/puma/puma]
 gem 'puma', '>= 5.0'
+# Use Prawn
+gem 'prawn'
+# Use CarrierWave
+gem 'carrierwave', '~> 2.0'
 
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
+gem 'dotenv-rails'
 gem 'importmap-rails'
-
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
 gem 'turbo-rails'
 
@@ -46,7 +50,7 @@ gem 'tzinfo-data', platforms: %i[windows jruby]
 gem 'bootsnap', require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
-# gem "image_processing", "~> 1.2"
+gem "image_processing", "~> 1.2"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -70,6 +74,7 @@ group :test do
   gem 'capybara'
   gem 'cucumber-rails', require: false
   gem 'database_cleaner'
+  gem 'database_cleaner-active_record'
   gem 'factory_bot_rails'
   gem 'rails-controller-testing'
   gem 'selenium-webdriver'
@@ -78,6 +83,6 @@ end
 
 group :production do
   gem 'appengine', '~> 0.6'
-  gem 'pg', '~> 1.5.6' # for gcloud deployment
   gem 'google-cloud-storage', '~> 1.44' # for gcloud storage
+  gem 'pg', '~> 1.5.6' # for gcloud deployment
 end

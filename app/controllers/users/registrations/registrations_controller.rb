@@ -10,9 +10,13 @@ class Users::Registrations::RegistrationsController < Devise::RegistrationsContr
   # end
 
   # POST /resource
-  # def create
-  #   super
-  # end
+  def create
+    super do |resource|
+      if resource.persisted?
+        UserHistoriesController.new.create_history_for_new_user(resource)
+      end
+    end
+  end
 
   # GET /resource/edit
   # def edit
@@ -42,7 +46,7 @@ class Users::Registrations::RegistrationsController < Devise::RegistrationsContr
 
   # If you have extra params to permit, append them to the sanitizer.
   def configure_sign_up_params
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:username, :password, :password_confirmation, 
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:username, :password, :password_confirmation,
                                       :email, :phone_number])
   end
 

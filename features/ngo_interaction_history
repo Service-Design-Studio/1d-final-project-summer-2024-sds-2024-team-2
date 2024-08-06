@@ -1,0 +1,26 @@
+Feature: Interaction History
+
+Background: 
+Given I am already on the NGO "Gebirah" page 
+
+Scenario: When I verify a user then I should see it on my Interaction History page 
+    Given I am already on NGO "Gebirah" verify a user page 
+    When I click all the boxes in the verification checklist 
+    And I press the "Verify" button 
+    Then I should be redirected to the NGO "Gebriah" page 
+    Then I should see a success message stating "Verification successful for unique ID: 1055290." 
+
+    Given I am already on the NGO "Gebirah" page 
+    When I press on the "Interaction History" button 
+    Then I should be redirected to the "Interaction History" page 
+    And I should see that I verified user with unique ID: 1055290
+
+Scenario: Navigating to the Interaction History page 
+    When I press on the "Interaction History" button 
+    Then I should be redirected to the "Intercation History" page 
+    And I should see a list of my recent interactions
+
+Scenario: Interaction History with no interactions 
+    When I press on the "Interaction History" button 
+    Then I should be redirected to the "Interaction History" page  
+    And I should see a message "No interactions found"
