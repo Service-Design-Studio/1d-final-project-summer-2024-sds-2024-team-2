@@ -10,7 +10,7 @@ SimpleCov.start 'rails' do
   add_filter 'app/controllers/users'
   add_filter 'app/jobs'
   add_filter 'app/mailers'
-  add_filter 'app/helpers/user_particulars_helper.rb'
+  add_filter 'app/helpers'
 end
 
 ENV['RAILS_ENV'] ||= 'test'
