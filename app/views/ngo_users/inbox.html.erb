@@ -22,7 +22,9 @@
                                 <div class="text-content" style="height: 50px;">
                                     <div class="message-header">
                                         <h4><%= message.full_name %></h4>
-                                        <p class="date"><%= DateTime.parse(message.createdAt).strftime("%B %d, %Y %H:%M") %></p>
+                                        <p class="date">
+                                            <%= Time.zone.parse(message.createdAt).in_time_zone('Asia/Singapore').strftime("%B %d, %Y %H:%M") %>
+                                        </p>
                                     </div>
                                     <p><%= message.message.split(' ').take(8).join(' ') %> <%= '...' if message.message.split(' ').size > 10 %></p>
                                 </div>
