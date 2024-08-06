@@ -7,6 +7,22 @@
     height: 500px; /* Adjust this value based on your needs */
     overflow-y: scroll;
   }
+
+  body {
+    background-color: #fffff;  
+    background-image: url('<%= asset_path('showbg.svg') %>');
+    background-size: cover;
+    background-position: center;
+  }
+
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.5);
+  }
 </style>
 
 <div class='p-5 row d-flex justify-content-between'>
@@ -93,25 +109,25 @@
 <script>
 const cardsData = [
    {
-    title: 'Comprehensive Documentation',
-    description: 'Ensure that the user has provided all the necessary documentation on their EnableID card. Please follow the checklist on the right.',
+    title: 'Access to services:',
+    description: 'Verification can help undocumented individuals gain access to essential services such as healthcare, education, and social services.',
   },
   {
-    title: 'If information provided is insufficient ',
-    description: 'You can add their EnableID documents to the keep-in-view page. ',
+    title: 'Emergency Assistance:',
+    description: 'They can receive timely help during emergencies, as NGOs and other organizations can quickly verify their identity and needs.',
   },
   {
-    title: 'Access to Basic Needs',
+    title: 'Access to Basic Needs:',
     description: 'Verifying a refugee allows them to receive food, water, and shelter from various NGOs, significantly improving their living conditions and overall well-being.',
   },
   // Add more titles below
   {
-    title: 'Medical Aid',
-    description: 'Verified refugees can access medical services and receive necessary treatments from other NGOs such, vaccinations, and healthcare support.',
+    title: 'Personal Information:',
+    description: 'Verify that the personal details (such as name, date of birth, and other identifying information) on the EnableID match the information provided by the individual.',
   },
   {
-    title: 'Title 5',
-    description: 'Description for Title 5',
+    title: 'Data Integrity:',
+    description: 'Confirm that the data on the EnableID has not been tampered with. This includes checking for any signs of alteration or corruption in the digital records.',
   }
   // You can continue adding more titles and descriptions in the same format
   
