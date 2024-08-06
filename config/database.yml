@@ -7,7 +7,7 @@
 default: &default
   adapter: sqlite3
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  timeout: 30000
+  timeout: 60000  # Increased timeout value to 60 seconds
 
 development:
   <<: *default
@@ -21,14 +21,14 @@ test:
   adapter: sqlite3
   database: storage/test.sqlite3
   pool: 5
-  timeout: 30000
+  timeout: 60000  # Increased timeout value to 60 seconds
 
 production:
   <<: *default
   adapter: postgresql
   encoding: utf8
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  timeout: 30000
+  timeout: 60000  # Increased timeout value to 60 seconds
   database: "db1"
   username: "user1"
   password: "fXozweJAcVcVcKStsywxIYMvdkFNRVTdOSXYIPREmKRHSsieJZ"
