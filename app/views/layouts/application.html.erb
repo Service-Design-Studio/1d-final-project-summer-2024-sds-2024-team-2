@@ -73,19 +73,16 @@
         </div>
     </div>
 
-    <% if @bulletins %>
-      <div class="bulletin-display m-0 px-0 flex-column overflow-hidden" style='max-height:100vh;' id="bulletinDisplay">
-          <div class='chat-header d-flex justify-content-between'>
-            <span class="close-button" id="closeButtonBulletin">&times;</span>
-            <span>Bulletin</span>
-            <span></span>
-          </div>
-          <div class="p-3 mx-0 d-flex justify-content-center">
-            <%= render 'bulletin' %>
-          </div>
-              <!-- Add your chat interface here -->
-      </div>
-    <% end %>
+    <div class="bulletin-display m-0 px-0 flex-column overflow-hidden" style='max-height:100vh;' id="bulletinDisplay">
+        <div class='chat-header d-flex justify-content-between'>
+          <span class="close-button" id="closeButtonBulletin">&times;</span>
+          <span>Bulletin</span>
+          <span></span>
+        </div>
+        <div class="p-3 mx-0 d-flex justify-content-center">
+          <%= render 'bulletin' %>
+        </div>              <!-- Add your chat interface here -->
+    </div>
 
   </body>
 </html>

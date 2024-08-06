@@ -47,22 +47,22 @@
               <small class="text-nowrap text-end text-muted pr-1"><%= time_ago_in_words(bulletin.created_at) %> ago</small>
             </div>
           </div>
-          <div class="d-flex px-1 w-100 align-items-center justify-content-between" style="font-size: 1.3em; border-top: solid 1px lightgrey">
-            <a type="button" onclick="" style="text-decoration: none;" aria_label="sender <%= bulletin.title %> <%= bulletin.id %>" data-ngoid="<%= ngo_user.id %>" data-userid="<%= @user&.id || "" %>" data-bs-toggle="modal" data-bs-target="#sendModal" data-ngoname="<%= bulletin.ngo_name %>">
-              <i style="text-center text-decoration: none; color: black;" class="sender bi bi-send"></i>
-            </a>
-            <% if @on_saved_page %>
-              <%= link_to '#', onclick: 'deleteSavePost(this)', data: { bulletin_id: bulletin.id, user_id: @user.id }, style: 'text-decoration: none;', aria_label: "toggle #{bulletin.title} #{bulletin.id}"  do %>
-                <i style='text-center text-decoration: none; color: orange;' id='bookmark-icon' class="bookmarker bi bi-bookmark-fill"></i>
+          <% if !@ngo_page %>
+            <div class="d-flex px-1 w-100 align-items-center justify-content-between" style="font-size: 1.3em; border-top: solid 1px lightgrey">
+              <%= link_to '#', onclick: '', style: 'text-decoration: none;', aria_label: "sender #{bulletin.title} #{bulletin.id}" do %>
+                <i style='text-center text-decoration: none; color: black;' class="sender bi bi-send"></i>
               <% end %>
-            <% else %>
-              <% if @user %>
+              <% if @on_saved_page %>
+                <%= link_to '#', onclick: 'deleteSavePost(this)', data: { bulletin_id: bulletin.id, user_id: @user.id }, style: 'text-decoration: none;', aria_label: "toggle #{bulletin.title} #{bulletin.id}"  do %>
+                  <i style='text-center text-decoration: none; color: orange;' class="bookmarker bi bi-bookmark-fill"></i>
+                <% end %>
+              <% else %>
                 <%= link_to '#', onclick: 'toggleSavePost(this)', data: { bulletin_id: bulletin.id, user_id: @user.id }, style: 'text-decoration: none;', aria_label: "toggle #{bulletin.title} #{bulletin.id}" do %>
-                  <i style='text-center text-decoration: none; color: orange;' id='bookmark-icon' class="bookmarker bi <%= saved ? 'bi-bookmark-fill' : 'bi-bookmark' %>"></i>
+                  <i style='text-center text-decoration: none; color: orange;' class="bookmarker bi <%= saved ? 'bi-bookmark-fill' : 'bi-bookmark' %>"></i>
                 <% end %>
               <% end %>
-            <% end %>
-          </div>
+            </div>
+          <% end %>
         </div>
       <% end %>
     </div>
