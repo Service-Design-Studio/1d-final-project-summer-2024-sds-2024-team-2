@@ -56,7 +56,7 @@
       </div>
     </div>
     <!-- Right Side (Bulletin Board) -->
-    <div class="col-lg-8 p-4 col-md-12 mx-0 d-flex justify-content-center d-lg-flex d-none" style="max-height: 75vh;">
+    <div id="bulletinDisplay" class="col-lg-8 p-0 p-lg-4 col-12 mx-0 justify-content-center d-lg-flex custom-max-height">
       <%= render 'bulletin' %>
     </div>
   </div>
@@ -84,6 +84,17 @@
     </div>
   </div>
 </div>
+
+<style>
+    @media (min-width: 992px) {
+        .custom-max-height {
+            max-height: 85vh;
+        }
+    }
+    #bulletinDisplay {
+      display: flex;
+    }
+</style>
 
 <% if @user_particular.present? %>
   <script>

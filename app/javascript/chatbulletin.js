@@ -1,28 +1,33 @@
 $(document).ready(function () {
+  document
+    .getElementById("bulletinButton")
+    .addEventListener("click", function () {
+      var bulletinDisplay = document.getElementById("bulletinDisplay");
+      if (
+        bulletinDisplay.style.display === "none" ||
+        bulletinDisplay.style.display === ""
+      ) {
+        bulletinDisplay.style.display = "flex";
+      } else {
+        bulletinDisplay.style.display = "none";
+      }
+    });
   // JavaScript to toggle chat display
   document.getElementById("chatButton").addEventListener("click", function () {
     document.getElementById("chatDisplay").style.display = "flex";
-    console.log(document.getElementById("chatDisplay").style.display);
-    document.getElementById("BulletinButton").style.display = "flex";
-  });
-    
-  document.getElementById("bulletinButton").addEventListener("click", function () {
-    document.getElementById("bulletinDisplay").style.display = "flex";
-    console.log(document.getElementById("bulletinDisplay").style.display);
-    document.getElementById("bulletinButton").style.display = "flex";
   });
 
-    // Define the function to handle the close button click
-    function handleCloseButtonClick() {
+  // Define the function to handle the close button click
+  function handleCloseButtonClick() {
     document.getElementById("chatDisplay").style.display = "none";
-    document.getElementById("bulletinDisplay").style.display = "none";
-    document.getElementById("BulletinButton").style.display = "none";
-    }
+  }
 
-    // Attach the function to the close button click event
-    document.getElementById("closeButtonBulletin").addEventListener("click", handleCloseButtonClick);
-    document.getElementById("closeButtonChat").addEventListener("click", handleCloseButtonClick);
-    
+  document
+    .getElementById("closeButtonChat")
+    .addEventListener("click", handleCloseButtonClick);
+
+  // Attach the function to the close button click event
+
   // Function to handle form submission
   function handleFormSubmission() {
     adjustChatInputHeight();
