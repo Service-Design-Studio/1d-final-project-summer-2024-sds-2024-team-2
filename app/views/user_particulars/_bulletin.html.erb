@@ -134,6 +134,7 @@
     $('.event-card').on('click', function() {
       const bookmarkIcon = $(this).find('#bookmark-icon');
       const modalSavedButtonIcon = $('#modal-saved-btn').find('i');
+      const modalSavedButton = $('#modal-saved-btn').find('span');
       var title = $(this).data('title');
       var description = $(this).data('description');
       var date = $(this).data('date');
@@ -154,9 +155,11 @@
       if (bookmarkIcon.hasClass('bi-bookmark-fill')) {
         console.log("the bookmark is supposed to be filled!");
         modalSavedButtonIcon.addClass('bi-bookmark-fill').removeClass('bi-bookmark');
+        modalSavedButton.text('Saved');
       } else {
         console.log("the bookmark is supposed to be NOT filled!");
         modalSavedButtonIcon.addClass('bi-bookmark').removeClass('bi-bookmark-fill');
+        modalSavedButton.text('Add to Saved');
       }
       //$('#modal-photo').attr('src', "app/assets/images/" + imageUrl);
     });
