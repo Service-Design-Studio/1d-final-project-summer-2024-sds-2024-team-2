@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_06_020231) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_31_023419) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -48,7 +48,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_06_020231) do
     t.boolean "saved"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "photo"
   end
 
   create_table "documents", force: :cascade do |t|
@@ -58,18 +57,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_06_020231) do
     t.integer "attachable_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_particular_id"
     t.index ["attachable_type", "attachable_id"], name: "index_documents_on_attachable"
-  end
-
-  create_table "interaction_histories", force: :cascade do |t|
-    t.string "activity_title"
-    t.text "description"
-    t.string "activity_type"
-    t.integer "ngo_user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["ngo_user_id"], name: "index_interaction_histories_on_ngo_user_id"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -80,13 +68,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_06_020231) do
     t.datetime "updated_at", null: false
     t.index ["ngo_users_id"], name: "index_messages_on_ngo_users_id"
     t.index ["user_id"], name: "index_messages_on_user_id"
-  end
-
-  create_table "ngo_services", force: :cascade do |t|
-    t.integer "ngo_user_id", null: false
-    t.text "services"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "ngo_users", force: :cascade do |t|
@@ -187,11 +168,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_06_020231) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "interaction_histories", "ngo_users"
   add_foreign_key "messages", "ngo_users", column: "ngo_users_id"
   add_foreign_key "messages", "users"
   add_foreign_key "saved_posts", "users"
-  add_foreign_key "uploaded_files", "users"
   add_foreign_key "user_histories", "users"
   add_foreign_key "user_particulars", "users"
 end
