@@ -17,6 +17,7 @@
     width: 90%; /* Adjust the width as needed */
     margin: 20px auto 20px auto; /* Add top margin and remove bottom margin */
     overflow: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 #search-form {
     position: sticky;
@@ -37,7 +38,6 @@
 
 .card-service {
     display: flex;
-    border: 1px solid #ccc;
     border-radius: 10px;
     background-color: white;
     overflow: hidden;
@@ -45,6 +45,7 @@
     width: 400px; /* Set your desired maximum width */
     height: 425px; /* Set your desired maximum height */
     margin: 5px; /* Adjust the margin to increase spacing between cards */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .column-service {
@@ -73,6 +74,7 @@
     padding: 5px;
     border-radius: 5px;
     overflow-y: auto;
+    
 }
 
 .card-title-service {
@@ -112,6 +114,7 @@
     border: none; /* Optional: Remove border */
     border-radius: 5px; /* Optional: Add border radius */
     cursor: pointer; /* Optional: Change cursor to pointer */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .message-btn-service:hover {

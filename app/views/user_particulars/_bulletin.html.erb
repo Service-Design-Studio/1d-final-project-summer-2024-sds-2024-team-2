@@ -1,4 +1,4 @@
-<div id="bulletin" class="d-flex flex-column pri-container m-0 add-small-shadow p-3 pb-3" style='font-size: 0.7rem; width:100%; max-height: 75vh;'>
+<div id="bulletin" class="mb-3 d-flex flex-column pri-container m-0 add-small-shadow p-3 pb-3" style='font-size: 0.7rem; width:100%; max-height: 75vh;'>
   <div class="d-flex mb-4">
     <div class="flex-column flex w-100">
       <h6 class='text-center'>Bulletin Board</h6>
@@ -23,7 +23,7 @@
       <% @bulletins.each do |bulletin| %>
         <% saved = @saved_posts&.include?(bulletin.id) %>
         <% ngo_user = @ngo_users.find { |user| user.name.casecmp?(bulletin.ngo_name) } || OpenStruct.new(id: 'N/A', image_url: 'default.png', name: 'Unknown') %>
-        <div class="col-sm-6 col-md-4 col-lg-3 mb-4 event-card card p-0" style="min-width:140px; max-width: 220px;" data-ngoid="<%= ngo_user.id %>" data-bulletin-id="<%= bulletin.id %>" data-ngoname="<%= bulletin.ngo_name %>" data-title="<%= bulletin.title %>" data-description="<%= bulletin.description %>" data-date="<%= bulletin.date ? bulletin.date.strftime("%d %B %Y") : "Date not available" %>" data-location="<%= bulletin.location %>" data-image-url="<%= ngo_user&.image_url.present? ? ngo_user.image_url : 'default.png' %>" data-user-id="<%= ngo_user&.id %>">
+        <div class="col-6 col-sm-6 col-md-4 col-lg-3 mb-1 event-card card p-0" style="min-width:125px; max-width: 220px;" data-ngoid="<%= ngo_user.id %>" data-bulletin-id="<%= bulletin.id %>" data-ngoname="<%= bulletin.ngo_name %>" data-title="<%= bulletin.title %>" data-description="<%= bulletin.description %>" data-date="<%= bulletin.date ? bulletin.date.strftime("%d %B %Y") : "Date not available" %>" data-location="<%= bulletin.location %>" data-image-url="<%= ngo_user&.image_url.present? ? ngo_user.image_url : 'default.png' %>" data-user-id="<%= ngo_user&.id %>">
           <div class="px-1 d-flex flex-column w-100 h-100" data-bs-toggle="modal" data-bs-target="#eventCards">
             <div class="d-flex flex-grow-1 w-100 align-items-center justify-content-center">
               <div class="bulletin-photo">
@@ -53,12 +53,12 @@
             </a>
             <% if @on_saved_page %>
               <%= link_to '#', onclick: 'deleteSavePost(this)', data: { bulletin_id: bulletin.id, user_id: @user.id }, style: 'text-decoration: none;', aria_label: "toggle #{bulletin.title} #{bulletin.id}"  do %>
-                <i style='text-center text-decoration: none; color: orange;' class="bookmarker bi bi-bookmark-fill"></i>
+                <i style='text-center text-decoration: none; color: orange;' id='bookmark-icon' class="bookmarker bi bi-bookmark-fill"></i>
               <% end %>
             <% else %>
               <% if @user %>
                 <%= link_to '#', onclick: 'toggleSavePost(this)', data: { bulletin_id: bulletin.id, user_id: @user.id }, style: 'text-decoration: none;', aria_label: "toggle #{bulletin.title} #{bulletin.id}" do %>
-                  <i style='text-center text-decoration: none; color: orange;' class="bookmarker bi <%= saved ? 'bi-bookmark-fill' : 'bi-bookmark' %>"></i>
+                  <i style='text-center text-decoration: none; color: orange;' id='bookmark-icon' class="bookmarker bi <%= saved ? 'bi-bookmark-fill' : 'bi-bookmark' %>"></i>
                 <% end %>
               <% end %>
             <% end %>
@@ -84,8 +84,8 @@
           <p id="modal-id"></p>
         </div>
         <div class="modal-footer d-flex justify-content-evenly">
-          <button id="modal-send-btn" type="button" class="btn-primary px-3 customhome-button" data-bs-toggle="modal" data-bs-target="#sendModal"><span class='mr-2'>Send a message </span><i style="text-center text-decoration: none; color: black;" class="m-0 sender bi bi-send fs-5"></i></button>
-          <button id="modal-saved-btn" type="button" class="btn-dark px-3 customhome-button"><span id='btn-span-text' class='mr-2'>Add to Saved </span><i style='color: orange;' class="m-0 bi bi-bookmark fs-5"></i></button>
+            <button id="modal-send-btn" type="button" class="btn-primary px-3 customhome-button" data-bs-toggle="modal" data-bs-target="#sendModal"><span class='mr-2'>Send a message </span><i style="text-center text-decoration: none; color: black;" class="m-0 sender bi bi-send fs-5"></i></button>
+            <button id="modal-saved-btn" type="button" class="btn-dark px-3 customhome-button"><span id='btn-span-text' class='mr-2'>Add to Saved </span><i style='color: orange;' class="m-0 bi fs-5"></i></button>
         </div>
       </div>
     </div>
@@ -132,6 +132,8 @@
     });
 
     $('.event-card').on('click', function() {
+      const bookmarkIcon = $(this).find('#bookmark-icon');
+      const modalSavedButtonIcon = $('#modal-saved-btn').find('i');
       var title = $(this).data('title');
       var description = $(this).data('description');
       var date = $(this).data('date');
@@ -146,6 +148,16 @@
       $('#modal-location').text("Location: " + location);
       $('#modal-id').text("Event ID: " + id);
       $('#eventCards').data('ngoid', $(this).data('ngoid'));
+      console.log("ModalBtnSavedIcon: " + modalSavedButtonIcon);
+      console.log("ModalBtnSavedIcon Class List: " + modalSavedButtonIcon.classList);
+      console.log(bookmarkIcon);
+      if (bookmarkIcon.hasClass('bi-bookmark-fill')) {
+        console.log("the bookmark is supposed to be filled!");
+        modalSavedButtonIcon.addClass('bi-bookmark-fill').removeClass('bi-bookmark');
+      } else {
+        console.log("the bookmark is supposed to be NOT filled!");
+        modalSavedButtonIcon.addClass('bi-bookmark').removeClass('bi-bookmark-fill');
+      }
       //$('#modal-photo').attr('src', "app/assets/images/" + imageUrl);
     });
 
@@ -208,6 +220,7 @@
           element.querySelector('i').classList.remove('bi-bookmark-fill');
           element.querySelector('i').classList.add('bi-bookmark');
           $(element).closest('.event-card').remove();
+          window.location.reload();
         } else {
           console.error('Error:', data.error);
         }

@@ -27,29 +27,28 @@
         <% end %>
       </div>
       <!-- 2FA Container -->
-      <div class="d-flex gap-2 my-2 w-100 justify-content-center align-items-center">
+      <div class="d-flex gap-2 my-3 w-100 justify-content-center align-items-center">
         <button id="generate-2fa-btn" class="py-2 px-2 text-nowrap generate-2fa-button" style="font-size:0.8em;">Generate 2FA Passcode:</button>
         <span id='two-fa-passcode' class='py-2 text-nowrap two-fa-passcode-input text-center' style="font-size:0.8em;"><%= @user_particular&.two_fa_passcode || "2FA unavailable" %></span>
       </div>
       <!-- Buttons Container, put under sub main container -->
-      <div class="pri-container py-3 px-2 d-flex w-100 flex-column flex-wrap">
-        <div class="row mb-2 d-flex justify-content-center gap-2">
+      <div class="contaianer-fluid pri-container mb-3 py-3 px-2 d-flex w-100 flex-column flex-wrap">
+        <div class="row d-flex justify-content-center g-2">
           <%if @user_particular%>
-            <%= link_to new_user_particular_document_path(@user), id: 'documents-button', class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
-              <i class="fas fa-file-alt fs-5"></i> Documents
+            <%= link_to new_user_particular_document_path(@user), id: 'documents-button', class: "customhome-button p-2 col-5", style: 'text-decoration: none; height: auto; min-height:40px;' do %>
+              <i class="fas fa-file-alt fs-5" style='min-width:20px;'></i> Documents
             <% end %>
           <% end %>
 
-          <%= link_to user_history_path(@user), class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
+          <%= link_to user_history_path(@user), class: "customhome-button p-2 col-5", style: 'text-decoration: none; height: auto; min-height:40px;' do %>
             <i class="fas fa-history fs-5"></i> Activity History
           <% end %>
-        </div>
-        <div class="row d-flex justify-content-center gap-2">
+
           <%if @user_particular%>
-            <%= link_to saved_post_user_particular_path(@user_particular), class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
+            <%= link_to saved_post_user_particular_path(@user_particular), class: "customhome-button p-2 col-5", style: 'text-decoration: none; height: auto; min-height:40px;' do %>
               <i style='color: orange;' class="bi bi-bookmark-fill fs-5"></i> Saved Post
             <% end %>
-            <%= link_to contact_ngo_path(@user_particular), class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
+            <%= link_to contact_ngo_path(@user_particular), class: "customhome-button p-2 col-5", style: 'text-decoration: none; height: auto; min-height:40px;' do %>
               <i class="fas fa-search fs-5"></i> Search Services
             <% end %>
           <% end %>
