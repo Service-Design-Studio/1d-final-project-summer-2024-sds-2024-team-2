@@ -189,6 +189,7 @@
       $('#sendModalLabel').text("What do you want to tell " + ngoname +"?");
       $('#sendModal').data('ngoid', $(this).data('ngoid'));
       $('#sendModal').data('userid', $(this).data('userid'));
+      $('#sendModal').data('event', $('#modal-title').text()); 
     });
 
     $('#modal-send-btn').click(function() {
@@ -197,6 +198,7 @@
         $('#sendModalLabel').text("What do you want to tell " + ngoname +"?");
         $('#sendModal').data('ngoid', $('#eventCards').data('ngoid'));
         $('#sendModal').data('userid', $('#eventCards').data('userid'));
+        $('#sendModal').data('event', $('#modal-title').text()); 
     });
 
     $('#modal-saved-btn').click(function() {
@@ -294,6 +296,7 @@
     $('#user_send_message_btn').click(function() {
         var ngoId = $('#sendModal').data('ngoid');
         var userId = $('#sendModal').data('userid');
+        var ngoEvent = $('#sendModal').data('event');
         var messageContent = $('#message-text').val();
 
         if (!messageContent.trim()) {
@@ -308,7 +311,7 @@
             data: {
               message: {
                 content: messageContent,
-                event_title: $('#sendModalLabel').text()
+                event_title: ngoEvent
                 }
             },
             headers: {
