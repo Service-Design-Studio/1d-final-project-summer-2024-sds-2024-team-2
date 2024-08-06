@@ -32,7 +32,7 @@
         <span id='two-fa-passcode' class='py-2 text-nowrap two-fa-passcode-input text-center' style="font-size:0.8em;"><%= @user_particular&.two_fa_passcode || "2FA unavailable" %></span>
       </div>
       <!-- Buttons Container, put under sub main container -->
-      <div class="contaianer-fluid pri-container py-3 px-2 d-flex w-100 flex-column flex-wrap">
+      <div class="contaianer-fluid pri-container mb-3 py-3 px-2 d-flex w-100 flex-column flex-wrap">
         <div class="row d-flex justify-content-center g-2">
           <%if @user_particular%>
             <%= link_to new_user_particular_document_path(@user), id: 'documents-button', class: "customhome-button p-2 col-5", style: 'text-decoration: none; height: auto; min-height:40px;' do %>
