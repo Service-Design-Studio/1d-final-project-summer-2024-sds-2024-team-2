@@ -23,7 +23,7 @@
       height: 10px;
       border-radius: 50%;
       content: '';
-      background-color: #cef9f8;
+      background-color: #b5ddf4;
       position: absolute;
       left: 50%;
       top: 50%;
@@ -62,8 +62,8 @@
     }
 
     &:after {
-      background-color: #50c596;
-      border-color: #50c596;
+      background-color: #7eb3e2;
+      border-color: #506bc5;
     }
   }
 
@@ -91,8 +91,8 @@
 
 /* When the verify button is enabled (all checkboxes are ticked), it will appear green */
 #verify-btn:not(:disabled) {
-  background-color: #4ec694;
-  border-color: #cef9f8;
+  background-color: #4d99db;
+  border-color: #fbfbfb;
 }
 
 
@@ -104,12 +104,12 @@ body {
 
 .card_2 {
   height: 140px;
-  background-color: #0eac95;
+  background-color: #ffffff;
   padding: 5px;
   margin-bottom: 10px;
   font-family: Helvetica;
   box-shadow: 0px 3px 8px 0px rgba(0,0,0,0.5);
-  color: white; /* Make text white */
+  color: rgb(62, 100, 80); /* Make text white */
   border-radius: 15px; /* Make edges rounder */
   overflow: hidden; /* Hide overflowing content */
   display: flex;

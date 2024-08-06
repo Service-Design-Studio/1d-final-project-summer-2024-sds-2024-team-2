@@ -23,6 +23,8 @@
     height: 100%;
     background: rgba(255, 255, 255, 0.5);
   }
+
+
 </style>
 
 <div class='p-5 row d-flex justify-content-between'>
@@ -45,7 +47,7 @@
     <%= form_with url: confirm_verify_ngo_user_path(@ngo_user), method: :post, local: true, id: "verify" do %>
       <input type="hidden" name="unique_id" value="<%= @user_particular.unique_id %>">
       ...
-      <h5 style='color:white;'>Please ensure that all these information is present before verifying:</h5>
+      <h5 style='color:Black;'>Please ensure that all these information is present before verifying:</h5>
       <div class="inputGroup">
         <input id="option1" name="option1" type="checkbox"/>
         <label for="option1">Full name</label>
@@ -197,3 +199,7 @@ new Vue({
   }
 })
 </script>
+
+
+
+
