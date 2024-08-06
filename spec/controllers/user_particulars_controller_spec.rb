@@ -31,7 +31,8 @@ RSpec.describe UserParticularsController, type: :controller do
     }
 
     @invalid_attributes = {
-      user_id: @user.id, #missing full name
+      user_id: @user.id, 
+      full_name: "Invalid@ name",
       phone_number_country_code: '+65',
       phone_number: '91234567',
       secondary_phone_number_country_code: '+60',

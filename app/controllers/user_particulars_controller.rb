@@ -71,8 +71,8 @@ class UserParticularsController < ApplicationController
     @user_particular = UserParticular.new(user_particular_params) # The Model object to store the hidden keyed params
 
     # Validate user particulars
-    user_particular_errors = validate_user_particulars(@user_particular) || []
-    dropdown_errors = validate_user_particulars_dropdown(@user_particular, params[:others]) || []
+    user_particular_errors = validate_user_particulars(@user_particular)
+    dropdown_errors = validate_user_particulars_dropdown(@user_particular, params[:others])
 
     error_messages_arr = user_particular_errors + dropdown_errors
     flash[:error] = error_messages_arr
@@ -98,16 +98,16 @@ class UserParticularsController < ApplicationController
   end
 
   def update
-    @user_particular = UserParticular.find(params[:id])
-
-    user_particular_errors = validate_user_particulars(@user_particular) || []
-    dropdown_errors = validate_user_particulars_dropdown(@user_particular, params[:others]) || []
+    user_particular_errors = validate_user_particulars(user_particular_params)
+    dropdown_errors = validate_user_particulars_dropdown(user_particular_params, params[:others])
 
     error_messages_arr = user_particular_errors + dropdown_errors
     flash[:error] = error_messages_arr
 
     # Validate user particulars
     if error_messages_arr.empty?
+      @user_particular = UserParticular.find(params[:id])
+
       if @user_particular.update(user_particular_params)
         if params[:user_particular][:profile_picture].present?
           @user_particular.profile_picture.attach(params[:user_particular][:profile_picture])
@@ -120,6 +120,7 @@ class UserParticularsController < ApplicationController
         flash[:error_message] = 'Edit failed.'
         redirect_to edit_user_particular_path(params[:id], user_particular: user_particular_params)
       end
+    # Fail input validation
     else
       flash[:error_message] = 'Edit failed. Please fix the error(s) below:'
       redirect_to edit_user_particular_path(params[:id], user_particular: user_particular_params)
@@ -177,14 +178,15 @@ class UserParticularsController < ApplicationController
       error_messages_arr << 'Full name can only contain valid letters and symbols.'
     end
 
-    if user_particular[:phone_number] =~ /[^0-9-]/
+    unless user_particular[:phone_number] =~ /[^0-9-]/
       error_messages_arr << 'Phone number can only contain numbers and hyphens.'
     end
 
-    if user_particular[:secondary_phone_number] =~ /[^0-9-]/
+    unless user_particular[:secondary_phone_number] =~ /[^0-9-]/
       error_messages_arr << 'Secondary phone number can only contain numbers and hyphens.'
     end
-
+    
+    # Ensure that neither or both secondary country code + phone number exist
     if user_particular[:secondary_phone_number_country_code].present? || user_particular[:secondary_phone_number].present?
       if user_particular[:secondary_phone_number_country_code].blank?
         error_messages_arr << 'Secondary country code must exist if secondary phone number exists.'
@@ -218,7 +220,8 @@ class UserParticularsController < ApplicationController
 
   def validate_user_particulars_dropdown(user_particular, others)
     error_messages_arr = []
-    # Check if 'others' is present and that each indiviual field is filled up
+
+    # Check if 'others' is present and that each individual field is filled up
     if others.present?
       # Check if others[:ethnicity] is blank
       if user_particular[:ethnicity].blank? && others[:ethnicity].blank?
