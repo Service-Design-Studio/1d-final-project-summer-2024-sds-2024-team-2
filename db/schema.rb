@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_03_115210) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_06_020231) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -113,6 +113,21 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_03_115210) do
     t.index ["user_id"], name: "index_saved_posts_on_user_id"
   end
 
+  create_table "uploaded_files", force: :cascade do |t|
+    t.string "name"
+    t.string "file_type"
+    t.integer "file_size"
+    t.integer "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_particular_id"
+    t.text "description"
+    t.string "document_type"
+    t.datetime "upload_date"
+    t.string "status"
+    t.index ["user_id"], name: "index_uploaded_files_on_user_id"
+  end
+
   create_table "user_histories", force: :cascade do |t|
     t.text "description"
     t.date "date"
@@ -148,6 +163,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_03_115210) do
     t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "needs_document_upload"
     t.index ["user_id"], name: "index_user_particulars_on_user_id"
   end
 
@@ -175,6 +191,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_03_115210) do
   add_foreign_key "messages", "ngo_users", column: "ngo_users_id"
   add_foreign_key "messages", "users"
   add_foreign_key "saved_posts", "users"
+  add_foreign_key "uploaded_files", "users"
   add_foreign_key "user_histories", "users"
   add_foreign_key "user_particulars", "users"
 end

@@ -1,7 +1,7 @@
 class User < ApplicationRecord
-  has_one :user_particular
-  has_one :user_history
-  has_many :messages, class_name: 'Message'
+  has_one :user_particular, dependent: :destroy
+  has_one :user_history, dependent: :destroy
+  has_many :messages, class_name: 'Message', dependent: :destroy
   has_many :saved_posts, dependent: :destroy
   has_many :documents, dependent: :destroy
 

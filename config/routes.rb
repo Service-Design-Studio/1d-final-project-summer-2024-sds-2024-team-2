@@ -1,8 +1,4 @@
-# frozen_string_literal: true
-
 Rails.application.routes.draw do
-  get 'user_histories/create'
-  # Set root path of web app
   root 'user_particulars#show'
 
   # Devise routes for user authentication
@@ -10,9 +6,6 @@ Rails.application.routes.draw do
     registrations: 'users/registrations/registrations',
     passwords: 'users/registrations/passwords'
   }
-  post 'chatbot', to: 'chatbot#chat'
-  get 'chatbot', to: 'chatbot#new'
-  # Custom routes for user particulars
   get 'user_particulars/confirm'
   post 'user_particulars/:id/generate_2fa', to: 'user_particulars#generate_2fa', as: 'generate_2fa'
   get 'user_particulars/:id/history', to: 'user_particulars#history', as: 'user_history'
@@ -25,14 +18,21 @@ Rails.application.routes.draw do
       get 'saved_post'
       get 'page2'
     end
-    resources :documents, only: %i[new create show edit update destroy]
+    resources :documents, only: [:new, :create, :show, :edit, :update, :destroy]
+    resources :uploaded_files, only: [:index, :create, :destroy, :update]
+  end
+
+  resources :uploaded_files, only: [:index, :create, :destroy, :update] do
+    member do
+      delete :destroy, to: 'uploaded_files#destroy'
+    end
   end
 
   # Resources for NGO users with custom member routes for verification and inbox
   resources :ngo_users do
     member do
-      post 'check_user' # Post action to verify user
-      get 'verify', to: 'ngo_users#verify', as: 'verify' # Verify action
+      post 'check_user'
+      get 'verify', to: 'ngo_users#verify', as: 'verify'
       post 'verify', to: 'ngo_users#verify'
       post 'confirm_verify', to: 'ngo_users#confirm_verify'
       get 'inbox', to: 'ngo_users#inbox', as: 'inbox'
