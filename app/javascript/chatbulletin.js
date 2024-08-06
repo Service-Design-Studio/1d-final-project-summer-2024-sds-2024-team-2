@@ -13,8 +13,10 @@ $(document).ready(function () {
       }
     });
   // JavaScript to toggle chat display
-  document.getElementById("chatButton").addEventListener("click", function () {
-    document.getElementById("chatDisplay").style.display = "flex";
+  document.querySelectorAll(".chatButton").forEach(function (button) {
+    button.addEventListener("click", function () {
+      document.getElementById("chatDisplay").style.display = "flex";
+    });
   });
 
   // Define the function to handle the close button click
@@ -49,7 +51,19 @@ $(document).ready(function () {
       data: { message: userInput },
       success: function (response) {
         thinkingMessage.remove();
-        appendMessage("bot", "Bot", response.reply);
+        // Function to process the response reply
+        function processReply(reply) {
+          // Replace **bold** with <strong>bold</strong>
+          // Replace *pointer* with <em>pointer</em>
+          reply = reply.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+          reply = reply.replace(/\* /g, "<br>");
+          return reply;
+        }
+
+        // Process the response reply
+        const processedReply = processReply(response.reply);
+
+        appendMessage("bot", "Bot", processedReply);
       },
       error: function () {
         thinkingMessage.remove();
