@@ -6,11 +6,7 @@ RSpec.describe User, type: :model do
       user.email = 'newuser@mail.com'
       user.password = 'password'
       user.phone_number = '91234567'
-  end
-
-  before do
-    # Sign in the user before each test
-    sign_in @user
+    end
   end
 
   # Rollback transaction after each test case
