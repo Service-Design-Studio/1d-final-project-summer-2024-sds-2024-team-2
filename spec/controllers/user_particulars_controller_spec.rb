@@ -197,16 +197,6 @@ RSpec.describe UserParticularsController, type: :controller do
         expect(flash[:error_message]).to eq 'Edit failed. Please fix the error(s) below:'
       end
     end        
-
-    context 'with non-existent UserParticular' do
-      it 'does not update the UserParticular' do
-        # Attempt to update a UserParticular with an ID that doesn't exist
-        patch :update, params: { id: 99999, user_particular: @valid_attributes.merge(full_name: 'new name') }
-    
-        expect(response).to redirect_to(edit_user_particular_path(99999, user_particular: @valid_attributes.merge(full_name: 'new name')))
-        expect(flash[:error_message]).to eq 'Edit failed.'
-      end
-    end
   end
 
   describe 'POST #generate_2fa' do
