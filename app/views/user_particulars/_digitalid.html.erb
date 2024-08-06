@@ -1,5 +1,5 @@
 <div class="container d-flex justify-content-center p-0">
-  <div class="card-1">
+  <div class="card-1" id="mainCard">
     <div class="card-1-header">
       EnableID Digital Card
       <% if @user_particular&.present? %>
@@ -97,7 +97,59 @@
       <% else %>
         <span>EnableID - Pending verification from an NGO</span>
       <% end %>
-      <i class="custom-verified fas fa-check"></i><%= image_tag 'qrcode.png', alt: "QR Code", class: 'img-fluid qr-code'%>
+      <i class="custom-verified fas fa-check"></i>
+      <%= image_tag 'qrcode.png', alt: "QR Code", class: 'img-fluid qr-code', id: "qrCode" %>
+    </div>
+  </div>
+
+  <!-- Hidden card to be shown when QR code is clicked -->
+  <div class="card-1" id="hiddenCard" style="display:none;">
+    <div class="card-1-header">
+      EnableID Digital Card
+      <% if @user_particular&.present? %>
+        <% case @user_particular&.status %>
+        <% when "pending" %>
+          <%= link_to edit_user_particular_path(@user_particular), class: "edit-link-right-align edit-icon-link" do %>
+            <i class="fas fa-edit"></i>
+          <% end %>
+        <% when "verified" %>
+          <%= link_to "#", class: "edit-link-right-align edit-icon-link", data: { bs_toggle: "modal", bs_target: "#verificationWarningModal" }, aria: { label: "Edit" } do %>
+            <i class="fas fa-edit"></i>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+    <div class="card-1-body">
+      <div style="display: flex; justify-content: center; align-items: center; height: 269px;">
+      <%= image_tag 'uxpertsqrcode.png', alt: "Default image", class: 'img-fluid qr-code', style:'width: 190px; height: 190px;' %>      </div>
+      <h5 style="text-align:center; margin-top: -20px;"><strong>Unique Identifier: </strong><%= @user_particular&.unique_id || "" %></h5>    </div>
+    <div class="card-footer">
+      <% if @user_particular&.status == 'pending' %>
+        <span>EnableID - Pending verification from an NGO</span>
+      <% elsif @user_particular&.status == 'verified' %>
+        <span>EnableID - Verified by <%= @user_particular&.verifier_ngo %></span>
+      <% else %>
+        <span>EnableID - Pending verification from an NGO</span>
+      <% end %>
+      <i class="custom-verified fas fa-check"></i>
+      <i class="fas fa-id-card fa-3x img-fluid qr-code " id="idcard"></i>
     </div>
   </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  // Event listener for clicking the QR code on the main card
+  document.getElementById("qrCode").addEventListener("click", function() {
+    document.getElementById("mainCard").style.display = "none";
+    document.getElementById("hiddenCard").style.display = "block";
+  });
+
+  // Event listener for clicking the fa-id-card icon on the hidden card
+  document.getElementById("idcard").addEventListener("click", function() {
+    document.getElementById("hiddenCard").style.display = "none";
+    document.getElementById("mainCard").style.display = "block";
+  });
+});
+
+</script>
