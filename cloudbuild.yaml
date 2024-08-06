@@ -47,7 +47,7 @@ steps:
 substitutions:
   _REGION: asia-southeast1
   _SERVICE_NAME: enable-id
-  _INSTANCE_NAME: prod1
+  _INSTANCE_NAME: prod
   _PROJECT_ID: our-id-boleh-426919
 
 images:
