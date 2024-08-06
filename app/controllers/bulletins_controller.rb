@@ -27,6 +27,13 @@ class BulletinsController < ApplicationController
     end
     
     if @bulletin.save
+      # Create interaction history
+      InteractionHistory.create(
+        activity_title: "New Bulletin Post: #{@bulletin.title}",
+        description: "A new bulletin post titled '#{@bulletin.title}' was created.",
+        activity_type: 'Post',
+        ngo_user_id: @ngo_user.id
+      )
       flash[:success] = "Post added successfully."
       redirect_to ngo_user_path(@ngo_user.id) # Adjust the redirect path as needed
     else

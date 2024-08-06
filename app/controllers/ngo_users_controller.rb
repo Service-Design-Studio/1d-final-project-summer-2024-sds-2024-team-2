@@ -56,6 +56,14 @@ class NgoUsersController < ApplicationController
       user: User.find_by(id: @user_particular.user_id)
     )
 
+    # create interaction history
+    InteractionHistory.create(
+      activity_title: "Verified user with Unique ID: #{@user_particular.unique_id}",
+      description: "User Particulars verified by #{@ngo_user.name}",
+      activity_type: 'Account',
+      ngo_user_id: @ngo_user.id
+    )
+
     flash[:success] = "Verification successful for unique ID: #{@user_particular.unique_id}."
     redirect_to ngo_user_path(@ngo_user), status: :found
   end

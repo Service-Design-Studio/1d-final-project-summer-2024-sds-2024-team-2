@@ -62,3 +62,8 @@
   font-size: 16px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
+
+/* styles.css */
+.interaction-history-page .interaction-icon {
+  background-color: #6bb39b !important; /* Change the color to green */
+}
