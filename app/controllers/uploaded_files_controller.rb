@@ -53,7 +53,11 @@ class UploadedFilesController < ApplicationController
   end
 
   def destroy
-    if @uploaded_file.file_path.purge && @uploaded_file.destroy
+    if @uploaded_file.file_path.attached?
+      @uploaded_file.file_path.purge
+    end
+
+    if @uploaded_file.destroy
       render json: { success: true, message: "File deleted successfully" }, status: :ok
     else
       render json: { success: false, errors: ["Failed to delete file"] }, status: :unprocessable_entity
