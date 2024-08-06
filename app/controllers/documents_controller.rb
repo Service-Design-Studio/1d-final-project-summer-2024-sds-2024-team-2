@@ -4,6 +4,7 @@ class DocumentsController < ApplicationController
 
   # GET /user_particulars/:user_particular_id/documents/new
   def new
+    @user = current_user
     @document = @attachable.documents.build
   end
 

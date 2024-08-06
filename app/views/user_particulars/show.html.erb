@@ -1,7 +1,7 @@
-<div class="container-fluid mt-4 d-flex justify-content-center">
+<div class="container-fluid p-4 d-flex justify-content-center">
   <!-- Left Side (Digital ID, 2FA, Buttons) -->
   <div class='row d-flex justify-content-center'>
-    <div class="col-lg-3 col-md-12">
+    <div class="col-lg-4 p-4 col-md-12">
       <!-- Digital ID Card Container -->
       <div class="d-flex justify-content-between align-items-center">
         <%= render 'digitalid' %>
@@ -27,32 +27,36 @@
         <% end %>
       </div>
       <!-- 2FA Container -->
-      <div class="d-flex gap-2 my-2 w-100 justify-content-center align-items-center">
+      <div class="d-flex gap-2 my-3 w-100 justify-content-center align-items-center">
         <button id="generate-2fa-btn" class="py-2 px-2 text-nowrap generate-2fa-button" style="font-size:0.8em;">Generate 2FA Passcode:</button>
         <span id='two-fa-passcode' class='py-2 text-nowrap two-fa-passcode-input text-center' style="font-size:0.8em;"><%= @user_particular&.two_fa_passcode || "2FA unavailable" %></span>
       </div>
       <!-- Buttons Container, put under sub main container -->
-      <div class="pri-container py-3 px-2 d-flex w-100 flex-column flex-wrap">
-        <div class="row mb-2 d-flex justify-content-center gap-2">
-          <%= link_to user_document_path(@user), id: 'documents-button', class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
-            <i class="fas fa-file-alt fs-5"></i> Documents
+      <div class="contaianer-fluid pri-container add-small-shadow mb-3 py-3 px-2 d-flex w-100 flex-column flex-wrap">
+        <div class="row d-flex justify-content-evenly g-2">
+          <%if @user_particular%>
+            <%= link_to user_document_path(@user), id: 'documents-button', class: "customhome-button p-2 col-5", style: 'text-decoration: none; height: auto; min-height:40px;' do %>
+              <i class="fas fa-file-alt fs-5" style='min-width:20px;'></i> Documents
+            <% end %>
           <% end %>
-          <%= link_to user_history_path(@user), class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
+
+          <%= link_to user_history_path(@user), class: "customhome-button p-2 col-5", style: 'text-decoration: none; height: auto; min-height:40px;' do %>
             <i class="fas fa-history fs-5"></i> Activity History
           <% end %>
-        </div>
-        <div class="row d-flex justify-content-center gap-2">
-          <%= link_to saved_post_user_particular_path(@user), class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
-            <i style='color: orange;' class="bi bi-bookmark-fill fs-5"></i> Saved Post
-          <% end %>
-          <%= link_to contact_ngo_path(@user), class: "customhome-button col-5", style: 'text-decoration: none; width: 100%; height: auto;' do %>
-            <i class="fas fa-search fs-5"></i> Search NGOs
+
+          <%if @user_particular%>
+            <%= link_to saved_post_user_particular_path(@user_particular), class: "customhome-button p-2 col-5", style: 'text-decoration: none; height: auto; min-height:40px;' do %>
+              <i style='color: orange;' class="bi bi-bookmark-fill fs-5"></i> Saved Post
+            <% end %>
+            <%= link_to contact_ngo_path(@user_particular), class: "customhome-button p-2 col-5", style: 'text-decoration: none; height: auto; min-height:40px;' do %>
+              <i class="fas fa-search fs-5"></i> Search Services
+            <% end %>
           <% end %>
         </div>
       </div>
     </div>
     <!-- Right Side (Bulletin Board) -->
-    <div class="col-lg-8 col-md-12 mx-0 d-flex justify-content-center">
+    <div class="col-lg-8 p-4 col-md-12 mx-0 d-flex justify-content-center d-lg-flex d-none ">
       <%= render 'bulletin' %>
     </div>
   </div>
@@ -79,6 +83,20 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- Bulletin button -->
+<div class="bulletin-button d-block d-lg-none d-flex justify-content-center align-items-center" id="bulletinButton"><i class="fs-5 bi bi-calendar-week"></i></div>
+<!-- Bulletin display -->
+<div class="bulletin-display m-0 px-0 flex-column overflow-hidden" style='max-height:100vh;' id="bulletinDisplay">
+    <div class='chat-header d-flex justify-content-between'>
+      <span class="close-button" id="closeButtonBulletin">&times;</span>
+      <span>Bulletin</span>
+      <span></span>
+    </div>
+    <div class="p-3 mx-0 d-flex justify-content-center">
+      <%= render 'user_particulars/bulletin' %>
+    </div>            
 </div>
 
 <% if @user_particular.present? %>

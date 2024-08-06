@@ -4,7 +4,7 @@ class UserParticularsController < ApplicationController
   before_action :set_user_particular, only: %i[show document edit update history]
   before_action :set_ngo_users
   before_action :set_saved_posts
-  before_action :set_bulletins_all
+  before_action :set_bulletins_all 
 
   def set_bulletins_all
     @bulletins = Bulletin.all
