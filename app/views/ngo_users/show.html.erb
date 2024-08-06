@@ -146,19 +146,19 @@
         <%= form_for :bulletin, url: bulletins_path, method: :post, html: { multipart: true } do |f| %>
           <%= f.hidden_field :user_id, value: @ngo_user.id %>
           <div class="form-group">
-            <%= f.label :title %>
+            <%= f.label :title %><span class="text-danger">*</span>
             <%= f.text_field :title, class: 'form-control', required: true  %>
           </div>
           <div class="form-group">
-            <%= f.label :description %>
+            <%= f.label :description %><span class="text-danger">*</span>
             <%= f.text_area :description, class: 'form-control', required: true  %>
           </div>
           <div class="form-group">
-            <%= f.label :date %>
+            <%= f.label :date %><span class="text-danger">*</span>
             <%= f.date_field :date, class: 'form-control', required: true  %>
           </div>
           <div class="form-group">
-            <%= f.label :location %>
+            <%= f.label :location %><span class="text-danger">*</span>
             <%= f.text_field :location, class: 'form-control', required: true  %>
           </div>
 
