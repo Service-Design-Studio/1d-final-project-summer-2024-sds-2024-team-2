@@ -4,7 +4,7 @@ Background:
     Given I am now on the user particulars home page as a verified user
 
 Scenario: Navigating to the Search Services page
-    When I press on the "Search Services" button
+    When I press on the "Search for Services" button
     Then I should be redirected to the "Search Services" page
     And I should see a list of NGOs with their contact informations
     And I should see a "Send a message "button in each ngo
