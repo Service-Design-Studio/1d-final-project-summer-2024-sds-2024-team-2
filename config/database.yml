@@ -29,4 +29,4 @@ production:
   database: "db1"
   username: "user1"
   password: "fXozweJAcVcVcKStsywxIYMvdkFNRVTdOSXYIPREmKRHSsieJZ"
-  host: /cloudsql/our-id-boleh-426919:asia-southeast1:prod1  
+  host: /cloudsql/our-id-boleh-426919:asia-southeast1:prod  
