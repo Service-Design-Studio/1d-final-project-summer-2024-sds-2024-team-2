@@ -4,7 +4,7 @@ class UploadedFilesController < ApplicationController
 
   def index
     @uploaded_files = @user_particular.uploaded_files
-    render json: @uploaded_files
+    render json: @uploaded_files.map { |file| file.as_json.merge(file_url: file.file_url) }
   rescue => e
     logger.error "Error in index action: #{e.message}"
     render json: { success: false, errors: ["Failed to load uploaded files"] }, status: :internal_server_error
@@ -13,20 +13,18 @@ class UploadedFilesController < ApplicationController
   def create
     @uploaded_file = @user_particular.uploaded_files.build(uploaded_file_params)
     @uploaded_file.status = 'Unverified'
-    @uploaded_file.document_type = 'Education'
-    @uploaded_file.description = 'Enter your description'
     @uploaded_file.user_id = current_user.id
+    @uploaded_file.upload_date = Time.current
 
-    if @uploaded_file.save
-      if params[:uploaded_file][:file_path].present?
-        @uploaded_file.file_path.attach(params[:uploaded_file][:file_path])
-        render json: { success: true, file: @uploaded_file.as_json.merge({ file_url: url_for(@uploaded_file.file_path) }) }, status: :created
+    if params[:uploaded_file][:file_path].present?
+      @uploaded_file.file_path.attach(params[:uploaded_file][:file_path])
+      if @uploaded_file.save
+        render json: { success: true, file: @uploaded_file.as_json.merge({ file_url: @uploaded_file.file_url }) }, status: :created
       else
-        @uploaded_file.destroy
-        render json: { success: false, errors: ["File path is missing"] }, status: :unprocessable_entity
+        render json: { success: false, errors: @uploaded_file.errors.full_messages }, status: :unprocessable_entity
       end
     else
-      render json: { success: false, errors: @uploaded_file.errors.full_messages }, status: :unprocessable_entity
+      render json: { success: false, errors: ["File path is missing"] }, status: :unprocessable_entity
     end
   rescue => e
     logger.error "Failed to upload file: #{e.message}"
@@ -43,6 +41,6 @@ class UploadedFilesController < ApplicationController
   end
 
   def uploaded_file_params
-    params.require(:uploaded_file).permit(:file_path, :name, :file_type, :file_size, :description, :document_type, :status)
+    params.require(:uploaded_file).permit(:name, :file_type, :file_size, :description, :document_type, :status)
   end
 end
