@@ -77,10 +77,10 @@ class UploadedFilesController < ApplicationController
   end
 
   def set_uploaded_file
-    @uploaded_file = @user_particular.uploaded_files.find(params[:id])
-  rescue ActiveRecord::RecordNotFound => e
-    logger.error "UploadedFile not found: #{e.message}"
-    render json: { success: false, errors: ["UploadedFile not found"] }, status: :not_found
+    @uploaded_file = @user_particular.uploaded_files.find_by(id: params[:id])
+    unless @uploaded_file
+      render json: { success: false, errors: ["UploadedFile not found"] }, status: :not_found
+    end
   end
 
   def uploaded_file_params
