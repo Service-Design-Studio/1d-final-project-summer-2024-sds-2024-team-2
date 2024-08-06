@@ -27,7 +27,7 @@ Scenario: Uploading an Unsupported File Type
   Given I am on the "Upload Document" page
   When I select a file with an unsupported format
   And drop the file
-  Then I should see an error message stating "Unsupported file type. Please upload a PDF, DOCX, or JPG file."
+  Then I should see an error message stating "Unsupported file type. Please upload a PDF, DOC, DOCX, or JPG file."
 
 Scenario: Uploading a File That Is Too Large
   Given I am on the "Upload Document" page
@@ -57,3 +57,15 @@ Scenario: Verifying Uploaded Documents
   When authorized personnel access my uploaded documents for verification
   Then they should only be able to do so with my consent and appropriate security checks
   And I should receive a notification that my documents are being reviewed
+
+Scenario: Removing Uploaded Documents
+  Given I am on the "Upload Document" page
+  And I have uploaded a document
+  When I click on the "Delete" button next to the uploaded document
+  Then I should see a confirmation message
+  And if I confirm the deletion, the document should be removed from the list
+
+Scenario: Viewing No Files Message
+  Given I am on the "Upload Document" page
+  And I have not uploaded any documents
+  Then I should see a message stating "No files uploaded yet."

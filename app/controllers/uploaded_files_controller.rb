@@ -1,48 +1,89 @@
 class UploadedFilesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user_particular
-
-  def create
-    uploaded_file = params[:uploaded_file][:file_path]
-    file_name = uploaded_file.original_filename
-    file_path = Rails.root.join('public', 'uploads', SecureRandom.uuid, file_name)
-    file_type = uploaded_file.content_type
-    file_size = uploaded_file.size
-    description = params[:uploaded_file][:description]
-    document_type = params[:uploaded_file][:document_type]
-
-    FileUtils.mkdir_p(File.dirname(file_path))
-    File.open(file_path, 'wb') do |file|
-      file.write(uploaded_file.read)
-    end
-
-    @user_particular.uploaded_files.create(
-      name: file_name,
-      file_path: file_path.to_s,
-      file_type: file_type,
-      file_size: file_size,
-      description: description,
-      document_type: document_type
-    )
-
-    render json: { success: true, file: { name: file_name, path: file_path.to_s, type: file_type, size: file_size, description: description, document_type: document_type } }, status: :created
-  end
+  before_action :set_uploaded_file, only: [:update, :destroy]
 
   def index
-    files = @user_particular.uploaded_files
-    render json: files
+    @uploaded_files = @user_particular.uploaded_files.includes(file_path_attachment: :blob)
+    files_with_urls = @uploaded_files.map do |file|
+      if file.file_path.attached?
+        file.as_json.merge(file_url: url_for(file.file_path))
+      else
+        file.as_json
+      end
+    end
+    render json: files_with_urls
+  rescue => e
+    logger.error "Error in index action: #{e.message}"
+    render json: { success: false, errors: ["Failed to load uploaded files"] }, status: :internal_server_error
+  end
+
+  def create
+    @uploaded_file = @user_particular.uploaded_files.build(uploaded_file_params)
+    @uploaded_file.status = 'Unverified'
+    @uploaded_file.document_type = 'Education'
+    @uploaded_file.description = 'Enter your description'
+    @uploaded_file.user_id = current_user.id
+    @uploaded_file.upload_date = Time.current
+
+    if params[:uploaded_file][:file_path].present?
+      @uploaded_file.file_path.attach(params[:uploaded_file][:file_path])
+      if @uploaded_file.save
+        render json: { success: true, file: @uploaded_file.as_json.merge({ file_url: @uploaded_file.file_url }) }, status: :created
+      else
+        render json: { success: false, errors: @uploaded_file.errors.full_messages }, status: :unprocessable_entity
+      end
+    else
+      render json: { success: false, errors: ["File path is missing"] }, status: :unprocessable_entity
+    end
+  rescue => e
+    logger.error "Failed to upload file: #{e.message}"
+    render json: { success: false, errors: ["Failed to upload file"] }, status: :internal_server_error
+  end
+
+  def update
+    if @uploaded_file.update(uploaded_file_params)
+      render json: { success: true, file: @uploaded_file }, status: :ok
+    else
+      render json: { success: false, errors: @uploaded_file.errors.full_messages }, status: :unprocessable_entity
+    end
+  rescue => e
+    logger.error "Failed to update file: #{e.message}"
+    render json: { success: false, errors: ["Failed to update file"] }, status: :internal_server_error
   end
 
   def destroy
-    file = @user_particular.uploaded_files.find(params[:id])
-    File.delete(file.file_path) if File.exist?(file.file_path)
-    file.destroy
-    render json: { success: true }
+    if @uploaded_file.file_path.attached?
+      @uploaded_file.file_path.purge
+    end
+
+    if @uploaded_file.destroy
+      render json: { success: true, message: "File deleted successfully" }, status: :ok
+    else
+      render json: { success: false, errors: ["Failed to delete file"] }, status: :unprocessable_entity
+    end
+  rescue => e
+    logger.error "Failed to delete file: #{e.message}"
+    render json: { success: false, errors: ["Failed to delete file"] }, status: :internal_server_error
   end
 
   private
 
   def set_user_particular
     @user_particular = UserParticular.find(params[:user_particular_id])
+  rescue ActiveRecord::RecordNotFound => e
+    logger.error "UserParticular not found: #{e.message}"
+    render json: { success: false, errors: ["UserParticular not found"] }, status: :not_found
+  end
+
+  def set_uploaded_file
+    @uploaded_file = @user_particular.uploaded_files.find_by(id: params[:id])
+    unless @uploaded_file
+      render json: { success: false, errors: ["UploadedFile not found"] }, status: :not_found
+    end
+  end
+
+  def uploaded_file_params
+    params.require(:uploaded_file).permit(:file_path, :name, :file_type, :file_size, :description, :document_type, :status)
   end
 end

@@ -561,6 +561,7 @@ DEPENDENCIES
   faker
   google-cloud-storage (~> 1.44)
   htmlbeautifier
+  image_processing (~> 1.2)
   importmap-rails
   jbuilder
   pg (~> 1.5.6)

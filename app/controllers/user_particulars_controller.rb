@@ -2,7 +2,7 @@
 class UserParticularsController < ApplicationController
   include UserParticularsHelper
   before_action :authenticate_user!
-  before_action :set_user_particular
+  before_action :set_user_particular, only: [:show, :document, :edit, :update, :history]
   before_action :set_ngo_users
   before_action :set_saved_posts
 
