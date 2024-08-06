@@ -23,7 +23,7 @@
   <%= form_with model: @user_particular, url: user_particular_path(@user_particular), method: :put, local: true do |form| %>
     <%= form.hidden_field :user_id, value: current_user.id %>
     <div class="row">
-      <div class='col-9'>
+      <div class='col-9 detail-section'>
         <div class="form-group">
           <%= form.label :full_name, "Full Name" %><span class="text-danger">*</span>
           <%= form.text_field :full_name, class: "form-control", required: true %>
@@ -58,7 +58,7 @@
         </div>
       </div>
 
-      <div class='col-3 d-flex flex-column justify-content-center align-items-center px-4'>
+      <div class='col-3 d-flex flex-column justify-content-center align-items-center px-4 photo-section'>
         <label class="m-0">Passport-Style Photo<span class="text-danger">*</span></label>
         <label id="profilePictureLabel" for="profile_picture" class="p-1 mb-0 form-group d-flex flex-grow-1 justify-content-center align-items-center text-center text-muted" style="cursor: pointer; border: 5px dashed rgba(198, 198, 198, 0.65); height: 200px; width: 200px; overflow: hidden;">
           <% if @user_particular.profile_picture.attached? %>
@@ -138,6 +138,29 @@
 <%# For concatenating the numbers to full number %>
 <script>
   document.addEventListener("DOMContentLoaded", function() {
+    const photoDiv = document.querySelector('.photo-section');
+    const detailDiv = document.querySelector('.detail-section');
+    function adjustPhotoSectionClasses() {
+      const screenWidth = window.innerWidth;
+      if (screenWidth <= 767) {
+        // Remove classes for smaller screens
+        photoDiv.className = 'justify-content-center align-items-center px-4';
+        photoDiv.style.marginBottom = '20px';  // Adding margin-bottom when screen is small
+        detailDiv.className = '';
+      } else {
+        // Add classes for larger screens
+        photoDiv.className = 'col-3 d-flex flex-column justify-content-center align-items-center px-4';
+        photoDiv.style.marginBottom = '';  // Remove margin-bottom for larger screens
+        detailDiv.className = 'col-9';
+      }
+    }
+
+    // Call the function on initial load
+    adjustPhotoSectionClasses();
+
+    // Add event listener for window resize
+    window.addEventListener('resize', adjustPhotoSectionClasses);
+
     // Simplify element selection by using an object to group related elements
     const elements = {
       primary: {
