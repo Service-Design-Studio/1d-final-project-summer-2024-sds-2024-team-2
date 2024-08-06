@@ -112,7 +112,6 @@ class UserParticularsController < ApplicationController
         if params[:user_particular][:profile_picture].present?
           @user_particular.profile_picture.attach(params[:user_particular][:profile_picture])
         end
-
         @user_particular.update(status: 'pending', verifier_ngo: nil)
         flash[:success] = 'Digital ID was successfully edited!'
         redirect_to @user_particular
@@ -125,6 +124,7 @@ class UserParticularsController < ApplicationController
       redirect_to edit_user_particular_path(params[:id], user_particular: user_particular_params)
     end
   end
+
 
   def history
     @back_path = root_path
