@@ -94,6 +94,21 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_31_023419) do
     t.index ["user_id"], name: "index_saved_posts_on_user_id"
   end
 
+  create_table "uploaded_files", force: :cascade do |t|
+    t.string "name"
+    t.string "file_type"
+    t.integer "file_size"
+    t.integer "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_particular_id"
+    t.text "description"
+    t.string "document_type"
+    t.datetime "upload_date"
+    t.string "status"
+    t.index ["user_id"], name: "index_uploaded_files_on_user_id"
+  end
+
   create_table "user_histories", force: :cascade do |t|
     t.text "description"
     t.date "date"
@@ -129,6 +144,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_31_023419) do
     t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "needs_document_upload"
     t.index ["user_id"], name: "index_user_particulars_on_user_id"
   end
 
