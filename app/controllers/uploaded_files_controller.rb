@@ -1,11 +1,18 @@
 class UploadedFilesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user_particular
-  before_action :set_uploaded_file, only: [:destroy, :update]
+  before_action :set_uploaded_file, only: [:update, :destroy]
 
   def index
-    @uploaded_files = @user_particular.uploaded_files
-    render json: @uploaded_files.map { |file| file.as_json.merge(file_path: url_for(file.file_path)) }
+    @uploaded_files = @user_particular.uploaded_files.includes(file_path_attachment: :blob)
+    files_with_urls = @uploaded_files.map do |file|
+      if file.file_path.attached?
+        file.as_json.merge(file_url: url_for(file.file_path))
+      else
+        file.as_json
+      end
+    end
+    render json: files_with_urls
   rescue => e
     logger.error "Error in index action: #{e.message}"
     render json: { success: false, errors: ["Failed to load uploaded files"] }, status: :internal_server_error
