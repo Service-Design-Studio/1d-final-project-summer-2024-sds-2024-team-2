@@ -10,7 +10,7 @@
                     <ul>
                     <h2 class="header-fixed">Messages</h2>
                     <% if @messages.empty? %>
-                        <h4 style="display: flex; justify-content: center; align-items: center; height: 80%; text-align: center; color:#767676">No messages recieved</h4>
+                        <h4 style="display: flex; justify-content: center; align-items: center; height: 100%; text-align: center; color:#767676">No messages recieved</h4>
                     <% else %>
                         <% @messages.each do |message| %>
                             <li onclick="showDetails(this)" 
@@ -19,14 +19,14 @@
                                 data-contact_number ="<%= message.phone_number_country_code %> <%= message.phone_number %>"
                                 data-email ="<%= message.email %>"
                                 data-message ="<%= message.message %>">
-                                <div class="text-content" style="height: 50px;">
+                                <div class="text-content" style="height: 80px; overflow: auto; margin:0;">
                                     <div class="message-header">
-                                        <h4><%= message.full_name %></h4>
-                                        <p class="date">
-                                            <%= Time.zone.parse(message.createdAt).in_time_zone('Asia/Singapore').strftime("%B %d, %Y %H:%M") %>
-                                        </p>
+                                        <h5><%= message.full_name %></h5>
                                     </div>
-                                    <p><%= message.message.split(' ').take(8).join(' ') %> <%= '...' if message.message.split(' ').size > 10 %></p>
+                                    <p class="date" style="margin:0;">
+                                            <%= Time.zone.parse(message.createdAt).in_time_zone('Asia/Singapore').strftime("%B %d, %Y %H:%M") %>
+                                    </p>
+                                    <p style="margin:0;"><%= message.message.split(' ').take(6).join(' ') %> <%= '...' if message.message.split(' ').size > 6 %></p>
                                 </div>
                             </li>
                         <% end %>
@@ -42,13 +42,13 @@
             <h4 style="display: flex; justify-content: center; align-items: center; height: 80%; text-align: center; color:#767676" id="default-message">Click on a message to display message here</h4>
             
             <div class="details-container" style="display: none;">
-                <div class="details-section">
+                <div class="details-section" style="overflow: auto;">
                     <p id="name" style="display: none;">Name: Not selected</p>
                     <p id="idNumber" style="display: none;">ID Number: Not selected</p>
                     <p id="contactNo" style="display: none;">Contact Number: Not selected</p>
                     <p id="email" style="display: none;">Email: Not selected</p>
                 </div>
-                <div class="message-section">
+                <div class="message-section" style="overflow: auto;">
                     <p id="message" style="display: none;">Message: Not selected</p>
                 </div>
             </div>
