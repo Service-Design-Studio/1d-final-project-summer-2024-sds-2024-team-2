@@ -6,4 +6,4 @@ env_variables:
   SECRET_KEY_BASE: 63f709c585a4dbb07d7294b24a1639ea5c903a25f59d7bde338f02ec12fc083edb335c741db49ac6bcd37105b429039c6423871f3a67a8605acc5e89b1871e3b
 
 beta_settings:
-  cloud_sql_instances: our-id-boleh-426919:asia-southeast1:prod1  
+  cloud_sql_instances: our-id-boleh-426919:asia-southeast1:prod  
