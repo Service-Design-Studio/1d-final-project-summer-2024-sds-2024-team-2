@@ -1,7 +1,7 @@
 class UploadedFilesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user_particular
-  before_action :set_uploaded_file, only: [:destroy]
+  before_action :set_uploaded_file, only: [:destroy, :update]
 
   def index
     @uploaded_files = @user_particular.uploaded_files
@@ -34,8 +34,19 @@ class UploadedFilesController < ApplicationController
     render json: { success: false, errors: ["Failed to upload file"] }, status: :internal_server_error
   end
 
+  def update
+    if @uploaded_file.update(uploaded_file_params)
+      render json: { success: true, file: @uploaded_file }, status: :ok
+    else
+      render json: { success: false, errors: @uploaded_file.errors.full_messages }, status: :unprocessable_entity
+    end
+  rescue => e
+    logger.error "Failed to update file: #{e.message}"
+    render json: { success: false, errors: ["Failed to update file"] }, status: :internal_server_error
+  end
+
   def destroy
-    if @uploaded_file.destroy
+    if @uploaded_file.file_path.purge && @uploaded_file.destroy
       render json: { success: true, message: "File deleted successfully" }, status: :ok
     else
       render json: { success: false, errors: ["Failed to delete file"] }, status: :unprocessable_entity
