@@ -8,6 +8,16 @@ class UserParticular < ApplicationRecord
   before_create :assign_unique_id
   before_create :generate_2fa_secret
 
+  # Presence Validations
+  validates :full_name, presence: true
+  validates :phone_number, presence: true
+  validates :country_of_origin, presence: true
+  validates :ethnicity, presence: true
+  validates :religion, presence: true
+  validates :gender, presence: true
+  validates :date_of_birth, presence: true
+  validates :date_of_arrival, presence: true
+
   def assign_unique_id
     loop do
       unique_id = rand(1_000_000..9_999_999)

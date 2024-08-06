@@ -241,14 +241,24 @@ RSpec.describe UserParticularsController, type: :controller do
     end
 
     context 'with invalid params' do
-      it 'does not update the UserParticular' do
+      it 'does not pass controller validation and update the UserParticular' do
         user_particular = UserParticular.create!(@valid_attributes) # Create an initial record
         patch :update, params: { id: user_particular.id, user_particular: @invalid_attributes }
     
         expect(response).to redirect_to(edit_user_particular_path(user_particular.id, user_particular: @invalid_attributes))
         expect(flash[:error_message]).to eq 'Edit failed. Please fix the error(s) below:'
       end
-    end        
+    end
+    
+    context 'with empty params' do
+      it 'does not get pass model validation and update the UserParticular' do
+        user_particular = UserParticular.create!(@valid_attributes) # Create an initial record
+        patch :update, params: { id: user_particular.id, user_particular: @invalid_attributes.merge(religion: '') } #empty religion field will fail model check
+    
+        expect(response).to redirect_to(edit_user_particular_path(user_particular.id, user_particular: @invalid_attributes))
+        expect(flash[:error_message]).to eq 'Edit failed'
+      end
+    end
   end
 
   describe 'POST #generate_2fa' do
