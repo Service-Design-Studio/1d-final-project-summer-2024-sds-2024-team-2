@@ -12,7 +12,7 @@ class UploadedFilesController < ApplicationController
 
   def create
     @uploaded_file = @user_particular.uploaded_files.build(uploaded_file_params)
-    @uploaded_file.status = 'Unverified' if @uploaded_file.status.blank?
+    @uploaded_file.status = 'Unverified'
     @uploaded_file.document_type = 'Education'
     @uploaded_file.description = 'Enter your description'
     @uploaded_file.user_id = current_user.id
