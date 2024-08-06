@@ -1,4 +1,3 @@
-# app/controllers/user_particulars_controller.rb
 class UserParticularsController < ApplicationController
   include UserParticularsHelper
   before_action :authenticate_user!
@@ -218,7 +217,7 @@ class UserParticularsController < ApplicationController
 
   def validate_user_particulars_dropdown(user_particular, others)
     error_messages_arr = []
-    # Check if 'others' is present and that each indiviual field is filled up
+    # Check if 'others' is present and that each individual field is filled up
     if others.present?
       # Check if others[:ethnicity] is blank
       if user_particular[:ethnicity].blank? && others[:ethnicity].blank?
@@ -231,7 +230,7 @@ class UserParticularsController < ApplicationController
       # Check if others[:religion] is blank
       if user_particular[:religion].blank? && others[:religion].blank?
         error_messages_arr << 'Please specify your religion.'
-      # Ensure others[:gender] contains only valid characters
+      # Ensure others[:religion] contains only valid characters
       elsif others[:religion] =~ /[^a-zA-Z-, ]/
         error_messages_arr << 'Religion can only contain letters, hyphens (-), and commas (,).'
       end

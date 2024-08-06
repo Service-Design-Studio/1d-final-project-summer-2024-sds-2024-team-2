@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  get 'user_histories/create'
   # Set root path of web app
   root 'user_particulars#show'
 
@@ -8,8 +7,7 @@ Rails.application.routes.draw do
     registrations: 'users/registrations/registrations',
     passwords: 'users/registrations/passwords'
   }
-  post 'chatbot', to: 'chatbot#chat'
-  get 'chatbot', to: 'chatbot#new'
+
   # Custom routes for user particulars
   get 'user_particulars/confirm'
   post 'user_particulars/:id/generate_2fa', to: 'user_particulars#generate_2fa', as: 'generate_2fa'
@@ -18,7 +16,7 @@ Rails.application.routes.draw do
   post 'user_particulars/:id/:ngoid/message', to: 'user_particulars#message', as: 'user_message'
   post 'user_particulars/:id/send_message/:ngoid', to: 'user_particulars#send_message', as: 'send_message'
   get 'user_particulars/:id/document', to: 'user_particulars#document', as: 'user_document'
-  
+
   # Resources for user particulars, with nested documents resources
   resources :user_particulars do
     member do
@@ -26,7 +24,13 @@ Rails.application.routes.draw do
       get 'page2'
     end
     resources :documents, only: [:new, :create, :show, :edit, :update, :destroy]
-    resources :uploaded_files, only: [:index, :create, :destroy]
+    resources :uploaded_files, only: [:index, :create, :destroy, :update]
+  end
+
+  resources :uploaded_files, only: [:index, :create, :destroy, :update] do
+    member do
+      delete :destroy, to: 'uploaded_files#destroy'
+    end
   end
 
   # Resources for NGO users with custom member routes for verification and inbox
@@ -44,4 +48,8 @@ Rails.application.routes.draw do
   # Resources for bulletins and saved posts
   resources :bulletins
   resources :saved_posts
+
+  # Chatbot routes
+  post 'chatbot', to: 'chatbot#chat'
+  get 'chatbot', to: 'chatbot#new'
 end
