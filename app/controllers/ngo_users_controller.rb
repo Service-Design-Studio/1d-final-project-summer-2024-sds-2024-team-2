@@ -9,6 +9,7 @@ class NgoUsersController < ApplicationController
     nil unless params[:unique_id].present?
     @ngo_users = NgoUser.all
     @bulletins = Bulletin.all.order(updated_at: :desc) # Ensures @bulletins is an array even if the query finds no records for NIL posts in bulletin board
+    logger.debug "Bulletins: #{@bulletins}"
     @show_add_bulletin_button = true
     @saved_posts = current_user&.saved_posts || [] # Ensure @saved_posts is not nil
   end
