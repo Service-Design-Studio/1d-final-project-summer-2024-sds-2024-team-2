@@ -100,13 +100,12 @@ class UserParticularsController < ApplicationController
   def update
     user_particular_errors = validate_user_particulars(user_particular_params)
     dropdown_errors = validate_user_particulars_dropdown(user_particular_params, params[:others])
-
+  
     error_messages_arr = user_particular_errors + dropdown_errors
     flash[:error] = error_messages_arr
-
+  
     # Validate user particulars
     if error_messages_arr.empty?
-      @user_particular = UserParticular.find(params[:id])
 
       if @user_particular.update(user_particular_params)
         if params[:user_particular][:profile_picture].present?
@@ -174,15 +173,15 @@ class UserParticularsController < ApplicationController
   def validate_user_particulars(user_particular)
     error_messages_arr = []
 
-    unless user_particular[:full_name] =~ /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžæÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u
+    if user_particular[:full_name] =~ /[^a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžæÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]/u
       error_messages_arr << 'Full name can only contain valid letters and symbols.'
     end
 
-    unless user_particular[:phone_number] =~ /[^0-9-]/
+    if user_particular[:phone_number] =~ /[^0-9-]/
       error_messages_arr << 'Phone number can only contain numbers and hyphens.'
     end
 
-    unless user_particular[:secondary_phone_number] =~ /[^0-9-]/
+    if user_particular[:secondary_phone_number] =~ /[^0-9-]/
       error_messages_arr << 'Secondary phone number can only contain numbers and hyphens.'
     end
     
