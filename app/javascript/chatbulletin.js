@@ -1,15 +1,16 @@
 $(document).ready(function () {
   // JavaScript to toggle chat display
-  document.getElementById("smallchatbutton").addEventListener("click", function () {
-    document.getElementById("chatDisplay").style.display = "flex";
-  });
+  document
+    .getElementById("smallchatbutton")
+    .addEventListener("click", function () {
+      document.getElementById("chatDisplay").style.display = "flex";
+    });
 
   document
     .getElementById("bigchatbutton")
     .addEventListener("click", function () {
       document.getElementById("chatDisplay").style.display = "flex";
     });
-
 
   // Define the function to handle the close button click
   function handleCloseButtonClick() {
@@ -20,6 +21,11 @@ $(document).ready(function () {
     .getElementById("closeButtonChat")
     .addEventListener("click", handleCloseButtonClick);
 
+  const chatBox = document.getElementById("chat-box");
+
+  if (chatBox && chatBox.children.length === 0) {
+    appendMessage("bot", "Bot", "Hi! Let me know how I can help you!");
+  }
   // Attach the function to the close button click event
 
   // Function to handle form submission

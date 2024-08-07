@@ -26,8 +26,10 @@
       <div class="photo-1 px-2">
         <% if @user_particular %>
           <% if @user_particular.profile_picture.attached? %>
-            <%= image_tag @user_particular.profile_picture, alt: "User's profile picture", class: 'img-fluid', style: 'width: 90px; height: 110px;' %>
-          <% else %>
+            <%= link_to '#', onclick: "openImagePopup('#{url_for(@user_particular.profile_picture)}'); return false;" do %>
+              <%= image_tag @user_particular.profile_picture, alt: "User's profile picture", class: 'img-fluid', style: 'width: 90px; height: 110px;' %>
+            <% end %>         
+            <% else %>
             <%= image_tag 'default.png', alt: "Default image", class: 'img-fluid', style:'width: 90px; height: 110px;' %>
           <% end %>
         <% else %>
@@ -152,4 +154,7 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 });
 
+  function openImagePopup(url) {
+    window.open(url, 'Image Preview', 'width=600,height=400');
+  }
 </script>

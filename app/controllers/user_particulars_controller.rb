@@ -100,10 +100,10 @@ class UserParticularsController < ApplicationController
   def update
     user_particular_errors = validate_user_particulars(user_particular_params)
     dropdown_errors = validate_user_particulars_dropdown(user_particular_params, params[:others])
-  
+
     error_messages_arr = user_particular_errors + dropdown_errors
     flash[:error] = error_messages_arr
-  
+
     # Validate user particulars
     if error_messages_arr.empty?
 
@@ -184,7 +184,7 @@ class UserParticularsController < ApplicationController
     if user_particular[:secondary_phone_number] =~ /[^0-9-]/
       error_messages_arr << 'Secondary phone number can only contain numbers and hyphens.'
     end
-    
+
     # Ensure that neither or both secondary country code + phone number exist
     if user_particular[:secondary_phone_number_country_code].present? || user_particular[:secondary_phone_number].present?
       if user_particular[:secondary_phone_number_country_code].blank?
@@ -298,7 +298,7 @@ class UserParticularsController < ApplicationController
     if @message.save
       flash[:notice] = "Message successfully sent to #{NgoUser.find(ngo_id).name}!"
       UserHistory.create(
-        activity_title: event_title.blank? ? "Message sent to #{NgoUser.find(ngo_id).name}!" : "#{event_title}: Message sent to #{NgoUser.find(ngo_id).name}!",
+        activity_title: event_title.blank? ? "Message sent to #{NgoUser.find(ngo_id).name}!" : "Message sent to #{NgoUser.find(ngo_id).name}!",
         description: "Message: #{message_content}",
         activity_type: 'Message',
         user: current_user

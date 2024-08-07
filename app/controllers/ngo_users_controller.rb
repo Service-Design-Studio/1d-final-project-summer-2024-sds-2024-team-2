@@ -83,6 +83,5 @@ class NgoUsersController < ApplicationController
     @back_path = ngo_user_path
     @ngo_user = NgoUser.find(params[:id])
     @interaction_history = InteractionHistory.where(ngo_user_id: @ngo_user.id)
-    render 'interaction_history'
   end
 end

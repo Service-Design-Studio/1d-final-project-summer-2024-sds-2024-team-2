@@ -17,7 +17,7 @@ World(Warden::Test::Helpers)
 Warden.test_mode!
 After { Warden.test_reset! } # devise inherits from warden, putting this here enables login_as methods in steps file
 Capybara.default_max_wait_time = 5
-Capybara.default_driver = :selenium_chrome
+Capybara.default_driver = :selenium_chrome_headless
 Capybara.server_port = 3002
 Capybara.app_host = 'http://127.0.0.1:3002'
 

@@ -1,4 +1,24 @@
 <!-- app/views/ngo_users/interaction_history.html.erb -->
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      background-color: #fffff;  
+      background-image: url('<%= asset_path('showbg.svg') %>');
+      background-size: cover;
+      background-position: center;
+    }
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.5);
+    }
+  </style>
+</head>
 <div class='container'>
   <div id="interaction_history" class="row d-flex justify-content-center" style="font-size:0.8em; max-height:65vh; overflow-y: auto; overflow-x: hidden;">
     <% if @interaction_history.present? %>
