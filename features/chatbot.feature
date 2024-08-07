@@ -8,7 +8,7 @@ Background:
 
 Scenario: Activating the Chat-bot from laptop screen
   Given I am using this on a laptop
-  When I press the "Talk to your AI assistant, Freddy! " button
+  When I press the "Talk to your AI assistant, Freddy!" button
   Then I should see the chat display appear
   And I should see "Hi! Let me know how I can help you!"
 
@@ -17,3 +17,10 @@ Scenario: Activating the Chat-bot from smaller mobile device
   When I press on the speech bubble icon button
   Then I should see the chat display appear
   And I should see "Hi! Let me know how I can help you!"
+
+Scenario: Bot introducing itself and functionalities
+  Given I opened up the chat display
+  When I type in "What could you help me with?
+  And I press the submit logo button
+  Then I should see "Freddy" from the bot's response
+  And I should see "EnableID" from the bot's response

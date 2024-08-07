@@ -3,12 +3,15 @@ Given(/^I am on the "([^"]*)" page$/) do |page|
 end
 
 When(/^I press the "([^"]*)" button$/) do |button|
+  puts button
   if has_button?(button)
     click_button(button)
   elsif has_link?(button)
     click_link(button)
   elsif has_css?("[aria_label='#{button}']")
     find("[aria_label='#{button}']").click
+  elsif has_css?('.chat-button.big-chat-button#bigchatbutton', text: button)
+    find('.chat-button.big-chat-button#bigchatbutton', text: button).click
   else
     raise "No button or link found with name '#{button}'"
   end
@@ -16,9 +19,9 @@ end
 
 Then(/^I should be directed to the "([^"]*)" page$/) do |page|
   expected_path = case page
-                  when "Upload Document"
+                  when 'Upload Document'
                     new_user_particular_document_path(@user_particular)
-                  when "Contact NGO"
+                  when 'Contact NGO'
                     contact_ngo_path(@user_particular)
                   else
                     path_to(page)
