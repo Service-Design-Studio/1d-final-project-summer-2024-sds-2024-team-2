@@ -256,28 +256,39 @@ ngo_users_data = [
   }
 ]
 
-# Create or update users and their particulars
+# Method to handle the creation or updating of user history
+def create_or_update_history_for_user(user)
+  # Check if the history already exists
+  existing_history = UserHistory.find_or_initialize_by(
+    activity_title: 'Created EnableID account',
+    description: 'Account creation, time to fill in your particulars, seek verification from NGOs, and seek services and support!',
+    activity_type: 'Account',
+    user: user
+  )
+end
+
 users_data.each do |user_data|
+  # Find or initialize the user
   user = User.find_or_initialize_by(username: user_data[:username])
 
-  # Only create user data
+  # Only create user data if it's a new record
   if user.new_record?
     user.email = user_data[:email]
     user.password = user_data[:password] # TODO: Has error when updating password during deployment
     user.phone_number = user_data[:phone_number]
     user.save!
-
   end
+
+  # Handle user particulars
   particulars_data = user_data[:particulars]
-  if particulars_data.nil?
-    # puts 'nil'
-  else
-    # Create/modify user data
+  if particulars_data
     user_particular = user.user_particular || user.build_user_particular
     user_particular.assign_attributes(particulars_data)
     user_particular.save!
   end
-  UserHistoriesController.new.create_history_for_new_user(user)
+
+  # Create or update user history with idempotency
+  create_or_update_history_for_user(user)
 end
 
 UserParticular.first.update(unique_id: '1055290', two_fa_passcode: '606833')
@@ -308,7 +319,13 @@ end
     date: DateTime.now - rand(1..30),
     user_id: 1
   }
-  user_history = UserHistory.find_or_initialize_by(id: i)
+
+  user_history = UserHistory.find_or_initialize_by(
+    activity_type: history_data[:activity_type],
+    activity_title: history_data[:activity_title],
+    user_id: history_data[:user_id]
+  )
+
   user_history.update!(history_data)
 end
 
