@@ -40,13 +40,17 @@
       <div class="row flex-nowrap align-items-center m-0 justify-content-between p-2" style="background-color: #f1536a; color: white; margin-bottom:0;">
         <div class="col-1 d-flex justify-content-start align-items-center">
           <% if @back_path.present? %>
-            <%= button_to "Back", @back_path, method: 'get', class: "text-nowrap btn btn-light" %>
+            <%= button_to @back_path, method: 'get', class: "text-nowrap btn btn-light", aria_label:"Back" do %>
+              <i class="bi bi-arrow-left"></i>
+            <% end %>
           <% end %>
         </div>
-        <h5 id="EnableID_usertitle" data-user-id="<%= @user&.id %>" class="text-center m-0 col-10 text-nowrap">Welcome, <%= @user_particular&.full_name || current_user.email %>!</h5>
+        <h5 id="EnableID_usertitle" data-user-id="<%= @user&.id %>" aria-label="Sign out" class="d-none d-lg-flex text-center m-0 col-10 text-nowrap">Welcome, <%= @user_particular&.full_name || current_user.email %>!</h5>
         <div class="col-1 d-flex justify-content-end align-items-center">
-          <%= button_to "Sign out", destroy_user_session_path, method: 'delete', class: "text-nowrap btn btn-light" %>
-        </div>
+          <%= button_to destroy_user_session_path, method: 'delete', class: "text-nowrap btn btn-light" do %>
+            <i class="bi bi-box-arrow-right"></i>
+          <% end %>        
+          </div>
       </div>
       <%= yield %>
     </div>
