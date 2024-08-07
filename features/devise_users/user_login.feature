@@ -4,8 +4,7 @@ Feature: User Login
   So that I can log in to my account
 
 Background:
-  Given that a User account by the Username of "user1", Email of "user1@mail.com", Phone Number of "90000001" exist
-  And I am on the "Login" page
+  Given I am on the "Login" page
 
 Scenario: Successful Login with Phone Number
   Given I fill in the following fields

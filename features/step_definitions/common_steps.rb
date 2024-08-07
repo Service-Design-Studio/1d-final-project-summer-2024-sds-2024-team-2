@@ -88,6 +88,11 @@ def fill_in_form(table)
   end
 end
 
+Given(/^that a User account by the Username of "user1", Email of "user1@mail.com", Phone Number of "90000001" exist$/) do
+  user = User.find_by(username: 'user1', email: 'user1@gmail.com', phone_number: '90000001')
+  expect(user).to be_persisted
+end
+
 # Maps page names to their corresponding paths
 def path_to(page_name)
   user_id = if defined?(@user_particular) && @user_particular.present?
