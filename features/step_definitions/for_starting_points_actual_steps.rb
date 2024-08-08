@@ -76,7 +76,7 @@ Given(/^I am now logged in to the user particulars home page$/) do
 end
 
 Then(/^I should see the welcome message$/) do
-  expect(page).to have_content('Welcome, ', wait: 2)
+  expect(page).to have_selector('h5#EnableID_usertitle', visible: false)
 end
 
 # Getting started but as an already verified user

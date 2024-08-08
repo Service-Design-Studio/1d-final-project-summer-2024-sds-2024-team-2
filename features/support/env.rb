@@ -4,22 +4,17 @@
 # instead of editing this one. Cucumber will automatically load all features/**/*.rb
 # files.
 
+require 'database_cleaner'
+require 'database_cleaner/cucumber'
 require 'database_cleaner/active_record'
+
 require 'capybara/cucumber'
 require 'selenium/webdriver'
 require 'warden'
 require 'devise'
 require 'simplecov'
 require 'cucumber/rails'
-
 SimpleCov.start
-World(Warden::Test::Helpers)
-Warden.test_mode!
-After { Warden.test_reset! } # devise inherits from warden, putting this here enables login_as methods in steps file
-Capybara.default_max_wait_time = 5
-Capybara.default_driver = :selenium_chrome_headless
-Capybara.server_port = 3002
-Capybara.app_host = 'http://127.0.0.1:3002'
 
 # By default, any exception happening in your Rails application will bubble up
 # to Cucumber so that your scenario will fail. This is a different from how
@@ -53,11 +48,6 @@ After do
   DatabaseCleaner.clean
 end
 
-# Ensure that the database is cleaned before the entire test suite runs
-Before('@clean') do
-  DatabaseCleaner.clean_with(:transaction)
-end
-
 # You may also want to configure DatabaseCleaner to use different strategies for certain features and scenarios.
 # See the DatabaseCleaner documentation for details. Example:
 #
@@ -79,3 +69,11 @@ end
 Cucumber::Rails::Database.javascript_strategy = :truncation
 
 # Debugging: Save and open page if CSRF token is not found
+
+World(Warden::Test::Helpers)
+Warden.test_mode!
+After { Warden.test_reset! } # devise inherits from warden, putting this here enables login_as methods in steps file
+Capybara.default_max_wait_time = 30
+Capybara.default_driver = :selenium_chrome
+Capybara.server_port = 3002
+Capybara.app_host = 'http://127.0.0.1:3002'

@@ -10,7 +10,7 @@ Scenario: Redirect to "Fill Particulars” page
 
 Scenario: Redirect to "Edit your particulars!" page
     Given I am now on the user particulars home page as a verified user
-    When I press the "Edit" button
+    When I click the edit icon link
     Then I should see "Caution!"
     When I press the "Proceed" button
     Then I should see "Edit your particulars"

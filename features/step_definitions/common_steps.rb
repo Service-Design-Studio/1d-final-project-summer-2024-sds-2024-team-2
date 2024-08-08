@@ -17,6 +17,10 @@ When(/^I press the "([^"]*)" button$/) do |button|
   end
 end
 
+Given('I click the edit icon link') do
+  find('a.edit-link-right-align.edit-icon-link[aria-label="Edit"]').click
+end
+
 Then(/^I should be directed to the "([^"]*)" page$/) do |page|
   expected_path = case page
                   when 'Upload Document'
@@ -119,7 +123,7 @@ def path_to(page_name)
     new_user_registration_path
   when 'saved post'
     saved_post_user_particular_path(user_id)
-  when 'search services'
+  when 'search for services'
     contact_ngo_path(user_id)
   else
     raise "Undefined page: #{page_name}"
