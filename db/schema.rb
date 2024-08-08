@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_06_020231) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_08_120544) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -115,7 +115,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_06_020231) do
 
   create_table "uploaded_files", force: :cascade do |t|
     t.integer "user_id", null: false
-    t.string "file_name", null: false
+    t.string "name", null: false
     t.string "file_type", null: false
     t.integer "file_size", null: false
     t.datetime "created_at", null: false
@@ -125,6 +125,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_06_020231) do
     t.string "document_type"
     t.datetime "upload_date"
     t.string "status"
+    t.boolean "needs_document_upload"
     t.index ["user_id"], name: "index_uploaded_files_on_user_id"
   end
 

@@ -91,6 +91,10 @@
             margin-top: 10px;
         }
 
+        .preview-btn {
+            margin-right: 15px;
+        }
+
         @media (max-width: 768px) {
             .upload-box, .uploaded-files {
                 width: 100%;
@@ -103,7 +107,7 @@
         <h2>File Upload Guide</h2>
         <ol>
             <li>Drag and drop your files into the designated area or click the "Browse" button to select files from your computer.</li>
-            <li>Supported file formats are PDF, DOC, DOCX, and JPG.</li>
+            <li>Supported file formats are PDF, DOC, DOCX, JPG and PNG.</li>
             <li>The maximum file size allowed is 5MB.</li>
             <li>After selecting the files, they will be automatically uploaded and listed on the right side.</li>
             <li>You can remove any file by clicking the delete button (🗑️) next to the file name.</li>
@@ -115,7 +119,7 @@
             <div class="icon">⬆️</div>
             <p>Drag and Drop files to upload or</p>
             <button id="browseBtn">Browse</button>
-            <p>Supported files: PDF, DOC, DOCX, JPG</p>
+            <p>Supported files: PDF, DOC, DOCX, JPG, PNG</p>
             <input type="file" id="fileInput" multiple style="display: none;">
         </div>
         <div class="uploaded-files">
@@ -132,7 +136,7 @@
         const fileList = document.getElementById('fileList');
         const noFilesMessage = document.getElementById('noFilesMessage');
 
-        const supportedFormats = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg'];
+        const supportedFormats = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg', 'image/png'];
         const maxFileSize = 5 * 1024 * 1024; // 5MB in bytes
 
         const userParticularId = 1; // Replace this with the dynamic user_particular_id if needed
@@ -179,19 +183,18 @@
 
         function addFileToList(file) {
             const listItem = document.createElement('li');
+            const uploadDate = new Date(file.upload_date);
+            const formattedUploadDate = uploadDate.toLocaleDateString("en-SG");
             listItem.innerHTML = `
                 <div class="file-info">
                     <div class="file-name">
                         ${file.name}
                     </div>
                     <div class="file-size">${formatFileSize(file.file_size)}</div>
-                    <div class="upload-date">${file.upload_date}</div>
-                    <div class="status">${file.status}</div>
-                    <div class="preview-btn" data-url="${file.file_url}">🔍</div>
-                    <div class="delete-btn" data-id="${file.id}">🗑️</div>
+                    <div class="upload-date">Uploaded on: ${formattedUploadDate}</div>
                 </div>
                 <div class="file-description">
-                    <input type="text" placeholder="Enter your description" class="description" data-id="${file.id}" value="${file.description || 'Enter your description'}">
+                    <input type="text" placeholder="Enter your description" class="description" data-id="${file.id}" value="${file.description || ''}">
                 </div>
                 <div class="file-type">
                     <select class="document-type" data-id="${file.id}">
@@ -201,9 +204,14 @@
                         <option value="Property" ${file.document_type === 'Property' ? 'selected' : ''}>Property</option>
                     </select>
                 </div>
+                <div class="file-actions mt-2">
+                    <button type="button" class="btn btn-primary preview-btn" data-url="${file.file_url}">Download</button>
+                    <button type="button" class="btn btn-danger delete-btn" data-id="${file.id}">Delete</button>
+                </div>
             `;
-            if (noFilesMessage) {
-                noFilesMessage.remove();
+            let noFilesMessageElem = document.getElementById('noFilesMessage');
+            if (noFilesMessageElem) {
+                noFilesMessageElem.remove();
             }
             fileList.appendChild(listItem);
             attachUpdateEventHandlers();
