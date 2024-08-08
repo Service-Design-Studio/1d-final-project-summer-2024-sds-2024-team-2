@@ -226,7 +226,7 @@ class UserParticularsController < ApplicationController
       if user_particular[:ethnicity].blank? && others[:ethnicity].blank?
         error_messages_arr << 'Please specify your ethnicity.'
       # Ensure others[:ethnicity] contains only valid characters
-      elsif others[:ethnicity] =~ /[^a-zA-Z-, ]/
+      elsif others[:ethnicity] =~ /[^a-zA-Z\-, ]/
         error_messages_arr << 'Ethnicity can only contain letters, hyphens (-), and commas (,).'
       end
 
@@ -234,7 +234,7 @@ class UserParticularsController < ApplicationController
       if user_particular[:religion].blank? && others[:religion].blank?
         error_messages_arr << 'Please specify your religion.'
       # Ensure others[:gender] contains only valid characters
-      elsif others[:religion] =~ /[^a-zA-Z-, ]/
+      elsif others[:religion] =~ /[^a-zA-Z\-, ]/
         error_messages_arr << 'Religion can only contain letters, hyphens (-), and commas (,).'
       end
 
@@ -242,7 +242,7 @@ class UserParticularsController < ApplicationController
       if user_particular[:gender].blank? && others[:gender].blank?
         error_messages_arr << 'Please specify your gender.'
       # Ensure others[:gender] contains only valid characters
-      elsif others[:gender] =~ /[^a-zA-Z-, ]/
+      elsif others[:gender] =~ /[^a-zA-Z\-, ]/
         error_messages_arr << 'Gender can only contain letters, hyphens (-), and commas (,).'
       end
 
