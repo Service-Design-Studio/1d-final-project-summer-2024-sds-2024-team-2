@@ -100,7 +100,7 @@ def path_to(page_name)
   user_id = if defined?(@user_particular) && @user_particular.present?
               @user_particular.id
             else
-              (UserParticular.last.id + 1)# Fallback to the most recent UserParticular if @user_particular is not set
+              (UserParticular.last.id + 1) # Fallback to the most recent UserParticular if @user_particular is not set
             end
   case page_name.downcase
   when 'home'
@@ -119,6 +119,8 @@ def path_to(page_name)
     new_user_registration_path
   when 'saved post'
     saved_post_user_particular_path(user_id)
+  when 'search services'
+    contact_ngo_path(user_id)
   else
     raise "Undefined page: #{page_name}"
   end
