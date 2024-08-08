@@ -24,7 +24,7 @@
                                         <h5><%= message.full_name %></h5>
                                     </div>
                                     <p class="date" style="margin:0;">
-                                            <%= Time.zone.parse(message.createdAt).in_time_zone('Asia/Singapore').strftime("%B %d, %Y %H:%M") %>
+                                            <%= message.created_at.in_time_zone('Asia/Singapore').strftime("%B %d, %Y %H:%M") %>
                                     </p>
                                     <p style="margin:0;"><%= message.message.split(' ').take(6).join(' ') %> <%= '...' if message.message.split(' ').size > 6 %></p>
                                 </div>
