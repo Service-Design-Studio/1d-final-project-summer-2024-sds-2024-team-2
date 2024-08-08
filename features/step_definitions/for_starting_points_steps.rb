@@ -33,8 +33,12 @@ Then(/^I should be redirected to the NGO "([^"]*)" page$/) do |page_name|
 end
 
 When(/^I key in the Unique ID: '([^"]*)" and 6 digit code 2FA: "([^"]*)", then I press the check button$/) do |unique_id, two_fa_code|
-  fill_in 'unique_id', with: unique_id # Replace 'unique_id_field' with the actual field identifier
-  fill_in 'two_fa_passcode', with: two_fa_code # Replace 'two_fa_code_field' with the actual field identifier
+  # Wait for the unique ID field to be present
+  find('#unique_id', wait: 10).set(unique_id) # Replace '#unique_id' with the actual field identifier
+
+  # Wait for the 2FA code field to be present
+  find('#two_fa_passcode', wait: 10).set(two_fa_code) # Replace '#two_fa_passcode' with the actual field identifier
+
   step 'I press the "Check" button'
 end
 

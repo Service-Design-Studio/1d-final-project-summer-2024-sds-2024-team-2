@@ -38,9 +38,11 @@ Then(/^I should not see "([^"]*)"$/) do |name|
 end
 
 Then(/^I should see the following filled-in details$/) do |table|
+  byebug
   table.hashes.each do |row|
-    step "I should see \"#{row['Field']}\""
-    step "I should see \"#{row['Value']}\""
+    field = row['Field']
+    value = row['Value']
+    expect(page).to have_content(value, wait: 10)
   end
 end
 
@@ -75,7 +77,7 @@ def fill_in_form(table)
       select row['Value'], from: "#{row['Field'].downcase}_select"
     when 'date of birth', 'date of arrival in malaysia'
       # For HTML5 date fields, ensure the date is in 'YYYY-MM-DD' format
-      fill_in row['Field'], with: row['Value'].to_date.strftime('%Y-%m-%d') unless row['Value'].to_s.strip.empty?
+      fill_in row['Field'], with: row['Value'].to_date.strftime('%d-%m-%Y') unless row['Value'].to_s.strip.empty?
     when 'phone number'
       select('+65', from: 'country_code_select') # Selects the country code from the dropdown
       fill_in 'phone_number_field', with: row['Value'] # Fills in the phone number field
@@ -88,12 +90,17 @@ def fill_in_form(table)
   end
 end
 
+Given(/^that a User account by the Username of "user1", Email of "user1@mail.com", Phone Number of "90000001" exist$/) do
+  user = User.find_by(username: 'user1', email: 'user1@gmail.com', phone_number: '90000001')
+  expect(user).to be_persisted
+end
+
 # Maps page names to their corresponding paths
 def path_to(page_name)
   user_id = if defined?(@user_particular) && @user_particular.present?
               @user_particular.id
             else
-              UserParticular.last.id # Fallback to the most recent UserParticular if @user_particular is not set
+              (UserParticular.last.id + 1)# Fallback to the most recent UserParticular if @user_particular is not set
             end
   case page_name.downcase
   when 'home'

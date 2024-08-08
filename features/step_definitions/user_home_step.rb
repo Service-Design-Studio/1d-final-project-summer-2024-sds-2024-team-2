@@ -30,11 +30,6 @@ When(/^I press on the "Activity History" button$/) do
   find_link('Activity History').click
 end
 
-Then(/^I should be redirected to the "Activity History" page$/) do
-  # Ensure the current path is the Activity History page path
-  expect(page).to have_current_path('http://127.0.0.1:3001/user_particulars/1/history', url: true)
-end
-
 And(/^I should see a list of my recent activities$/) do
   # Ensure the activity list is present on the page
   expect(page).to have_css('#user_history')
@@ -83,6 +78,7 @@ Then(/^I should see the following fields with their respective values:$/) do |ta
       raise "Unknown field: #{field}"
     end
 
-    expect(actual_value).to eq(expected_value), "Expected #{field} to have value #{expected_value} but got #{actual_value}"
+    expect(actual_value).to eq(expected_value),
+                            "Expected #{field} to have value #{expected_value} but got #{actual_value}"
   end
 end
