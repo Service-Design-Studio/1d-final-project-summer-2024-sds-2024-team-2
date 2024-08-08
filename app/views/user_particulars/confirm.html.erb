@@ -4,7 +4,9 @@
     <div class = 'col-5'>
       <%= render 'digitalid' %>
     </div>
-<%= form_with model: @user_particular, url: user_particulars_path, method: :post, html: { class: 'col-3 d-flex flex-column justify-content-center align-items-center px-4' } do |form| %>        <%= form.hidden_field :full_name, value: @user_particular.full_name %>
+    <div class = 'col-lg-5 col-8 d-flex justify-content-center align-items-center'>
+<%= form_with model: @user_particular, url: user_particulars_path, method: :post, html: { class: 'h-100 w-100 d-flex flex-grow-1 flex-column justify-content-center align-items-center px-4', style: "max-width 330px; min-width 220px; min-height:290px;"} do |form| %>        
+        <%= form.hidden_field :full_name, value: @user_particular.full_name %>
         <%= form.hidden_field :phone_number_country_code, value: @user_particular.phone_number_country_code %>
         <%= form.hidden_field :phone_number, value: @user_particular.phone_number %>
         <%= form.hidden_field :secondary_phone_number_country_code, value: @user_particular.secondary_phone_number_country_code %>
@@ -22,13 +24,13 @@
         <%= form.hidden_field :passport_url, value: @user_particular.passport_url %>
         <%= form.hidden_field :user_id, value: @user_particular.user_id %>
         <%= form.hidden_field :status, value: "pending" %>
-  </div>
-  <div class = 'col-lg-5 col-8'>
       <label class="m-0">Passport-Style Photo<span class="text-danger">*</span></label>
-      <label id="profilePictureLabel" for="profile_picture" class="p-1 mb-0 form-group d-flex flex-grow-1 justify-content-center align-items-center text-center text-muted" style="cursor: pointer; border: 5px dashed rgba(198, 198, 198, 0.65);">Upload a photo of yourself here</label>
+      <label id="profilePictureLabel" for="profile_picture" class="w-100 h-100 p-1 mb-0 form-group d-flex flex-grow-1 justify-content-center align-items-center text-center text-muted" style="min-wdith:220px; cursor: pointer; border: 5px dashed rgba(198, 198, 198, 0.65);">Upload a photo of yourself here</label>
       <%= form.file_field :profile_picture, id: "profile_picture", accept: 'image/jpeg,image/png', class: "form-control-file", style: "display: none;" %>
       <input type="file" accept="image/*" capture="camera" id="cameraInput" style="display: none;">
       <button type="button" class='mt-1 py-1 btn btn-dark w-100' onclick="startCamera()" data-bs-toggle="modal" data-bs-target="#cameraModal">Or take one right now 📸</button>
+    </div>
+
   </div>
         
 <div class="d-flex justify-content-center my-3">
