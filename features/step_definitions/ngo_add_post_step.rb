@@ -1,5 +1,5 @@
 # Given I am already on the NGO "Gebirah" page
-Given(/^I am already on the NGO "(.*?)" page$/) do |ngo_name|
+Given(/^I am already on the NGO "Gebirah" page$/) do
   # Assuming you have a method to find the NGO user by name and get its ID
   # ngo_user = NgoUser.find_by(name: ngo_name)
   # visit ngo_user_path(ngo_user)
@@ -21,13 +21,5 @@ Then(/^I should see event card with the following fields$/) do |table|
       expect(page).to have_selector('.event-card', text: row['Date'])
       expect(page).to have_selector('.event-card', text: row['Location'])
     end
-  end
-end
-
-Then(/^I should see the following filled-in details$/) do |table|
-  table.hashes.each do |row|
-    field = row['Field']
-    value = row['Value']
-    expect(page).to have_content(value, wait: 10)
   end
 end

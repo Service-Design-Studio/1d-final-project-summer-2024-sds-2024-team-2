@@ -57,7 +57,6 @@ end
 When(/^I press on the message icon on the "([^"]+)", ID: "([^"]+)" event card$/) do |title, id|
   # Locate the event card with the specified title and ID
   event_card = find(".event-card[data-title='#{title}'][data-bulletin-id='#{id}']")
-
   # Simulate a click on this <i> element
   step "I press the \"sender #{title} #{id}\" button"
 end
@@ -155,7 +154,7 @@ And('the bookmark icon on the "Saved" button should be filled') do
   expect(bookmark_icon[:class]).to include('bi-bookmark-fill')
 end
 
-Given('I have opened up the modal on the event card {string}, ID: {string}') do |event_name, event_id|
+Given('I have opened up the modal on the event card "Gebirah Aid Giveaway", ID: "1"') do
   step 'I press on the event card "Gebirah Aid Giveaway", ID: "1"'
 end
 
