@@ -91,6 +91,10 @@
             margin-top: 10px;
         }
 
+        .preview-btn {
+            margin-right: 15px;
+        }
+
         @media (max-width: 768px) {
             .upload-box, .uploaded-files {
                 width: 100%;
@@ -179,14 +183,15 @@
 
         function addFileToList(file) {
             const listItem = document.createElement('li');
+            const uploadDate = new Date(file.upload_date);
+            const formattedUploadDate = uploadDate.toLocaleDateString("en-SG");
             listItem.innerHTML = `
                 <div class="file-info">
                     <div class="file-name">
                         ${file.name}
                     </div>
                     <div class="file-size">${formatFileSize(file.file_size)}</div>
-                    <div class="upload-date">${file.upload_date}</div>
-                    <div class="status">${file.status}</div>
+                    <div class="upload-date">Uploaded on: ${formattedUploadDate}</div>
                 </div>
                 <div class="file-description">
                     <input type="text" placeholder="Enter your description" class="description" data-id="${file.id}" value="${file.description || ''}">
