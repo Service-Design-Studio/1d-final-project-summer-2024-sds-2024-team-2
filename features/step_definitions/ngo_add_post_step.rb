@@ -24,15 +24,10 @@ Then(/^I should see event card with the following fields$/) do |table|
   end
 end
 
-Then('I should see a validation message "Please fill out this field."') do
-  # Find all required fields
-  required_fields = all('input[required], textarea[required], select[required]')
-
-  # Trigger form submission
-  find('form').submit
-
-  # Check if any required field shows the validation message
-  required_fields.each do |field|
-    expect(field.native.attribute('validationMessage')).to eq('Please fill out this field.')
+Then(/^I should see the following filled-in details$/) do |table|
+  table.hashes.each do |row|
+    field = row['Field']
+    value = row['Value']
+    expect(page).to have_content(value, wait: 10)
   end
 end

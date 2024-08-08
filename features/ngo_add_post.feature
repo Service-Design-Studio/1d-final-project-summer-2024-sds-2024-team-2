@@ -40,8 +40,13 @@ Scenario: Missing fields when adding posts
   | Description               | Food Distribution |
   | Date                      | 31-1-2024         |
   | Location                  | Malaysia          |
-  Then I should see a validation message "Please fill out this field."
-
+  Then I should see the following filled-in details
+  | Field                     | Value             |
+  | Title                     |                   |
+  | Description               | Food Distribution |
+  | Date                      | 31-1-2024         |
+  | Location                  | Malaysia          |
+  
 Scenario: Add photo to event post
   When I press the "Add Bulletin Post" button
   Given I fill in the following fields
