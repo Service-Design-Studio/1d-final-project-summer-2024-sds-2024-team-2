@@ -14,7 +14,7 @@ Scenario: All Fields Displayed correctly
   | Ethnicity                 | Rohingya     |
   | Religion                  | Islam        |
   | Gender                    | Female       |
-  | Date of Birth             | 31-12-2000   |
+  | Date of Birth             | 31-12-2000 |
   | Date of Arrival in Malaysia | 01-07-2012 |
   And I press the "Submit" button
   Then I should see the following filled-in details

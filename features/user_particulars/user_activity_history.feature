@@ -45,9 +45,9 @@ Scenario: Account creation, user particulars, and verification
 
 Scenario: Storing archive of sent messages
     Given I have opened up the modal on the event card "Gebirah Aid Giveaway", ID: "1"
-    When I press the "Send a Message" button
+    When I press the "Send a message" button
     And I fill the message with "I would like to join this event but I will be late"
-    And I press the "Send Message" button
+    And I press the "Send message" button
     Then I should be redirected to the home page
     When I press the "Activity History" button
     Then I should see "Gebirah Aid Giveaway: Message sent to Gebirah!"
@@ -55,7 +55,7 @@ Scenario: Storing archive of sent messages
 Scenario: Storing archive of sent messages from saved NGOs
     When I press the "Search NGOs" button
     Then I should be redirected to the "Search NGOs" page
-    When I press the "Send a Message" button for Gebirah
+    When I press the "Send a message" button for Gebirah
     And I fill the message with "Hello!"
     And I press the "Send" button
     Then I should see "Message sent to Gebirah!"
