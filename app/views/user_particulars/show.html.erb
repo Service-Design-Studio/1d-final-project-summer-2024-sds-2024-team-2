@@ -32,28 +32,24 @@
         <span id='two-fa-passcode' class='py-2 text-nowrap two-fa-passcode-input text-center' style="font-size:0.8em;"><%= @user_particular&.two_fa_passcode || "2FA unavailable" %></span>
       </div>
       <!-- Buttons Container, put under sub main container -->
-      <div class="contaianer-fluid pri-container add-small-shadow mb-3 py-3 px-2 d-flex w-100 flex-column flex-wrap">
-        <div class="row d-flex justify-content-evenly g-2">
-          <%if @user_particular%>
-            <%= link_to user_document_path(@user_particular), id: 'documents-button', class: "customhome-button p-2 col-5", style: 'text-decoration: none; height: auto; min-height:40px;' do %>
-              <i class="fas fa-file-alt fs-5" style='min-width:20px;'></i> Documents
-            <% end %>
-          <% end %>
-
-          <%= link_to user_history_path(@user), class: "customhome-button p-2 col-5", style: 'text-decoration: none; height: auto; min-height:40px;' do %>
-            <i class="fas fa-history fs-5"></i> Activity History
-          <% end %>
-
-          <%if @user_particular%>
-            <%= link_to saved_post_user_particular_path(@user_particular), class: "customhome-button p-2 col-5", style: 'text-decoration: none; height: auto; min-height:40px;' do %>
-              <i style='color: orange;' class="bi bi-bookmark-fill fs-5"></i> Saved Post
-            <% end %>
-            <%= link_to contact_ngo_path(@user_particular), class: "customhome-button p-2 col-5", style: 'text-decoration: none; height: auto; min-height:40px;' do %>
-              <i class="fas fa-search fs-5"></i> Search for Services
-            <% end %>
-          <% end %>
+      <%if @user_particular%>
+        <div class="contaianer-fluid pri-container add-small-shadow mb-3 py-3 px-2 d-flex w-100 flex-column flex-wrap">
+          <div class="row d-flex justify-content-evenly g-2">
+              <%= link_to user_document_path(@user_particular), id: 'documents-button', class: "customhome-button p-2 col-5", style: 'text-decoration: none; height: auto; min-height:40px;' do %>
+                <i class="fas fa-file-alt fs-5" style='min-width:20px;'></i> Documents
+              <% end %>
+              <%= link_to user_history_path(@user_particular.id), class: "customhome-button p-2 col-5", style: 'text-decoration: none; height: auto; min-height:40px;' do %>
+                <i class="fas fa-history fs-5"></i> Activity History
+              <% end %>
+              <%= link_to saved_post_user_particular_path(@user_particular), class: "customhome-button p-2 col-5", style: 'text-decoration: none; height: auto; min-height:40px;' do %>
+                <i style='color: orange;' class="bi bi-bookmark-fill fs-5"></i> Saved Post
+              <% end %>
+              <%= link_to contact_ngo_path(@user_particular), class: "customhome-button p-2 col-5", style: 'text-decoration: none; height: auto; min-height:40px;' do %>
+                <i class="fas fa-search fs-5"></i> Search for Services
+              <% end %>
+          </div>
         </div>
-      </div>
+      <% end %>
     </div>
     <!-- Right Side (Bulletin Board) -->
     <div id="bulletinDisplay" class="flex-grow-1 col-lg-8 p-0 p-lg-4 col-12 mx-0 justify-content-center d-lg-flex custom-max-height">

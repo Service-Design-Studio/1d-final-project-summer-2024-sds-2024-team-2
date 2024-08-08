@@ -128,7 +128,8 @@ class UserParticularsController < ApplicationController
 
   def history
     @back_path = root_path
-    @user_history = UserHistory.where(user_id: params[:id]).order(updated_at: :desc)
+    user_id = @user_particular.user_id
+    @user_history = UserHistory.where(user_id: user_id).order(updated_at: :desc)
   end
 
   def set_user_particular
