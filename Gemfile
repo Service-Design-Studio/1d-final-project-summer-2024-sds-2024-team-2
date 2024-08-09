@@ -21,6 +21,9 @@ gem 'puma', '>= 5.0'
 gem 'prawn'
 # Use CarrierWave
 gem 'carrierwave', '~> 2.0'
+# Use rspec
+gem 'rspec'
+
 
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem 'dotenv-rails'
