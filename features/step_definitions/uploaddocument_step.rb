@@ -1,25 +1,3 @@
-Given(/^I am an undocumented individual$/) do
-  @user = User.create!(
-    username: 'undocumented_user',
-    email: 'undocumented@example.com',
-    phone_number: '1234567890',
-    password: 'password',
-    registered: false,
-    needs_document_upload: true
-  )
-  @user_particular = UserParticular.create!(
-    user: @user,
-    full_name: 'Undocumented User',
-    phone_number: '1234567890',
-    country_of_origin: 'Unknown',
-    ethnicity: 'Unknown',
-    religion: 'Unknown',
-    gender: 'Unknown',
-    date_of_birth: Date.new(2000, 1, 1),
-    date_of_arrival: Date.new(2020, 1, 1)
-  )
-end
-
 Given(/^I have completed the initial registration process$/) do
   @user.update(registered: true)
 end

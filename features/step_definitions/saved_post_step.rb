@@ -18,7 +18,7 @@ end
 
 When(/^I press on the unfilled bookmark icon on the "([^"]+)", ID: "([^"]+)" event card$/) do |title, id|
   # Locate the event card with the specified title and ID
-  event_card = find(".event-card[data-title='#{title}'][data-bulletin-id='#{id}']")
+  # event_card = find(".event-card[data-title='#{title}'][data-bulletin-id='#{id}']")
 
   # Within this event card, find the <i> element that is a direct child of the <a> element with the onclick attribute set to toggleSavePost(this)
   bookmark_icon = event_card.find('a > i.bookmarker')
@@ -56,7 +56,7 @@ end
 
 When(/^I press on the message icon on the "([^"]+)", ID: "([^"]+)" event card$/) do |title, id|
   # Locate the event card with the specified title and ID
-  event_card = find(".event-card[data-title='#{title}'][data-bulletin-id='#{id}']")
+  # event_card = find(".event-card[data-title='#{title}'][data-bulletin-id='#{id}']")
   # Simulate a click on this <i> element
   step "I press the \"sender #{title} #{id}\" button"
 end
