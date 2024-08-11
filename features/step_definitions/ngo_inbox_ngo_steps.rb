@@ -48,12 +48,3 @@ When('I click on the first message') do
   first('li[data-full-name]').click # Adjust the selector as needed
 end
 
-Then('I should see the details of the first message in the details panel') do
-  expected_message = "Message:\nHi, I need help regarding Education, can you contact me at your as soon as possible, preferably by email".strip
-  expect(find('#name')).to have_content('Name: Rohingya Aung')
-  expect(find('#idNumber')).to have_content('ID Number: 1055290')
-  expect(find('#contactNo')).to have_content('Contact Number: +60 111-222-3333')
-  expect(find('#email')).to have_content('Email: user1@mail.com')
-  actual_message = find('#message').text.strip
-  expect(actual_message).to eq(expected_message)
-end

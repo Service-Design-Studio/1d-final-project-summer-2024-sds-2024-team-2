@@ -28,6 +28,7 @@ Scenario: Adding a saved post and removing it in Saved Post page
     And the "Gebirah Aid Giveaway", ID: "1" event card bookmark icon should become unfilled
 
 Scenario: Adding a saved post, then immediately retracting it, then going into the Saved Post page
+    Given I am now on the user particulars home page as a verified user
     When I press on the unfilled bookmark icon on the "Gebirah Aid Giveaway", ID: "1" event card
     Then the bookmark icon for the "Gebirah Aid Giveaway", ID: "1" event card is filled
     When I press on the filled bookmark icon on the "Gebirah Aid Giveaway", ID: "1" event card

@@ -4,7 +4,7 @@ Background:
     Given I am now logged in to the user particulars home page
 
 Scenario: Navigating to search service page
-    When I press on the "Search Services" button
+    When I press on the "Search for Services" button
     Then I should be directed to the "Contact NGO" page
 
 Scenario: Send a message to NGO

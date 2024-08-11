@@ -3,7 +3,6 @@ Given('I am already on the Contact NGO page') do
   step 'I should be directed to the "Contact NGO" page'
 end
 
-
 When('I click on the send message button') do
   all('.button-container-service')[5].click
 end
@@ -32,4 +31,3 @@ end
 Then('I should see a flash message {string}') do |message|
   expect(page).to have_content(message)
 end
-

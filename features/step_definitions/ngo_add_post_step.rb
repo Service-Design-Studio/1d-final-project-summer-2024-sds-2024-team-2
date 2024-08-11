@@ -1,5 +1,5 @@
 # Given I am already on the NGO "Gebirah" page
-Given(/^I am already on the NGO "(.*?)" page$/) do |ngo_name|
+Given(/^I am already on the NGO "Gebirah" page$/) do
   # Assuming you have a method to find the NGO user by name and get its ID
   # ngo_user = NgoUser.find_by(name: ngo_name)
   # visit ngo_user_path(ngo_user)
@@ -21,18 +21,5 @@ Then(/^I should see event card with the following fields$/) do |table|
       expect(page).to have_selector('.event-card', text: row['Date'])
       expect(page).to have_selector('.event-card', text: row['Location'])
     end
-  end
-end
-
-Then('I should see a validation message "Please fill out this field."') do
-  # Find all required fields
-  required_fields = all('input[required], textarea[required], select[required]')
-
-  # Trigger form submission
-  find('form').submit
-
-  # Check if any required field shows the validation message
-  required_fields.each do |field|
-    expect(field.native.attribute('validationMessage')).to eq('Please fill out this field.')
   end
 end

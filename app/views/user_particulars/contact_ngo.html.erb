@@ -157,7 +157,7 @@ $(document).ready(function() {
             url: '/user_particulars/' + userId + '/' + ngoId + '/message',  // Adjust the URL as necessary
             type: 'POST',
             data: {
-                message: { content: messageContent }
+                message: { content: "#{messageContent} #{ @user_particulars.status == 'verified' ? 'Verified User!' : 'Not Verified User!' }" }
             },
             headers: {
                 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') // Ensure CSRF token is sent

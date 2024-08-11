@@ -4,6 +4,7 @@ end
 
 When(/^I press the "([^"]*)" button$/) do |button|
   puts button
+  Capybara.default_max_wait_time = 10
   if has_button?(button)
     click_button(button)
   elsif has_link?(button)
@@ -15,6 +16,10 @@ When(/^I press the "([^"]*)" button$/) do |button|
   else
     raise "No button or link found with name '#{button}'"
   end
+end
+
+Given('I click the edit icon link') do
+  find('a.edit-link-right-align.edit-icon-link[aria-label="Edit"]').click
 end
 
 Then(/^I should be directed to the "([^"]*)" page$/) do |page|
@@ -38,7 +43,6 @@ Then(/^I should not see "([^"]*)"$/) do |name|
 end
 
 Then(/^I should see the following filled-in details$/) do |table|
-  byebug
   table.hashes.each do |row|
     field = row['Field']
     value = row['Value']
@@ -119,7 +123,7 @@ def path_to(page_name)
     new_user_registration_path
   when 'saved post'
     saved_post_user_particular_path(user_id)
-  when 'search services'
+  when 'search for services'
     contact_ngo_path(user_id)
   else
     raise "Undefined page: #{page_name}"

@@ -423,6 +423,10 @@ GEM
     rexml (3.3.2)
       strscan
     rotp (6.3.0)
+    rspec (3.13.0)
+      rspec-core (~> 3.13.0)
+      rspec-expectations (~> 3.13.0)
+      rspec-mocks (~> 3.13.0)
     rspec-core (3.13.0)
       rspec-support (~> 3.13.0)
     rspec-expectations (3.13.1)
@@ -570,6 +574,7 @@ DEPENDENCIES
   rails (~> 7.1.3, >= 7.1.3.4)
   rails-controller-testing
   rotp
+  rspec
   rspec-rails
   sassc-rails (>= 2.1.0)
   selenium-webdriver

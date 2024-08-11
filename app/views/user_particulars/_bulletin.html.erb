@@ -310,7 +310,7 @@
             type: 'POST',
             data: {
               message: {
-                content: messageContent,
+                content: "#{messageContent} #{ @user_particulars.status == 'verified' ? 'Verified User!' : 'Not Verified User!' }" ,
                 event_title: ngoEvent
                 }
             },
